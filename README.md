@@ -7,7 +7,7 @@
 | Deliverable | Where |
 |---|---|
 | 3-slide strategy (PDF) | `deck/Keerthi_Modalavalasa_RISA_Growth_APM.pdf` |
-| Working product: dashboard, campaign and task manager, AI copilot | Live link: _added at deploy_. Source: `growth-center/` |
+| Working product: dashboard, campaign and task manager, AI copilot | **Live: https://campusfest-growth-center-brown.vercel.app**. Source: `growth-center/` |
 | This README: research, assumptions, calculations, sources, framework, setup, tools, limitations | You are here |
 
 ---

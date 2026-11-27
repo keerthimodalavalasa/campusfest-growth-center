@@ -1,0 +1,10 @@
+# Upload only the app (the project's root directory is growth-center)
+/*
+!/growth-center
+# never upload local secrets or local state
+growth-center/.env*
+!growth-center/.env.example
+growth-center/.pglite
+growth-center/.next
+growth-center/node_modules
+growth-center/*.log

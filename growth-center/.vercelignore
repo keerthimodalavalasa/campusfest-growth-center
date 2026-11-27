@@ -1,0 +1,7 @@
+# never upload local secrets or local state
+.env*
+!.env.example
+.pglite
+.next
+node_modules
+*.log
