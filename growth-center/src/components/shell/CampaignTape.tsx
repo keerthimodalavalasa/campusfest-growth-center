@@ -5,6 +5,7 @@ import { useApp } from '@/lib/app-state';
 import { addDays, dateLabel, daysBetween, inr, num } from '@/lib/format';
 import { cx, Segmented, Skeleton } from '@/components/ui';
 import { hideTip, showTip } from '@/components/tooltip';
+import { useElementWidth } from '@/components/viz';
 
 interface Tape {
   start: string;
@@ -28,6 +29,8 @@ export function CampaignTape() {
   const { data } = useApi<Tape>('/api/tape');
   const barsRef = useRef<HTMLDivElement>(null);
   const [drag, setDrag] = useState(false);
+  // measured, so labels hide by real pixels (not by a day count that collides on narrow screens)
+  const [labelsRef, labelsW] = useElementWidth<HTMLDivElement>();
 
   const n = data ? data.days.length : 0;
   const maxRegs = useMemo(() => (data ? Math.max(1, ...data.days.map((d) => d.regs)) : 1), [data]);
@@ -153,7 +156,7 @@ export function CampaignTape() {
           )}
           style={{ left: `${pos(idx)}%` }}
         />
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-3 text-[11.5px] leading-none font-[600] whitespace-nowrap text-ink-2">
+        <div ref={labelsRef} aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-3 text-[11.5px] leading-none font-[600] whitespace-nowrap text-ink-2">
           <span className="absolute left-0">{dateLabel(data.start)}</span>
           {revisions.map((t) => (
             <span key={t.date} className="absolute -translate-x-1/2 text-haldi-ink" style={{ left: `${pos(daysBetween(data.start, t.date))}%` }}>
@@ -163,7 +166,8 @@ export function CampaignTape() {
           <span className="absolute -translate-x-1/2 text-lac" style={{ left: `${pos((evI + evJ) / 2)}%` }}>
             Event
           </span>
-          {n - evJ > 6 ? <span className="absolute right-0 max-[720px]:hidden">{dateLabel(data.end)}</span> : null}
+          {/* the end date shows only when it clears the "Event" label: half of "Event" (~20px) + "20 Apr" (~44px) + a gap */}
+          {labelsW > 0 && labelsW * (1 - pos((evI + evJ) / 2) / 100) > 76 ? <span className="absolute right-0">{dateLabel(data.end)}</span> : null}
         </div>
       </div>
 

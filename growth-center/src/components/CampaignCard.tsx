@@ -10,7 +10,7 @@ import { tipProps } from '@/components/tooltip';
 import { CountUp, MicroRing } from '@/components/viz';
 
 /**
- * One campaign as a limestone card: campaign colour cap, the call pill, cost per (expected) visitor as the numeral,
+ * One campaign as a limestone card: campaign colour dot by the name, the call pill, cost per (expected) visitor as the numeral,
  * share of spend (haldi) against share of visitors (lac), and the show-up ring. The whole card links to the
  * campaign. `meta` is an optional line under the name (status, owner); `footer` replaces the default ring row.
  * Shares are drawn on a common scale (`maxShare`) so cards compare with each other.
@@ -56,14 +56,14 @@ export function CampaignCard({
         ],
         notes: rec?.reasons[0] ? [rec.reasons[0]] : [],
       }))}
-      className={cx('anim-settle field-stone relative flex min-w-0 flex-col overflow-hidden rounded-tile-m px-4 pb-4 transition-[filter] duration-150 focus-within:brightness-[0.97] hover:brightness-[0.97]', className)}
+      className={cx('anim-settle field-stone relative flex min-w-0 flex-col overflow-hidden rounded-tile-m p-4 transition-[filter] duration-150 focus-within:brightness-[0.97] hover:brightness-[0.97]', className)}
       style={d(0)}
     >
-      <div aria-hidden className="-mx-4 mb-3.5 h-2" style={{ background: color }} />
       <div className="flex items-start justify-between gap-2">
+        <span aria-hidden className="mt-[5px] size-2.5 shrink-0 rounded-full" style={{ background: color }} />
         <Link
           href={`/campaigns/${m.campaignId}`}
-          className="min-w-0 text-[14px] leading-[1.3] font-[650] after:absolute after:inset-0 after:content-['']"
+          className="mr-auto min-w-0 text-[14px] leading-[1.3] font-[650] after:absolute after:inset-0 after:content-['']"
           aria-label={`${m.name}${rec ? `: ${rec.decision}` : ''}. Open campaign detail`}
         >
           {m.name}

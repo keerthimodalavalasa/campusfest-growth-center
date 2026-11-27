@@ -177,7 +177,7 @@ export default function ExecutePage() {
           delay={40}
           className="min-h-[180px]"
           wideViz
-          vizClass="!top-[20px] !h-[40px] !w-[92px] max-[720px]:!h-[40px] max-[720px]:!w-[92px]"
+          vizClass="!h-[40px] !w-[92px] max-[720px]:!h-[40px] max-[720px]:!w-[92px]"
           viz={
             // a baseline, so days with nothing due still read as days
             <div className="border-b-[1.5px] border-stone-3">

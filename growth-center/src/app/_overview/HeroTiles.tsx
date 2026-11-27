@@ -32,7 +32,7 @@ export function HeroTile({ c }: { c: Ctx }) {
     gap == null ? 'no visitor goal set' : gap > 0 ? `${num(gap)} ${pre ? 'short on pace' : mode === 'event' ? 'to go' : 'short'}` : `${num(-gap)} over goal${pre ? ' on pace' : ''}`;
 
   return (
-    <Tile field="lac" size="hero" delay={0} data-area="hero" aria-label={pre ? 'North star: projected visitors' : 'North star: verified visitors'} className="flex flex-col overflow-hidden">
+    <Tile field="lac" size="hero" delay={0} data-area="hero" aria-label={pre ? 'North star: projected visitors' : 'North star: verified visitors'} className="@container flex flex-col overflow-hidden">
       <div className="flex items-center gap-2">
         <Ico icon={UsersDuotone} size={20} ia="#fff" ib="var(--lac-pale)" />
         <h2 className="text-[15px] leading-[1.3] font-[650]">{pre ? 'Projected visitors' : 'Unique verified visitors'}</h2>
@@ -41,8 +41,9 @@ export function HeroTile({ c }: { c: Ctx }) {
         </span>
       </div>
 
-      <div className="mt-3.5 mb-[18px] flex items-end gap-[18px] max-[720px]:flex-wrap max-[720px]:gap-x-4 max-[720px]:gap-y-5">
-        <div className="num text-[132px] leading-[0.8] font-[820] tracking-[-0.025em] max-[1200px]:text-[112px] max-[720px]:text-[92px]">
+      {/* wraps at any width, and the numeral scales with the tile (container units), so nothing runs off the tile */}
+      <div className="mt-3.5 mb-[18px] flex flex-wrap items-end gap-x-[18px] gap-y-3">
+        <div className="num text-[clamp(72px,24cqi,132px)] leading-[0.8] font-[820] tracking-[-0.025em]">
           <CountUp value={value} format={num} />
         </div>
         {goal != null ? (
@@ -51,7 +52,7 @@ export function HeroTile({ c }: { c: Ctx }) {
             <div className="mt-1 text-[12.5px] font-[550] text-k2">visitor goal</div>
           </div>
         ) : null}
-        <div className="ml-auto pb-1 text-right max-[720px]:ml-0 max-[720px]:text-left">
+        <div className="ml-auto pb-1 text-right">
           {attained != null ? (
             <div className="num text-[44px] leading-[0.9] max-[720px]:text-[34px]">
               <CountUp value={attained * 100} format={(n) => `${Math.round(n)}%`} />
@@ -162,7 +163,7 @@ export function Attainment({ c, prev }: { c: Ctx; prev: Overview['previous'] }) 
         title={pre ? 'Show rate, assumed' : 'Show rate'}
         label="Show rate"
         delay={120}
-        vizClass="!top-[18px] !h-[54px] !w-[92px] max-[720px]:!h-[47px] max-[720px]:!w-20"
+        vizClass="!h-[54px] !w-[92px] max-[720px]:!h-[47px] max-[720px]:!w-20"
         viz={<Gauge value={showRate} assumed={pre} label={`${pct(showRate)} show rate${pre ? ', assumed' : ''}`} />}
         value={<CountUp value={showRate * 100} format={(n) => `${n.toFixed(1)}%`} />}
         sub={pre ? 'planning assumption' : `${num(T.registeredVisitors)} of ${num(T.registrations)} came`}

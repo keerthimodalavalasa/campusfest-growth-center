@@ -34,7 +34,7 @@ export function TimelineTile({ p }: { p: Plan }) {
       </TileHead>
 
       <div className="mt-4 overflow-x-auto pb-1">
-        <div className="relative min-w-[760px]">
+        <div className="relative min-w-[1000px]">
           {/* gate markers */}
           <div className="relative h-9">
             {gates.map((g, i) => (

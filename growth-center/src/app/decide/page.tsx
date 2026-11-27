@@ -133,7 +133,7 @@ export default function DecidePage() {
               delay={80}
               className="min-h-[180px]"
               wideViz
-              vizClass="!top-[20px] !h-[40px] !w-[92px] max-[720px]:!h-[40px] max-[720px]:!w-[92px]"
+              vizClass="!h-[40px] !w-[92px] max-[720px]:!h-[40px] max-[720px]:!w-[92px]"
               viz={costs.length ? <MiniBars values={costs} color="var(--ink)" width={92} height={40} gap={3} label="Cost per visitor by paid campaign, cheapest first" /> : null}
               value={median != null ? <CountUp value={median} format={inr} /> : '–'}
               sub={perUnit(d.phase)}
@@ -148,7 +148,7 @@ export default function DecidePage() {
               delay={120}
               className="min-h-[180px]"
               wideViz
-              vizClass="!top-[20px] !flex !h-[40px] !w-[92px] justify-end max-[720px]:!h-[40px] max-[720px]:!w-[92px] max-[720px]:justify-start"
+              vizClass="!flex !h-[40px] !w-[92px] justify-end max-[720px]:!h-[40px] max-[720px]:!w-[92px] max-[720px]:justify-start"
               viz={moves.length ? <MiniBars values={moves.map((m) => m.amount)} color="var(--haldi)" width={Math.min(92, moves.length * 18)} height={40} gap={4} label="Suggested move amounts" /> : null}
               value={<CountUp value={moved} format={inrShort} />}
               sub={moves.length ? `${moves.length} ${moves.length === 1 ? 'move' : 'moves'}, Stop to Scale` : 'nothing to move at this date'}

@@ -88,7 +88,7 @@ function BetTile({ idea, live, maxVis, maxBudget, open, onToggle, delay }: { ide
           aria-label={`ICE ${ice.toFixed(1)} of 10: impact ${idea.ice.I}, confidence ${idea.ice.C}, ease ${idea.ice.E}`}
         >
           <Gauge value={ice / 10} color="var(--ink)" className="block h-auto w-[76px]" />
-          <span className="num -mt-3 text-[20px] leading-none">{ice.toFixed(1)}</span>
+          <span data-in-gauge className="num -mt-3 text-[20px] leading-none">{ice.toFixed(1)}</span>
           <span className="tab mt-0.5 text-[11px] font-[600] text-ink-2">
             I{idea.ice.I} C{idea.ice.C} E{idea.ice.E}
           </span>

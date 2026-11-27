@@ -15,7 +15,7 @@ type Rec = DecisionBoard['recommendations'][number];
 
 /**
  * Campaign scoreboard: one limestone card per campaign, cheapest visitor first. Each card carries its campaign colour
- * as a cap, the call pill, cost per (expected) visitor, share of spend vs share of visitors, and the show-up ring.
+ * as a dot by the name, the call pill, cost per (expected) visitor, share of spend vs share of visitors, and the show-up ring.
  * The full table stays one click away in Campaigns.
  */
 export function Scoreboard({ c, decisions }: { c: Ctx; decisions: DecisionBoard | null }) {
@@ -70,18 +70,20 @@ export function Scoreboard({ c, decisions }: { c: Ctx; decisions: DecisionBoard 
                 ],
                 notes: rec?.reasons[0] ? [rec.reasons[0]] : [],
               }))}
-              className="anim-settle field-stone relative flex min-w-0 flex-col overflow-hidden rounded-tile-m px-4 pb-4 transition-[filter] duration-150 focus-within:brightness-[0.97] hover:brightness-[0.97]"
+              className="anim-settle field-stone relative flex min-w-0 flex-col overflow-hidden rounded-tile-m p-4 transition-[filter] duration-150 focus-within:brightness-[0.97] hover:brightness-[0.97]"
               style={{ '--d': `${380 + i * 40}ms` } as CSSProperties}
             >
-              <div aria-hidden className="-mx-4 mb-3.5 h-2" style={{ background: color }} />
               <div className="flex flex-col items-start gap-2 text-[13.5px] leading-[1.3] font-[650]">
+                <span className="flex max-w-full min-w-0 items-start gap-2">
+                <span aria-hidden className="mt-[4px] size-2.5 shrink-0 rounded-full" style={{ background: color }} />
                 <Link
                   href={`/campaigns/${r.m.campaignId}`}
-                  className="max-w-full truncate after:absolute after:inset-0 after:content-[''] max-[720px]:whitespace-normal"
+                  className="min-w-0 after:absolute after:inset-0 after:content-['']"
                   aria-label={`${r.m.name}${rec ? `: ${rec.decision}` : ''}. Open campaign detail`}
                 >
                   {r.m.name}
                 </Link>
+                </span>
                 {rec ? <StatusPill decision={rec.decision} /> : <span className="inline-flex h-6 items-center rounded-full px-2 text-[12px] font-[650] text-ink-2 shadow-[inset_0_0_0_1.5px_var(--stone-3)]">No call yet</span>}
               </div>
               <div className="mt-3 flex flex-col items-start gap-[5px]">

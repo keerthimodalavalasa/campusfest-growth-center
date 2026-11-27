@@ -250,7 +250,7 @@ export function TornadoTile({ p }: { p: Plan }) {
       </TileHead>
       <ul className="mt-3 grid gap-1">
         {rows.map((r, i) => {
-          const w = (Math.abs(r.delta_visitors) / max) * 40;
+          const w = (Math.abs(r.delta_visitors) / max) * 32; // leaves room outside the longest bar for its value label
           const neg = r.delta_visitors < 0;
           const label = clean(r.sensitivity);
           return (

@@ -192,7 +192,6 @@ function CampaignDetail() {
         </Tile>
 
         <Tile field="stone" delay={240} pad={false} className="col-span-5 flex flex-col overflow-hidden max-[1200px]:col-span-12" aria-label="The call">
-          {rec ? <div aria-hidden className="h-2" style={{ background: DECISION[rec.decision].fg }} /> : null}
           <div className="flex flex-1 flex-col p-5">
             <TileHead icon={SlidersHorizontalDuotone} aside={rec ? <StatusPill decision={rec.decision} /> : null}>
               The call
@@ -364,7 +363,7 @@ function KeyTiles({ m, totals, rec, post, walkIns, weekly, plannedBudget }: { m:
         delay={0}
         className={cls}
         wideViz
-        vizClass="!top-[18px] !h-[54px] !w-[92px] max-[720px]:!h-[47px] max-[720px]:!w-20"
+        vizClass="!h-[54px] !w-[92px] max-[720px]:!h-[47px] max-[720px]:!w-20"
         viz={show != null && !walkIns ? <Gauge value={show} assumed={!post} color="#fff" hatch="var(--lac-track)" track="var(--lac-track)" label={post ? `${pct(show)} of registrants came` : `${pct(show)} show rate, assumed`} /> : null}
         value={<CountUp value={post ? m.visitors : m.expectedVisitors} format={num} />}
         sub={walkIns ? `${pct(m.shares.visitors)} of all visitors` : post ? `${pct(m.rates.regToVisit)} of registrants came` : `confirmed × ${pct(m.showRateAssumption, 0)} assumed`}
@@ -379,7 +378,7 @@ function KeyTiles({ m, totals, rec, post, walkIns, weekly, plannedBudget }: { m:
         delay={40}
         className={cls}
         wideViz
-        vizClass="!top-[20px] !h-[40px] !w-[92px] max-[720px]:!h-[40px] max-[720px]:!w-[92px]"
+        vizClass="!h-[40px] !w-[92px] max-[720px]:!h-[40px] max-[720px]:!w-[92px]"
         viz={recent.some((n) => n > 0) ? <MiniBars values={recent} color="var(--nizami)" width={92} height={40} gap={3} highlightLast label="New registrations, last 10 weeks" /> : null}
         value={<CountUp value={m.registrations} format={num} />}
         sub={`${num(m.momentum.regsLast7)} in the last 7 days`}
@@ -407,7 +406,7 @@ function KeyTiles({ m, totals, rec, post, walkIns, weekly, plannedBudget }: { m:
         delay={120}
         className={cls}
         wideViz
-        vizClass="!top-[20px] !h-[44px] !w-[92px] max-[720px]:!h-[44px] max-[720px]:!w-[92px]"
+        vizClass="!h-[44px] !w-[92px] max-[720px]:!h-[44px] max-[720px]:!w-[92px]"
         viz={!walkIns && eff != null && median ? <VsMedian value={eff} median={median} /> : null}
         value={walkIns ? '–' : eff != null ? <CountUp value={eff} format={inr} /> : '–'}
         sub={walkIns ? 'not bought' : m.spend > 0 && ratio != null ? `${times(ratio)} the ${inr(median)} median` : 'no net paid spend'}

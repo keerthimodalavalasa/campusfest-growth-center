@@ -44,11 +44,15 @@ export function MetricTile({
 }) {
   return (
     <Tile field={field} size="s" delay={delay} aria-label={label} className={cx('flex min-h-0 flex-col', className)} style={style}>
-      <div className={cx('flex items-start gap-2', viz ? (wideViz ? 'pr-[100px] max-[720px]:pr-0' : 'pr-[72px] max-[720px]:pr-0') : null)}>
-        <Ico icon={icon} size={20} ia={ia} ib={ib} />
-        <h3 className="text-[13.5px] leading-[1.3] font-[650] max-[720px]:text-[13px]">{title}</h3>
+      {/* The visual sits in the flow beside the title, never on top of it: the title keeps a minimum width
+          and wraps; when the tile is too narrow for both, the visual drops to its own line. */}
+      <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-2.5">
+        <div className={cx('flex flex-1 items-start gap-2', viz ? (wideViz ? 'min-w-[8rem]' : 'min-w-[8.5rem]') : 'min-w-0')}>
+          <Ico icon={icon} size={20} ia={ia} ib={ib} />
+          <h3 className="min-w-0 text-[13.5px] leading-[1.3] font-[650] [overflow-wrap:break-word] max-[720px]:text-[13px]">{title}</h3>
+        </div>
+        {viz ? <div className={cx('relative -mt-1.5 -mr-1.5 size-[72px] shrink-0 max-[720px]:size-16', vizClass)}>{viz}</div> : null}
       </div>
-      {viz ? <div className={cx('absolute top-3.5 right-3.5 size-[72px] max-[720px]:static max-[720px]:mt-3 max-[720px]:mb-3.5 max-[720px]:size-16', vizClass)}>{viz}</div> : null}
       <div className="mt-auto pt-3">
         <div className="num text-[46px] leading-[0.9] max-[720px]:text-[36px]">{value}</div>
         {sub ? <div className="mt-[5px] text-[12.5px] leading-[1.35] font-[550] text-k2">{sub}</div> : null}

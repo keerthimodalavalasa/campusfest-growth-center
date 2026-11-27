@@ -312,6 +312,13 @@ th.num {
   .score-cards > :last-child:nth-child(4n + 3) { grid-column: span 2; }
 }
 
+/* three signal tiles per row only where each still has room for its campaign name (~320px a tile) */
+@media (max-width: 1000px) {
+  .sig-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sig-grid > .sig-wide { grid-column: 1 / -1; }
+  .sig-grid > .sig-ask:nth-child(n) { grid-column: auto; }
+}
+
 @media (max-width: 720px) {
   .bento { grid-template-columns: minmax(0, 1fr); grid-template-areas: "hero" "att" "sig" "fun" "pace" "gate" "week" "score"; }
   .sig-grid { grid-template-columns: minmax(0, 1fr); }

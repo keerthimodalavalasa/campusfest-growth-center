@@ -104,7 +104,7 @@ export default function DiagnosePage() {
           delay={40}
           className="min-h-[180px]"
           wideViz
-          vizClass="!top-[20px] !flex !h-[40px] !w-[92px] justify-end max-[720px]:!h-[40px] max-[720px]:!w-[92px] max-[720px]:justify-start"
+          vizClass="!flex !h-[40px] !w-[92px] justify-end max-[720px]:!h-[40px] max-[720px]:!w-[92px] max-[720px]:justify-start"
           viz={d.bottlenecks.length ? <MiniBars values={d.bottlenecks.map((x) => x.visitorsLost)} color="var(--lac)" width={Math.min(92, d.bottlenecks.length * 16)} height={40} gap={4} label="Visitors lost by campaign, worst first" /> : null}
           value={lostLabel(lostTotal)}
           sub={`${d.bottlenecks.length} ${d.bottlenecks.length === 1 ? 'campaign' : 'campaigns'} below portfolio`}
@@ -118,7 +118,7 @@ export default function DiagnosePage() {
           label="Signals fired"
           delay={80}
           className="min-h-[180px]"
-          vizClass="!top-[20px] !h-[40px] !w-[64px] max-[720px]:!h-[40px] max-[720px]:!w-[64px]"
+          vizClass="!h-[40px] !w-[64px] max-[720px]:!h-[40px] max-[720px]:!w-[64px]"
           viz={<SeverityBars high={sevCount('high')} medium={sevCount('medium')} low={sevCount('low')} />}
           value={<CountUp value={d.signals.length} format={num} />}
           sub={`${sevCount('high')} high severity`}
@@ -139,7 +139,7 @@ export default function DiagnosePage() {
           label="Registrations, last 7 days"
           delay={120}
           className="min-h-[180px]"
-          vizClass="!top-[20px] !h-[40px] !w-[36px] max-[720px]:!h-[40px] max-[720px]:!w-[36px]"
+          vizClass="!h-[40px] !w-[36px] max-[720px]:!h-[40px] max-[720px]:!w-[36px]"
           viz={<MiniBars values={[totalPrev7, totalLast7]} color="var(--nizami)" width={36} height={40} gap={4} highlightLast label={`${num(totalPrev7)} the week before, ${num(totalLast7)} this week`} />}
           value={<CountUp value={totalLast7} format={num} />}
           sub={`vs ${num(totalPrev7)} the week before`}

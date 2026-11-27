@@ -125,7 +125,7 @@ export default function CampaignsPage() {
               delay={0}
               className="min-h-[180px]"
               wideViz
-              vizClass="!top-[20px] !h-[40px] !w-[92px] max-[720px]:!h-[40px] max-[720px]:!w-[92px]"
+              vizClass="!h-[40px] !w-[92px] max-[720px]:!h-[40px] max-[720px]:!w-[92px]"
               viz={<MiniBars values={sorted.map((m) => cpvOf(m) ?? 0)} color="var(--ink)" width={92} height={40} gap={3} label={`Cost per ${pre ? 'expected ' : ''}visitor by campaign, cheapest first`} />}
               value={totalCpv != null ? <CountUp value={totalCpv} format={inr} /> : '–'}
               sub="all campaigns, net spend"
@@ -153,7 +153,7 @@ export default function CampaignsPage() {
               delay={80}
               className="min-h-[180px]"
               wideViz
-              vizClass="!top-[18px] !h-[54px] !w-[92px] max-[720px]:!h-[47px] max-[720px]:!w-20"
+              vizClass="!h-[54px] !w-[92px] max-[720px]:!h-[47px] max-[720px]:!w-20"
               viz={<Gauge value={pre ? showRate : (T.rates.regToVisit ?? 0)} assumed={pre} label={pre ? `${pct(showRate)} show rate, assumed` : `${pct(T.rates.regToVisit)} of registrants came`} />}
               value={<CountUp value={visitors} format={num} />}
               sub={pre ? `confirmed × ${pct(showRate, 0)} assumed` : `${pct(T.rates.regToVisit)} of registrants came`}
@@ -218,11 +218,13 @@ export default function CampaignsPage() {
               {walkIns && (walkIns.visitors > 0 || walkIns.identified > 0) ? (
                 <Link
                   href={`/campaigns/${UNATTRIBUTED}`}
-                  className="anim-settle field-stone relative flex min-w-0 flex-col overflow-hidden rounded-tile-m px-4 pb-4 transition-[filter] duration-150 hover:brightness-[0.97]"
+                  className="anim-settle field-stone relative flex min-w-0 flex-col overflow-hidden rounded-tile-m p-4 transition-[filter] duration-150 hover:brightness-[0.97]"
                   style={{ '--d': `${180 + sorted.length * 40}ms` } as CSSProperties}
                 >
-                  <div aria-hidden className="-mx-4 mb-3.5 h-2 bg-sand" />
-                  <span className="text-[14px] leading-[1.3] font-[650]">Walk-ins and unattributed</span>
+                  <span className="flex items-center gap-2 text-[14px] leading-[1.3] font-[650]">
+                    <span aria-hidden className="size-2.5 shrink-0 rounded-full bg-sand" />
+                    Walk-ins and unattributed
+                  </span>
                   <span className="mt-1 text-[12.5px] font-[550] text-ink-2">Not bought, so no call</span>
                   <span className="num mt-3.5 text-[34px] leading-[0.9]">{num(post ? walkIns.visitors : walkIns.identified)}</span>
                   <small className="mt-1 text-[12px] font-[550] text-ink-2">{post ? 'verified visitors with no campaign' : 'people identified with no campaign'}</small>

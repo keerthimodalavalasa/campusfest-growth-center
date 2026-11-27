@@ -179,7 +179,7 @@ export function PlanKpis({ p }: { p: Plan }) {
         delay={100}
         className={cls}
         wideViz
-        vizClass="!top-[20px] !h-[40px] !w-[92px] max-[720px]:!h-[40px] max-[720px]:!w-[92px]"
+        vizClass="!h-[40px] !w-[92px] max-[720px]:!h-[40px] max-[720px]:!w-[92px]"
         viz={weekly.length ? <MiniBars values={weekly} color="var(--nizami)" width={92} height={40} gap={3} label="Weekly registrations the base plan needs" /> : null}
         value={<CountUp value={p.base.registrations} format={num} />}
         sub={`base plan, ${num(regs2025)} in 2025`}
@@ -194,7 +194,7 @@ export function PlanKpis({ p }: { p: Plan }) {
         delay={140}
         className={cls}
         wideViz
-        vizClass="!top-[18px] !h-[54px] !w-[92px] max-[720px]:!h-[47px] max-[720px]:!w-20"
+        vizClass="!h-[54px] !w-[92px] max-[720px]:!h-[47px] max-[720px]:!w-20"
         viz={<Gauge value={p.base.registrant_show} assumed label={`${pct(p.base.registrant_show)} planned show-up, modelled`} />}
         value={<CountUp value={p.base.registrant_show * 100} format={(n) => `${n.toFixed(1)}%`} />}
         sub={show2025 != null ? `planned, ${pct(show2025)} in 2025` : 'planned'}
