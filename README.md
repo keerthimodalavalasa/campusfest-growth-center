@@ -66,11 +66,14 @@ research/
   data_findings.md        what the 2025 data says
   strategy_final.md       the full strategy: every number, assumption, test and audit fix
   design-inspiration.md   the 13 reference sites reviewed and what was borrowed (with licences)
-  chat_eval.md            copilot evaluation transcript and results
+  chat_eval.md            copilot evaluation transcript and results (19 cases, six-run log)
+  chat_eval_rerun.md      output of partial re-runs (--only), kept apart from the full record
 growth-center/            the product (Next.js 16, TypeScript, Postgres)
+  docs/design-spec.md     the "Charminar Bento" design system: tokens, tiles, charts, rules
 deck/                     the PDF; final slide sources in deck/directions/a-gate (HTML over three.js renders)
                           plus two rejected design mockups; SLIDE1-3.md hold the exact slide copy
-tools/                    headless-Chrome screenshot, crop and PDF tools
+tools/                    headless-Chrome tools (Playwright): screenshots, crops, the deck PDF,
+  overlap-audit.mjs       and the layout audit that checks every page for overlapping or spilling text
 ```
 
 ---
@@ -243,6 +246,14 @@ It would also have issued STOP on Creator Partners. No later outcome leaks into 
   - Invalid values are rejected.
   - The SQL tool refuses writes.
 - **Break-UI pass.** Worst-case data was injected: crore-scale spend, 10M impressions, 70-character names, negative net spend, a task overdue by 695 days. The layout issues it exposed were fixed. For example, the efficiency scatter switches to a log axis when costs span more than 12×.
+- **Layout audit** (`tools/overlap-audit.mjs`). It opens every page in headless Chrome and measures where text and graphics actually land. It flags:
+  - text partly hidden under a chart, ring or gauge;
+  - text running into other text;
+  - text spilling out of its tile;
+  - a page wider than the screen.
+
+  It caught real bugs at tablet widths, such as rings covering tile titles and the hero figure spilling out of its tile. After the fixes it reports **0 issues** on all 8 pages, at 11 widths from 390 px (phone) to 1536 px, on both the latest date and mid-campaign (9 Mar 2025).
+- `npx tsc --noEmit` and `npm run lint` both pass with no errors.
 
 ### Visual design: "Charminar Bento"
 The interface is a light bento of colour-blocked tiles drawn from Hyderabad's materials.
@@ -261,6 +272,9 @@ The interface is a light bento of colour-blocked tiles drawn from Hyderabad's ma
 - Scale / Keep / Change / Stop calls always carry a glyph and a label.
 - The campaign, family and status palettes are checked with a palette validator for colour-blind separation and contrast.
 - Type is Mona Sans, with condensed poster-style numerals.
+- A tile's visual sits beside its title, never on top of it; on a narrow tile it drops to its own line. Campaign identity is a small colour dot next to the name, not a coloured band across the card.
+- Responsive from phone to wide desktop. Wide strips, such as the 2027 timeline, scroll sideways on small screens instead of squeezing.
+- The app icon is a limestone gate arch on a lac tile, because the North Star counts people verified at the gate. Every page has its own tab title and description. A shared link shows a preview card with the 2025 result and the 2027 targets (`src/app/opengraph-image.png`).
 
 **How it was chosen.** I built three working Overview mockups on the real data, each a genuinely different direction:
 1. Dusk Command: dark and continuous with the deck.
@@ -280,23 +294,37 @@ They were shown side by side behind a picker, and the owner picked the bento. It
 
 ## 8. Setup
 
+Requires Node.js 22 or later.
+
 ```bash
 cd growth-center
 npm install
-# .env.local
-#   GOOGLE_GENERATIVE_AI_API_KEY=...   (Google AI Studio)
+cp .env.example .env.local             # then fill it in:
+#   GOOGLE_GENERATIVE_AI_API_KEY=...   (Google AI Studio; only the copilot needs it)
 #   DATABASE_URL=postgres://...        (optional: Neon. Without it a local PGlite database is created in ./.pglite)
-#   GEMINI_MODELS=gemini-3.8-flash,gemini-3.5-flash-lite   (optional: the fallback chain, in order)
+#   GEMINI_MODELS=...                  (optional: the fallback chain, in order; the default is in .env.example)
+#   TOOL_APPROVAL_SECRET=...           (any long random string; signs copilot approval cards)
+#   ADMIN_TOKEN=...                    (optional: protects POST /api/admin/seed)
 npm run dev                            # first request creates the schema and imports data/attendee-dataset.xlsx (a copy of Datasets/Attendee Dataset.xlsx)
-npm test                               # engine + mutation tests (PGlite, no network)
+npm test                               # 34 engine + mutation tests (PGlite, no network)
+npx tsc --noEmit && npm run lint       # types and lint
 npm run dev -- -p 3100                 # the eval's default target
 npm run eval:chat                      # copilot evaluation against http://localhost:3100; pass another URL as the first argument
 ```
 
+**Layout audit.** Run it against a production build, because the dev server's hot reload can interrupt it. The script expects Google Chrome at its default Windows path; edit `executablePath` in the script on other systems.
+
+```bash
+cd growth-center && npm run build && npm start -- -p 3100
+cd tools && npm install
+node overlap-audit.mjs http://localhost:3100 --asof 2025-03-09
+# options: --widths 390,820,1280  --pages /,/plan  (in Git Bash, prefix MSYS_NO_PATHCONV=1 so "/" is not rewritten)
+```
+
 **Production (Vercel + Neon).**
 1. `DATABASE_URL=... npm run seed` loads the schema, the original data and the plan tasks into Neon.
-2. Set `GOOGLE_GENERATIVE_AI_API_KEY`, `DATABASE_URL` and `ADMIN_TOKEN` on Vercel.
-3. Deploy with the project root set to `growth-center` and the region next to the Neon database.
+2. Set `GOOGLE_GENERATIVE_AI_API_KEY`, `DATABASE_URL`, `TOOL_APPROVAL_SECRET` and `ADMIN_TOKEN` on Vercel.
+3. Deploy with the project root set to `growth-center` and the region next to the Neon database (`vercel.json` pins Singapore, `sin1`). The project is connected to GitHub, so every push to `main` deploys to production.
 
 **Regenerate the plan:**
 
@@ -312,7 +340,8 @@ Then re-seed management data (`POST /api/admin/seed`).
 
 | Tool / source | Use | Notes |
 |---|---|---|
-| **Claude Code** (Anthropic, Claude Opus 5.5) | Research orchestration, analysis, model, app code, deck | Every number was checked against the data or the independent Python implementation; screenshots were reviewed for every page |
+| **Claude Code** (Anthropic, Claude Opus 5.5) | Research orchestration, analysis, model, app code, deck | Every number was checked against the data or the independent Python implementation. Screenshots of every page were reviewed, and the layout audit checks every page automatically |
+| Playwright (`playwright-core`) driving headless Chrome | Screenshots, the deck PDF, the layout audit | Apache-2.0 |
 | Google **Gemini 3.8 Flash**, with 3.5/3.1 Flash-Lite and 3.6 Flash as fallbacks (AI Studio, free tier) | Copilot model | Free-tier prompts may be used by Google, so only the synthetic dataset is sent. A production deployment would use a paid tier or pseudonymised tool outputs |
 | Next.js 16, React 19, Tailwind 4, Recharts 3, Vercel AI SDK 7, Neon serverless, PGlite, exceljs, zod, mathjs | App stack | Versions pinned in `package.json` |
 | **Rare UI** Fluid Orb (rareui.com) | Copilot avatar / thinking state | MIT + Commons Clause + Attribution. Credited in the app and here; source notice kept in `src/components/vendor/fluid-orb.tsx` |
