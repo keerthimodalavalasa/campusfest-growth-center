@@ -3,7 +3,8 @@ import type { ReactNode } from 'react';
 import { ClipboardListDuotone, ClockDuotone, IndianRupeeDuotone, UserPlusDuotone, UsersDuotone } from 'runeicons-react';
 import type { EventDays } from '@/server/engine/eventday';
 import { dateLabel, daysBetween, inr, inrShort, num, pct } from '@/lib/format';
-import { cx, Delta, Ico, Skeleton, Tile, type IconComponent, type TileField } from '@/components/ui';
+import { cx, Delta, Ico, Skeleton, Tile } from '@/components/ui';
+import { MetricTile as Mini } from '@/components/tiles';
 import { CountUp, Gauge, Ring, Waffle, WaffleKey } from '@/components/viz';
 import { GateClock, GateCountdown, gateDayColor } from '@/components/GateClock';
 import { share, waffleUnit, type Ctx, type Overview } from './model';
@@ -107,23 +108,6 @@ export function HeroTile({ c }: { c: Ctx }) {
 }
 
 /* ------------------------------------------------------------------ attainment: one solid tile per family */
-
-function Mini({ field, icon, ia, ib, title, viz, vizClass, value, sub, foot, delay, label }: { field: TileField; icon: IconComponent; ia?: string; ib?: string; title: string; viz: ReactNode; vizClass?: string; value: ReactNode; sub: ReactNode; foot: ReactNode; delay: number; label: string }) {
-  return (
-    <Tile field={field} size="s" delay={delay} aria-label={label} className="flex min-h-0 flex-col">
-      <div className="flex items-start gap-2 pr-[72px] max-[720px]:pr-0">
-        <Ico icon={icon} size={20} ia={ia} ib={ib} />
-        <h3 className="text-[13.5px] leading-[1.3] font-[650] max-[720px]:text-[13px]">{title}</h3>
-      </div>
-      <div className={cx('absolute top-3.5 right-3.5 size-[72px] max-[720px]:static max-[720px]:mt-3 max-[720px]:mb-3.5 max-[720px]:size-16', vizClass)}>{viz}</div>
-      <div className="mt-auto pt-3">
-        <div className="num text-[46px] leading-[0.9] max-[720px]:text-[36px]">{value}</div>
-        <div className="mt-[5px] text-[12.5px] leading-[1.35] font-[550] text-k2">{sub}</div>
-      </div>
-      <div className="mt-2.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 pt-2.5 text-[12.5px] font-[600] shadow-[inset_0_1px_0_var(--rule)]">{foot}</div>
-    </Tile>
-  );
-}
 
 export function Attainment({ c, prev }: { c: Ctx; prev: Overview['previous'] }) {
   const { s, mode } = c;

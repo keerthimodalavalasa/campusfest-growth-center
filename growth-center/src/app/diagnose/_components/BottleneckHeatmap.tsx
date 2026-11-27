@@ -1,33 +1,34 @@
 'use client';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type CSSProperties } from 'react';
 import type { StageBottleneck } from '@/server/engine/diagnose';
 import { CampaignDot } from '@/components/charts';
 import { cx, EmptyState } from '@/components/ui';
+import { tipProps } from '@/components/tooltip';
 import { num, pct } from '@/lib/format';
 import { NEUTRAL_PTS, pts, shownGap, splitStage, tidy } from './text';
 
-/** Step boundaries in percentage points. Fixed, so a colour means the same thing on every date. */
+/*
+  One-hue sequential scale (lac, the visitors family) on the shortfall against the portfolio: the further a
+  campaign converts below the portfolio at a stage, the more visitors it loses there, the heavier the fill.
+  At or above the portfolio there is no loss, so those cells stay neutral and carry a ▲ with the printed gap.
+  Steps are fixed in points, so a shade means the same thing on every date.
+*/
 const BOUNDS = [NEUTRAL_PTS, 4, 8, 12];
-const MIX = [15, 35, 60, 100];
+const MIX = [18, 34, 55, 100];
 
 /** Binned on the value as printed (one decimal), so "−4.0 pts" is never coloured as the 1–4 step. */
 function stepOf(gap: number): number {
-  const a = Math.abs(shownGap(gap));
+  const g = shownGap(gap);
+  if (g > -NEUTRAL_PTS) return 0;
   let s = 0;
-  for (const b of BOUNDS) if (a >= b) s++;
-  return s; // 0 = neutral, 1..4 = intensity
+  for (const b of BOUNDS) if (-g >= b) s++;
+  return s; // 0 = no real shortfall, 1..4 = heavier
 }
 
-function cellColors(gap: number): { bg: string; fg: string } {
-  const s = stepOf(gap);
-  if (s === 0) return { bg: 'var(--paper-2)', fg: 'var(--ink)' };
-  const accent = shownGap(gap) > 0 ? 'var(--bangle)' : 'var(--lac)';
-  return { bg: s === 4 ? accent : `color-mix(in srgb, ${accent} ${MIX[s - 1]}%, var(--surface))`, fg: s === 4 ? '#fff' : 'var(--ink)' };
-}
-
-function cellTitle(c: StageBottleneck, visitorUnit: string): string {
-  const lost = c.peopleLost > 0 ? `\nPeople lost vs portfolio: ~${num(c.peopleLost)}; ${visitorUnit} lost: ~${num(c.visitorsLost)}.` : '\nAt or above the portfolio rate: no people lost at this stage.';
-  return `${tidy(c.explanation)}${lost}`;
+function cellColors(step: number): { bg: string; fg: string } {
+  if (step === 0) return { bg: 'var(--stone-2)', fg: 'var(--ink)' };
+  if (step === 4) return { bg: 'var(--lac)', fg: '#fff' };
+  return { bg: `color-mix(in srgb, var(--lac) ${MIX[step - 1]}%, var(--stone))`, fg: 'var(--ink)' };
 }
 
 export function BottleneckHeatmap({ gaps, post }: { gaps: StageBottleneck[]; post: boolean }) {
@@ -49,61 +50,71 @@ export function BottleneckHeatmap({ gaps, post }: { gaps: StageBottleneck[]; pos
   }, [gaps]);
 
   if (!gaps.length) {
-    return <EmptyState title="Not enough people yet to compare stages">Stage gaps appear once campaigns have identified and registered people at this date. Move the as-of date later to see them.</EmptyState>;
+    return (
+      <div className="mt-3">
+        <EmptyState title="Not enough people yet to compare stages">Stage gaps appear once campaigns have identified and registered people. Move the as-of date later to see them.</EmptyState>
+      </div>
+    );
   }
 
-  const cols = `minmax(10.5rem, 1.15fr) repeat(${stages.length}, minmax(7.25rem, 1fr))`;
+  const cols = `minmax(9.5rem, 1.1fr) repeat(${stages.length}, minmax(6.5rem, 1fr))`;
 
   return (
-    <div>
+    <div className="mt-3">
       <div className="overflow-x-auto">
-        <div role="table" aria-label="Stage conversion gap versus portfolio, by campaign" className="min-w-fit">
-          <div role="row" className="grid items-end gap-1 pb-1.5" style={{ gridTemplateColumns: cols }}>
-            <div role="columnheader" className="type-condensed px-1 text-[0.8rem] font-semibold text-ink-2">
+        <div role="table" aria-label="Stage conversion gap against the portfolio, by campaign" className="min-w-fit">
+          <div role="row" className="grid items-end gap-1 pb-2" style={{ gridTemplateColumns: cols }}>
+            <div role="columnheader" className="px-1 text-[12.5px] font-[600] text-ink-2">
               Campaign
             </div>
             {stages.map((s) => {
               const { main, qualifier } = splitStage(s);
               return (
-                <div role="columnheader" key={s} className="px-1 leading-tight">
-                  <div className="type-condensed text-[0.82rem] font-semibold text-ink">{main}</div>
-                  {qualifier ? <div className="text-[0.72rem] text-ink-3">{qualifier}</div> : null}
-                  <div className="num mt-0.5 text-[0.74rem] text-ink-3">Portfolio {pct(portfolioRate.get(s))}</div>
+                <div role="columnheader" key={s} className="px-1 leading-tight" {...(qualifier ? tipProps({ title: main, notes: [qualifier.charAt(0).toUpperCase() + qualifier.slice(1)] }) : {})}>
+                  <div className={cx('text-[12.5px] font-[650] text-ink', qualifier && 'underline decoration-stone-3 decoration-dotted decoration-[1.5px] underline-offset-[3px]')}>{main.replace(' → ', ' to ')}</div>
+                  <div className="tab mt-0.5 text-[12px] font-[550] text-ink-2">portfolio {pct(portfolioRate.get(s))}</div>
                 </div>
               );
             })}
           </div>
-          <div role="rowgroup" className="space-y-1">
-            {campaigns.map((c) => (
+          <div role="rowgroup" className="grid gap-1">
+            {campaigns.map((c, ri) => (
               <div role="row" key={c.id} className="grid gap-1" style={{ gridTemplateColumns: cols }}>
-                <div role="rowheader" className="flex items-center px-1 text-[0.88rem] font-medium">
-                  <CampaignDot id={c.id}>{c.name}</CampaignDot>
+                <div role="rowheader" className="flex min-w-0 items-center px-1 text-[13px] font-[600]">
+                  <CampaignDot id={c.id}>
+                    <span className="truncate">{c.name}</span>
+                  </CampaignDot>
                 </div>
-                {stages.map((s) => {
+                {stages.map((s, ci) => {
                   const g = cell.get(`${c.id}|${s}`);
                   if (!g) {
                     return (
-                      <div role="cell" key={s} className="grid h-12 place-items-center rounded-md border border-dashed border-line text-[0.8rem] text-ink-3" title="Not enough people at this stage to compare">
+                      <div role="cell" key={s} className="grid h-12 place-items-center rounded-[8px] text-[12.5px] text-ink-2 shadow-[inset_0_0_0_1.5px_var(--stone-2)]" title="Not enough people at this stage to compare">
                         –
                       </div>
                     );
                   }
-                  const { bg, fg } = cellColors(g.gapPts);
+                  const step = stepOf(g.gapPts);
+                  const { bg, fg } = cellColors(step);
                   const isActive = active === g;
+                  const better = shownGap(g.gapPts) >= NEUTRAL_PTS;
                   return (
                     <div role="cell" key={s}>
                       <button
                         type="button"
-                        title={cellTitle(g, visitorUnit)}
                         aria-label={tidy(g.explanation)}
                         onMouseEnter={() => setActive(g)}
                         onFocus={() => setActive(g)}
                         onClick={() => setActive(g)}
-                        className={cx('flex h-12 w-full flex-col items-center justify-center rounded-md leading-tight transition-shadow', isActive && 'ring-2 ring-ink ring-offset-1')}
-                        style={{ background: bg, color: fg }}
+                        className={cx('anim-fade flex h-12 w-full flex-col items-center justify-center rounded-[8px] leading-tight transition-shadow duration-150', isActive && 'shadow-[0_0_0_2px_var(--stone),0_0_0_4px_var(--ink)]')}
+                        style={{ background: bg, color: fg, '--d': `${200 + ri * 40 + ci * 30}ms` } as CSSProperties}
                       >
-                        <span className="num text-[0.9rem] font-semibold">{pts(g.gapPts)}</span>
-                        <span className="num text-[0.72rem] opacity-80">{pct(g.rate)}</span>
+                        <span className="tab text-[14px] font-[750]">
+                          {better ? <span aria-hidden className="mr-0.5 text-[9px]">▲</span> : null}
+                          {pts(g.gapPts)}
+                        </span>
+                        {/* secondary ink only where it keeps 4.5:1: on the two heavier steps the rate stays in full ink */}
+                        <span className={cx('tab text-[11.5px] font-[600]', step === 4 ? 'text-lac-soft' : step >= 2 ? 'text-ink' : 'text-ink-2')}>{pct(g.rate)}</span>
                       </button>
                     </div>
                   );
@@ -114,14 +125,21 @@ export function BottleneckHeatmap({ gaps, post }: { gaps: StageBottleneck[]; pos
         </div>
       </div>
 
-      <div className="mt-3 min-h-[3.25rem] rounded-[var(--radius-control)] bg-paper-2 px-3 py-2 text-[0.83rem] text-ink-2" aria-live="polite">
+      <div className="mt-3 min-h-[3.25rem] rounded-[12px] bg-stone-2 px-3.5 py-2.5 text-[13px] leading-[1.45] text-ink-2" aria-live="polite">
         {active ? (
           <>
             <span className="text-ink">{tidy(active.explanation)}</span>
-            {active.peopleLost <= 0 ? <span> At or above the portfolio rate, so no people are lost here.</span> : !post ? <span> Visitors here are expected visitors, using the show-rate assumption.</span> : null}
+            {active.peopleLost > 0 ? (
+              <span>
+                {' '}
+                About <b className="tab font-[700] text-ink">{num(active.peopleLost)}</b> people and <b className="tab font-[700] text-ink">{num(active.visitorsLost)}</b> {visitorUnit} lost here.
+              </span>
+            ) : (
+              <span> At or above the portfolio rate, so no people are lost here.</span>
+            )}
           </>
         ) : (
-          <>Point at or focus a cell to read its explanation and the people lost at that stage.</>
+          <>Point at or focus a cell to read it.</>
         )}
       </div>
 
@@ -131,29 +149,20 @@ export function BottleneckHeatmap({ gaps, post }: { gaps: StageBottleneck[]; pos
 }
 
 function HeatLegend() {
-  const worse = [4, 3, 2, 1].map((s) => ({ s, gap: -BOUNDS[s - 1] }));
-  const better = [1, 2, 3, 4].map((s) => ({ s, gap: BOUNDS[s - 1] }));
-  const range = (s: number) => (s === 4 ? `${BOUNDS[3]}+` : `${BOUNDS[s - 1]}–${BOUNDS[s]}`);
-  const steps = [...worse.map((w) => ({ key: `w${w.s}`, bg: cellColors(w.gap).bg, label: range(w.s) })), { key: 'n', bg: 'var(--paper-2)', label: 'under 1' }, ...better.map((b) => ({ key: `b${b.s}`, bg: cellColors(b.gap).bg, label: range(b.s) }))];
+  const steps = [0, 1, 2, 3, 4].map((s) => ({ s, ...cellColors(s), label: s === 0 ? 'under 1 or better' : s === 4 ? `${BOUNDS[3]}+` : `${BOUNDS[s - 1]}–${BOUNDS[s]}` }));
   return (
-    <div className="mt-3 flex flex-wrap items-end gap-x-6 gap-y-2">
-      <div className="w-full max-w-[26rem]" role="img" aria-label="Colour scale: four shades of red for 1 to 12 or more points worse than the portfolio, grey for under 1 point either way, four shades of green for 1 to 12 or more points better.">
-        <div className="flex justify-between text-[0.75rem] text-ink-2">
-          <span>Points worse than portfolio</span>
-          <span>Points better</span>
-        </div>
-        <div className="mt-1 grid grid-cols-9 gap-1">
-          {steps.map((s) => (
-            <span key={s.key} className={cx('block h-3.5 rounded-[3px]', s.key === 'n' && 'border border-line-2')} style={{ background: s.bg }} />
-          ))}
-        </div>
-        <div className="num mt-0.5 grid grid-cols-9 gap-1 text-center text-[0.68rem] leading-tight text-ink-3">
-          {steps.map((s) => (
-            <span key={s.key}>{s.label}</span>
-          ))}
-        </div>
+    <div className="mt-3 max-w-[30rem]" role="img" aria-label="Colour scale: one hue, darker for a bigger shortfall against the portfolio. Neutral for under 1 point worse or better, then 1 to 4, 4 to 8, 8 to 12, and 12 or more points worse.">
+      <div className="text-[12px] font-[600] text-ink-2">Points worse than the portfolio</div>
+      <div className="mt-1 grid grid-cols-5 gap-[2px]">
+        {steps.map((s) => (
+          <span key={s.s} className="block h-3 first:rounded-l-[4px] last:rounded-r-[4px]" style={{ background: s.bg }} />
+        ))}
       </div>
-      <span className="text-[0.75rem] text-ink-3">Cells show the gap in percentage points; small text is the campaign&apos;s own rate.</span>
+      <div className="tab mt-1 grid grid-cols-5 gap-[2px] text-[11.5px] leading-tight font-[550] text-ink-2">
+        {steps.map((s) => (
+          <span key={s.s}>{s.label}</span>
+        ))}
+      </div>
     </div>
   );
 }

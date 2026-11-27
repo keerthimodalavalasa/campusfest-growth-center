@@ -215,6 +215,8 @@ export interface FunnelLeak {
   value: number;
   label: string;
   tip: TipContent;
+  /** mark this leak as the one that matters (ink pill instead of the white one) */
+  highlight?: boolean;
 }
 
 /**
@@ -274,7 +276,10 @@ export function StepFunnel({ stages, leaks, format }: { stages: FunnelStage[]; l
                   tabIndex={0}
                   aria-label={`${format(leak.value)} ${leak.label}`}
                   {...tipProps(leak.tip)}
-                  className="anim-fade tab absolute left-1/2 z-[2] inline-flex h-[26px] -translate-x-1/2 translate-y-1/2 cursor-default items-center rounded-full bg-ground px-2.5 text-[12.5px] font-[700] whitespace-nowrap text-ink shadow-[0_0_0_1.5px_var(--stone-3)] max-[720px]:h-6 max-[720px]:px-[7px] max-[720px]:text-[11.5px]"
+                  className={cx(
+                    'anim-fade tab absolute left-1/2 z-[2] inline-flex h-[26px] -translate-x-1/2 translate-y-1/2 cursor-default items-center rounded-full px-2.5 text-[12.5px] font-[700] whitespace-nowrap max-[720px]:h-6 max-[720px]:px-[7px] max-[720px]:text-[11.5px]',
+                    leak.highlight ? 'bg-ink text-white shadow-[0_0_0_2px_var(--stone)]' : 'bg-ground text-ink shadow-[0_0_0_1.5px_var(--stone-3)]',
+                  )}
                   style={{ bottom: low ? `max(${(hg + hb) / 2}%, calc(${hb}% + 52px))` : `${(hg + hb) / 2}%`, ...v({ '--d': `${420 + i * 60}ms` }) }}
                 >
                   −{format(leak.value)}

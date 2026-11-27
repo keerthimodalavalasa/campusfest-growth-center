@@ -14,7 +14,7 @@ interface Draft {
 }
 
 /** Status, planned budget and notes, saved together with PATCH /api/campaigns/{id}. */
-export function ManagePanel({ campaign, spend, color }: { campaign: Campaign; spend: number; color: string }) {
+export function ManagePanel({ campaign, spend }: { campaign: Campaign; spend: number }) {
   const original: Draft = { status: campaign.status, budget: campaign.plannedBudget == null ? '' : String(campaign.plannedBudget), notes: campaign.notes ?? '' };
   // null = showing the saved values; a draft exists only while the user is editing
   const [draft, setDraft] = useState<Draft | null>(null);
@@ -73,29 +73,30 @@ export function ManagePanel({ campaign, spend, color }: { campaign: Campaign; sp
           </Select>
         </Field>
         <Field label="Planned budget (INR)" error={budgetError}>
-          <TextInput value={v.budget} onChange={(e) => set('budget', e.target.value)} inputMode="numeric" placeholder="Not set" className="num" aria-invalid={!!budgetError} />
+          <TextInput value={v.budget} onChange={(e) => set('budget', e.target.value)} inputMode="numeric" placeholder="Not set" className="tab" aria-invalid={!!budgetError} />
         </Field>
       </div>
       {budget != null && budget > 0 ? (
         <div>
-          <div className="mb-1 flex items-baseline justify-between text-[0.8rem] text-ink-2">
+          <div className="mb-1.5 flex items-baseline justify-between text-[12.5px] text-ink-2">
             <span>
-              <span className="num font-semibold text-ink">{inr(spend)}</span> net spend of <span className="num">{inr(budget)}</span> planned
+              <b className="tab font-[700] text-ink">{inr(spend)}</b> net spend of <span className="tab">{inr(budget)}</span> planned
             </span>
-            <span className="num font-semibold" style={{ color: spend > budget ? 'var(--lac)' : 'var(--ink-2)' }}>
+            <span className="tab font-[700] text-ink">
+              {spend > budget ? <span className="mr-1 text-st-stop">over</span> : null}
               {pct(spend / budget, 0)}
             </span>
           </div>
-          <Meter value={Math.max(0, spend)} goal={budget} color={color} height={6} />
+          <Meter value={Math.max(0, spend)} goal={budget} color="var(--haldi)" height={8} />
         </div>
       ) : (
-        <p className="text-[0.8rem] text-ink-3">No planned budget set. Net spend to date is {inr(spend)}.</p>
+        <p className="text-[12.5px] text-ink-2">No planned budget set. Net spend to date is {inr(spend)}.</p>
       )}
       <Field label="Notes" hint="Context for the team: what changed, what you are testing, what to watch.">
         <TextArea value={v.notes} onChange={(e) => set('notes', e.target.value)} className="min-h-20" />
       </Field>
       {error ? (
-        <p role="alert" className="text-[0.85rem] text-lac">
+        <p role="alert" className="text-[13px] font-[600] text-st-stop">
           {error}
         </p>
       ) : null}

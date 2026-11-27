@@ -1,6 +1,6 @@
 'use client';
 import { CartesianGrid, DefaultZIndexes, ReferenceArea, ReferenceLine, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis, ZIndexLayer, usePlotArea, useXAxisScale, useYAxisScale } from 'recharts';
-import { axisProps, ChartTip } from '@/components/charts';
+import { axisProps, ChartTip, cursorProps } from '@/components/charts';
 import { campaignColor } from '@/lib/colors';
 import { inr, inrShort, num } from '@/lib/format';
 import { CHART_RESIZE_DEBOUNCE, niceTicks } from './shared';
@@ -17,7 +17,7 @@ export interface ScatterPoint {
 
 const DOT_R = 6;
 const FONT = 12;
-const CHAR_W = 6.7; // Archivo at 12px, generous so boxes never undercount
+const CHAR_W = 6.7; // Mona Sans at 12px, generous so boxes never undercount
 const LABEL_H = 14;
 
 /** 1-2-5 ticks for a log axis between lo and hi. */
@@ -48,15 +48,16 @@ export function EfficiencyScatter({ points: all, scaleAt, stopAt, post }: { poin
 
   return (
     <div>
-      <div className="h-[22rem]">
+      <div className="mt-2 h-[340px] max-[720px]:h-[300px]">
       {/* trailing-edge debounce: a momentary resize (window snapshots, devtools) does not re-render the chart at a throwaway size */}
       <ResponsiveContainer width="100%" height="100%" debounce={CHART_RESIZE_DEBOUNCE}>
-        <ScatterChart margin={{ top: 22, right: 16, bottom: 18, left: 4 }}>
-          <CartesianGrid stroke="var(--line)" strokeDasharray="0" />
-          {scaleAt != null ? <ReferenceArea x1={xLo} x2={scaleAt} fill="var(--bangle-soft)" fillOpacity={0.6} stroke="none" ifOverflow="hidden" /> : null}
-          {stopAt != null ? <ReferenceArea x1={stopAt} x2={xMax} fill="var(--lac-soft)" fillOpacity={0.6} stroke="none" ifOverflow="hidden" /> : null}
-          {scaleAt != null ? <ReferenceLine x={scaleAt} stroke="var(--bangle)" strokeWidth={1.5} strokeDasharray="4 3" /> : null}
-          {stopAt != null ? <ReferenceLine x={stopAt} stroke="var(--lac)" strokeWidth={1.5} strokeDasharray="4 3" /> : null}
+        <ScatterChart margin={{ top: 34, right: 16, bottom: 18, left: 4 }}>
+          <CartesianGrid stroke="var(--stone-2)" strokeDasharray="0" />
+          {/* the two decision zones are neutral washes; the status colour lives only on the boundary line and its labelled pill */}
+          {scaleAt != null ? <ReferenceArea x1={xLo} x2={scaleAt} fill="var(--stone-2)" fillOpacity={0.75} stroke="none" ifOverflow="hidden" /> : null}
+          {stopAt != null ? <ReferenceArea x1={stopAt} x2={xMax} fill="var(--stone-2)" fillOpacity={0.75} stroke="none" ifOverflow="hidden" /> : null}
+          {scaleAt != null ? <ReferenceLine x={scaleAt} stroke="var(--st-scale)" strokeWidth={1.5} /> : null}
+          {stopAt != null ? <ReferenceLine x={stopAt} stroke="var(--st-stop)" strokeWidth={1.5} /> : null}
           <XAxis
             type="number"
             dataKey="x"
@@ -67,12 +68,13 @@ export function EfficiencyScatter({ points: all, scaleAt, stopAt, post }: { poin
             ticks={xTicks}
             {...axisProps}
             tickFormatter={(v: number) => inrShort(v)}
-            label={{ value: `${xName} (net spend ÷ ${post ? 'verified visitors' : 'expected visitors'})${log ? ', log scale' : ''}`, position: 'insideBottom', offset: -10, fill: 'var(--ink-3)', fontSize: 12 }}
+            label={{ value: `${xName}${log ? ', log scale' : ''}`, position: 'insideBottom', offset: -10, fill: 'var(--ink-2)', fontSize: 12, fontWeight: 550 }}
           />
-          <YAxis type="number" dataKey="y" name={yName} domain={[0, yMax]} ticks={yTicks} {...axisProps} tickFormatter={(v: number) => num(v)} width={56} label={{ value: yName, angle: -90, position: 'insideLeft', offset: 12, fill: 'var(--ink-3)', fontSize: 12, style: { textAnchor: 'middle' } }} />
+          <YAxis type="number" dataKey="y" name={yName} domain={[0, yMax]} ticks={yTicks} {...axisProps} tickFormatter={(v: number) => num(v)} width={56} label={{ value: yName, angle: -90, position: 'insideLeft', offset: 12, fill: 'var(--ink-2)', fontSize: 12, fontWeight: 550, style: { textAnchor: 'middle' } }} />
           <ZAxis range={[DOT_R * DOT_R * 3.4, DOT_R * DOT_R * 3.4]} />
           <Tooltip
-            cursor={{ stroke: 'var(--line-2)', strokeDasharray: '3 3' }}
+            cursor={cursorProps}
+            isAnimationActive={false}
             content={({ active, payload }) => {
               const p = (payload?.[0]?.payload ?? null) as ScatterPoint | null;
               if (!active || !p) return null;
@@ -92,14 +94,14 @@ export function EfficiencyScatter({ points: all, scaleAt, stopAt, post }: { poin
             }}
           />
           {points.map((p) => (
-            <Scatter key={p.id} name={p.name} data={[p]} fill={campaignColor(p.id)} stroke="var(--surface)" strokeWidth={1.5} isAnimationActive={false} />
+            <Scatter key={p.id} name={p.name} data={[p]} fill={campaignColor(p.id)} stroke="var(--stone)" strokeWidth={2} isAnimationActive={false} />
           ))}
           <DotLabels points={points} scaleAt={scaleAt} stopAt={stopAt} />
         </ScatterChart>
       </ResponsiveContainer>
       </div>
       {log ? (
-        <p className="mt-1 text-[0.78rem] text-ink-3">
+        <p className="mt-1 text-[12.5px] text-ink-2">
           Log scale: costs span {Math.round(spread)}×, so equal steps mean equal ratios.
           {offScale.length ? ` Not on this scale (net spend ≤ ₹0): ${offScale.map((p) => p.name).join(', ')}.` : ''}
         </p>
@@ -128,22 +130,25 @@ function DotLabels({ points, scaleAt, stopAt }: { points: ScatterPoint[]; scaleA
 
   const px = points.map((p) => ({ p, x: xs(p.x) ?? 0, y: ys(p.y) ?? 0 }));
   const obstacles: Box[] = px.map((d) => ({ x0: d.x - DOT_R - 2, y0: d.y - DOT_R - 2, x1: d.x + DOT_R + 2, y1: d.y + DOT_R + 2 }));
-  const bounds: Box = { x0: area.x, y0: area.y - 18, x1: area.x + area.width, y1: area.y + area.height };
+  const bounds: Box = { x0: area.x, y0: area.y, x1: area.x + area.width, y1: area.y + area.height };
 
   // threshold captions sit just above the plot, beside their line
-  const captions: { text: string; x: number; y: number; anchor: 'start' | 'end'; color: string }[] = [];
+  // threshold captions: a status pill (glyph + word + value) above the plot, hung off its boundary line
+  const captions: { text: string; glyph: string; x: number; w: number; color: string }[] = [];
+  const pill = (glyph: string, text: string, at: number, side: 'end' | 'start', color: string) => {
+    const w = (text.length + 2) * 6.3 + 16;
+    const x = side === 'end' ? at - w + 10 : at - 10;
+    captions.push({ text, glyph, x: Math.max(area.x - 8, Math.min(x, area.x + area.width - w)), w, color });
+  };
   if (scaleAt != null) {
     const x = xs(scaleAt);
-    if (x != null) captions.push({ text: `scale below ${inr(scaleAt)}`, x: x - 5, y: area.y - 6, anchor: 'end', color: 'var(--bangle)' });
+    if (x != null) pill('↗', `Scale ≤ ${inr(scaleAt)}`, x, 'end', 'var(--st-scale)');
   }
   if (stopAt != null) {
     const x = xs(stopAt);
-    if (x != null) captions.push({ text: `stop above ${inr(stopAt)}`, x: x + 5, y: area.y - 6, anchor: 'start', color: 'var(--lac)' });
+    if (x != null) pill('■', `Stop ≥ ${inr(stopAt)}`, x, 'start', 'var(--st-stop)');
   }
-  for (const c of captions) {
-    const w = c.text.length * CHAR_W;
-    obstacles.push({ x0: c.anchor === 'end' ? c.x - w : c.x, y0: c.y - LABEL_H + 2, x1: c.anchor === 'end' ? c.x : c.x + w, y1: c.y + 3 });
-  }
+  for (const c of captions) obstacles.push({ x0: c.x, y0: area.y - 30, x1: c.x + c.w, y1: area.y - 8 });
   // the threshold lines themselves: labels may cross them, but only when nothing better exists
   for (const v of [scaleAt, stopAt]) {
     const x = v == null ? null : xs(v);
@@ -206,13 +211,16 @@ function DotLabels({ points, scaleAt, stopAt }: { points: ScatterPoint[]; scaleA
     <ZIndexLayer zIndex={DefaultZIndexes.label}>
       <g aria-hidden>
         {captions.map((c) => (
-          <text key={c.text} x={c.x} y={c.y} textAnchor={c.anchor} fontSize={11.5} fontWeight={600} fill={c.color}>
-            {c.text}
-          </text>
+          <g key={c.text}>
+            <rect x={c.x} y={area.y - 30} width={c.w} height={22} rx={11} fill={c.color} />
+            <text x={c.x + 9} y={area.y - 15} fontSize={12} fontWeight={700} fill="#fff" style={{ fontVariantNumeric: 'tabular-nums' }}>
+              <tspan fontSize={11}>{c.glyph}</tspan> {c.text}
+            </text>
+          </g>
         ))}
-        {placed.map((l) => (l.lead ? <line key={`${l.text}-lead`} x1={l.lead[0]} y1={l.lead[1]} x2={l.lead[2]} y2={l.lead[3]} stroke="var(--ink-3)" strokeWidth={0.75} /> : null))}
+        {placed.map((l) => (l.lead ? <line key={`${l.text}-lead`} x1={l.lead[0]} y1={l.lead[1]} x2={l.lead[2]} y2={l.lead[3]} stroke="var(--ink-2)" strokeWidth={0.75} /> : null))}
         {placed.map((l) => (
-          <text key={l.text} x={l.x} y={l.y} textAnchor={l.anchor} fontSize={FONT} fontWeight={600} fill="var(--ink)" stroke="var(--surface)" strokeWidth={3} strokeLinejoin="round" paintOrder="stroke">
+          <text key={l.text} x={l.x} y={l.y} textAnchor={l.anchor} fontSize={FONT} fontWeight={600} fill="var(--ink)" stroke="var(--stone)" strokeWidth={3} strokeLinejoin="round" paintOrder="stroke">
             {l.text}
           </text>
         ))}

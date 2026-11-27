@@ -1,12 +1,13 @@
 'use client';
-import { useId, type ReactNode } from 'react';
-import { Info } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { InfoDuotone } from 'runeicons-react';
 import type { CampaignMetrics, Snapshot } from '@/server/engine/snapshot';
 import type { DecisionBoard, Recommendation } from '@/server/engine/decide';
 import type { Signal, StageBottleneck } from '@/server/engine/diagnose';
 import type { DailyPoint, WeeklyPoint } from '@/server/engine/timeseries';
 import type { Campaign } from '@/server/engine/types';
-import { Chip, cx } from '@/components/ui';
+import { Chip, cx, Ico } from '@/components/ui';
+import { tipProps } from '@/components/tooltip';
 
 /* ------------------------------------------------------------------ API shapes */
 
@@ -63,26 +64,38 @@ export const CAMPAIGN_STATUSES = ['planned', 'active', 'paused', 'stopped', 'com
 export type CampaignStatus = (typeof CAMPAIGN_STATUSES)[number];
 
 const STATUS_LABEL: Record<string, string> = { planned: 'Planned', active: 'Active', paused: 'Paused', stopped: 'Stopped', completed: 'Completed' };
-const STATUS_DOT: Record<string, string> = { planned: 'var(--sagar)', active: 'var(--bangle)', paused: 'var(--zari-bright)', stopped: 'var(--lac)', completed: 'var(--ink-3)' };
 
 export const statusLabel = (s: string | null | undefined) => (s ? STATUS_LABEL[s] ?? s : '–');
 
+/**
+ * Lifecycle mark: shape and weight, never a hue (hues belong to families, campaigns and the four calls).
+ * Active is a solid ink dot, planned a ring, paused half-filled, stopped a square, completed a faint dot.
+ */
+function StatusMark({ status }: { status: string }) {
+  const base = 'inline-block size-2 shrink-0';
+  if (status === 'active') return <i aria-hidden className={cx(base, 'rounded-full bg-ink')} />;
+  if (status === 'planned') return <i aria-hidden className={cx(base, 'rounded-full shadow-[inset_0_0_0_1.5px_var(--ink-2)]')} />;
+  if (status === 'paused') return <i aria-hidden className={cx(base, 'rounded-full shadow-[inset_0_0_0_1.5px_var(--ink-2)]')} style={{ background: 'linear-gradient(90deg, var(--ink-2) 50%, transparent 50%)' }} />;
+  if (status === 'stopped') return <i aria-hidden className={cx(base, 'rounded-[2px] bg-ink-2')} />;
+  return <i aria-hidden className={cx(base, 'rounded-full bg-stone-3')} />;
+}
+
 export function StatusChip({ status }: { status: string }) {
-  if (!STATUS_LABEL[status]) return <span className="text-ink-3">–</span>;
+  if (!STATUS_LABEL[status]) return <span className="text-ink-2">–</span>;
   return (
-    <Chip>
-      <span className="size-1.5 rounded-full" style={{ background: STATUS_DOT[status] }} aria-hidden />
+    <Chip bg="var(--ground)" className="shadow-[inset_0_0_0_1.5px_var(--stone-3)]">
+      <StatusMark status={status} />
       {STATUS_LABEL[status]}
     </Chip>
   );
 }
 
-/** Compact status for dense tables: coloured dot and the word. */
+/** Compact status for dense tables and cards: the mark and the word. */
 export function StatusText({ status }: { status: string }) {
-  if (!STATUS_LABEL[status]) return <span className="text-ink-3">–</span>;
+  if (!STATUS_LABEL[status]) return <span className="text-ink-2">–</span>;
   return (
     <span className="inline-flex items-center gap-1.5 whitespace-nowrap text-ink-2">
-      <span className="size-1.5 rounded-full" style={{ background: STATUS_DOT[status] }} aria-hidden />
+      <StatusMark status={status} />
       {STATUS_LABEL[status]}
     </span>
   );
@@ -95,11 +108,12 @@ export const channelLabel = (c: string | null | undefined) => {
   return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
+/** Task states as weight on limestone: blocked is the only one that borrows the stop colour, and it carries a glyph. */
 export const TASK_STATUS: Record<string, { label: string; fg: string; bg: string }> = {
-  todo: { label: 'To do', fg: 'var(--ink-2)', bg: 'var(--paper-2)' },
-  in_progress: { label: 'In progress', fg: 'var(--sagar)', bg: 'var(--sagar-soft)' },
-  blocked: { label: 'Blocked', fg: 'var(--lac)', bg: 'var(--lac-soft)' },
-  done: { label: 'Done', fg: 'var(--bangle)', bg: 'var(--bangle-soft)' },
+  todo: { label: 'To do', fg: 'var(--ink-2)', bg: 'var(--stone-2)' },
+  in_progress: { label: 'In progress', fg: 'var(--ink)', bg: 'var(--stone-3)' },
+  blocked: { label: 'Blocked', fg: '#fff', bg: 'var(--st-stop)' },
+  done: { label: 'Done', fg: '#fff', bg: 'var(--ink)' },
 };
 
 /** Percentage-point gap with one decimal: "+2.3 pts" / "−9.0 pts". */
@@ -158,33 +172,17 @@ export const istDate = (ms: number | null | undefined) => (ms == null ? null : n
 
 /* ------------------------------------------------------------------ info tooltip */
 
-/** Small focusable "i" button that reveals an explanation on hover or keyboard focus. */
-export function InfoTip({ label, children, side = 'left', className }: { label: string; children: ReactNode; side?: 'left' | 'right'; className?: string }) {
-  const id = useId();
+/** Small focusable "i" button that shows an explanation in the shared dark tooltip on hover or keyboard focus. */
+export function InfoTip({ label, children, className }: { label: string; children: ReactNode; side?: 'left' | 'right'; className?: string }) {
   return (
-    <span className={cx('group/tip relative inline-flex align-middle', className)}>
-      <button
-        type="button"
-        aria-label={label}
-        aria-describedby={id}
-        onClick={(e) => e.stopPropagation()}
-        className="inline-grid size-[18px] place-items-center rounded-full text-ink-3 hover:bg-paper-2 hover:text-ink"
-      >
-        <Info size={13} strokeWidth={2} aria-hidden />
-      </button>
-      <span
-        role="tooltip"
-        id={id}
-        aria-hidden
-        className={cx(
-          'pointer-events-none invisible absolute top-full z-30 mt-1 w-64 rounded-lg border border-line bg-surface px-3 py-2 text-left text-[0.78rem] leading-snug font-normal whitespace-normal text-ink-2 opacity-0 shadow-[0_6px_24px_-12px_rgba(27,36,48,0.35)] transition-opacity',
-          'group-focus-within/tip:visible group-focus-within/tip:opacity-100 group-hover/tip:visible group-hover/tip:opacity-100',
-          side === 'left' ? 'right-0' : 'left-0',
-        )}
-        style={{ fontStretch: '100%' }}
-      >
-        {children}
-      </span>
-    </span>
+    <button
+      type="button"
+      aria-label={`${label}: ${typeof children === 'string' ? children : ''}`}
+      onClick={(e) => e.stopPropagation()}
+      {...tipProps({ title: label, notes: [children] })}
+      className={cx('inline-grid size-[18px] shrink-0 place-items-center rounded-full align-middle text-ink-2 transition-colors duration-150 hover:bg-stone-2 hover:text-ink', className)}
+    >
+      <Ico icon={InfoDuotone} size={14} ia="currentColor" ib="var(--stone-3)" />
+    </button>
   );
 }

@@ -135,7 +135,7 @@ export function NewCampaignDialog({ open, onClose, onCreated }: { open: boolean;
             </Select>
           </Field>
           <Field label="Planned budget (INR)" error={errors.budget}>
-            <TextInput value={f.budget} onChange={(e) => set('budget', e.target.value)} inputMode="numeric" placeholder="e.g. 25000" className="num" aria-invalid={!!errors.budget} />
+            <TextInput value={f.budget} onChange={(e) => set('budget', e.target.value)} inputMode="numeric" placeholder="e.g. 25000" className="tab" aria-invalid={!!errors.budget} />
           </Field>
           <Field label="Planned start">
             <TextInput type="date" value={f.start} onChange={(e) => set('start', e.target.value)} />
@@ -145,7 +145,7 @@ export function NewCampaignDialog({ open, onClose, onCreated }: { open: boolean;
           </Field>
         </div>
         {serverError ? (
-          <p role="alert" className="text-[0.85rem] text-lac">
+          <p role="alert" className="text-[13px] font-[600] text-st-stop">
             {serverError}
           </p>
         ) : null}
