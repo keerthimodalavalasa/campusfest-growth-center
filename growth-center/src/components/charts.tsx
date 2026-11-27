@@ -1,15 +1,20 @@
 'use client';
 import type { ReactNode } from 'react';
 import { campaignColor } from '@/lib/colors';
+import { TipBody } from '@/components/tooltip';
 
-/** Shared Recharts styling: recessive grid and axes, text in text inks. */
+/** Shared Recharts styling: recessive stone grid and axes, tabular text in the text inks. */
 export const axisProps = {
-  stroke: 'var(--line-2)',
-  tick: { fill: 'var(--ink-3)', fontSize: 12 },
+  stroke: 'var(--stone-3)',
+  tick: { fill: 'var(--ink-2)', fontSize: 11.5, fontWeight: 550, style: { fontVariantNumeric: 'tabular-nums' } },
   tickLine: false,
-  axisLine: { stroke: 'var(--line-2)' },
+  axisLine: { stroke: 'var(--stone-3)' },
 } as const;
-export const gridProps = { stroke: 'var(--line)', strokeDasharray: '0', vertical: false } as const;
+export const gridProps = { stroke: 'var(--stone-2)', strokeDasharray: '0', vertical: false } as const;
+/** Hairline crosshair for line and area charts. */
+export const cursorProps = { stroke: 'var(--ink)', strokeWidth: 1 } as const;
+/** Column hover wash for bar charts. */
+export const barCursorProps = { fill: 'var(--stone-2)', radius: 6 } as const;
 
 interface TipRow {
   name?: string | number;
@@ -19,35 +24,44 @@ interface TipRow {
   payload?: Record<string, unknown>;
 }
 
-/** Tooltip body for Recharts' <Tooltip content={...}>. */
+/** Dark tooltip body for Recharts' <Tooltip content={...}>: bidri with a hairline, tabular values. */
 export function ChartTip({ active, payload, label, format, labelFormat }: { active?: boolean; payload?: TipRow[]; label?: string | number; format?: (v: number, name: string) => string; labelFormat?: (l: string) => string }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg border border-line bg-surface px-3 py-2 text-[0.8rem] shadow-[0_6px_24px_-12px_rgba(27,36,48,0.35)]">
-      {label != null ? <div className="mb-1 font-semibold text-ink">{labelFormat ? labelFormat(String(label)) : label}</div> : null}
-      {payload
-        .filter((p) => p.value != null)
-        .map((p, i) => (
-          <div key={i} className="flex items-center gap-2 text-ink-2">
-            <span className="inline-block size-2 rounded-full" style={{ background: p.color }} />
-            <span>{p.name}</span>
-            <span className="num ml-auto pl-3 font-semibold text-ink">{format ? format(Number(p.value), String(p.name)) : String(p.value)}</span>
-          </div>
-        ))}
+    <div className="min-w-[150px] max-w-[280px] rounded-[12px] bg-bidri px-3 py-2.5 text-[12.5px] text-white shadow-[inset_0_0_0_1px_var(--bidri-3),0_10px_30px_rgba(26,29,35,0.22)]">
+      <TipBody
+        title={label != null ? (labelFormat ? labelFormat(String(label)) : label) : undefined}
+        rows={payload
+          .filter((p) => p.value != null)
+          .map((p) => ({ color: p.color, label: p.name, value: format ? format(Number(p.value), String(p.name)) : String(p.value) }))}
+      />
     </div>
   );
 }
 
-export function Legend({ items }: { items: { label: string; color: string; dashed?: boolean }[] }) {
+/** Chart keys: line or square swatches in the series colour, labels in text ink. */
+export function Legend({ items, className }: { items: { label: string; color: string; dashed?: boolean; dotted?: boolean; line?: boolean; thin?: boolean; bar?: boolean }[]; className?: string }) {
   return (
-    <ul className="flex flex-wrap gap-x-4 gap-y-1 text-[0.8rem] text-ink-2">
+    <ul className={`flex flex-wrap gap-x-4 gap-y-1 text-[12.5px] font-[550] text-ink-2 ${className ?? ''}`}>
       {items.map((i) => (
-        <li key={i.label} className="flex items-center gap-1.5">
-          {i.dashed ? <span className="inline-block w-4 border-t-2 border-dashed" style={{ borderColor: i.color }} /> : <span className="inline-block size-2.5 rounded-[3px]" style={{ background: i.color }} />}
+        <li key={i.label} className="flex items-center gap-1.5 whitespace-nowrap">
+          <Swatch color={i.color} kind={i.bar ? 'bar' : i.dotted ? 'dotted' : i.dashed ? 'dashed' : i.line ? 'line' : 'square'} thin={i.thin} />
           {i.label}
         </li>
       ))}
     </ul>
+  );
+}
+
+export function Swatch({ color, kind = 'square', thin }: { color: string; kind?: 'square' | 'line' | 'dashed' | 'dotted' | 'bar'; thin?: boolean }) {
+  if (kind === 'square') return <span aria-hidden className="inline-block size-2.5 shrink-0 rounded-[3px]" style={{ background: color }} />;
+  if (kind === 'bar') return <span aria-hidden className="inline-block h-3 w-[3px] shrink-0 rounded-[1px]" style={{ background: color }} />;
+  return (
+    <span
+      aria-hidden
+      className="inline-block h-0 w-3.5 shrink-0 rounded-[2px]"
+      style={{ borderTop: `${kind === 'dotted' ? 3 : thin ? 1.5 : 2.5}px ${kind === 'dotted' ? 'dotted' : kind === 'dashed' ? 'dashed' : 'solid'} ${color}` }}
+    />
   );
 }
 

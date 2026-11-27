@@ -61,15 +61,15 @@ function Receipt({ name, part }: { name: string; part: AnyToolPart }) {
   const failed = part.state === 'output-error' || (part.output && typeof part.output.error === 'string');
   const detail = describe(name, part.input);
   return (
-    <div className="rounded-lg bg-paper text-[0.8rem]">
-      <button onClick={() => setOpen(!open)} className="flex w-full items-center gap-2 px-2.5 py-1.5 text-left text-ink-2" aria-expanded={open} disabled={running}>
-        {running ? <LoaderCircle size={14} className="animate-spin text-ink-3" /> : failed ? <CircleAlert size={14} className="text-zari" /> : <Database size={14} className="text-sagar" />}
-        <span className="font-semibold text-ink">{LABELS[name] ?? name}</span>
-        {detail ? <span className="truncate text-ink-3">{detail}</span> : null}
-        {!running ? <ChevronDown size={14} className={cx('ml-auto shrink-0 text-ink-3 transition-transform', open && 'rotate-180')} /> : null}
+    <div className="rounded-[12px] shadow-[inset_0_0_0_1.5px_var(--stone-2)] text-[12.5px]">
+      <button type="button" onClick={() => setOpen(!open)} className="flex w-full items-center gap-2 rounded-[12px] px-3 py-2 text-left text-ink-2 transition-colors duration-150 hover:bg-stone" aria-expanded={open} disabled={running}>
+        {running ? <LoaderCircle size={14} className="animate-spin text-ink-2" /> : failed ? <CircleAlert size={14} className="text-st-change" /> : <Database size={14} className="text-nizami" />}
+        <span className="font-[650] text-ink">{LABELS[name] ?? name}</span>
+        {detail ? <span className="truncate text-ink-2">{detail}</span> : null}
+        {!running ? <ChevronDown size={14} className={cx('ml-auto shrink-0 text-ink-2 transition-transform duration-200 ease-out', open && 'rotate-180')} /> : null}
       </button>
       {open ? (
-        <pre className="max-h-72 overflow-auto border-t border-line px-2.5 py-2 text-[0.72rem] leading-snug whitespace-pre-wrap text-ink-2">
+        <pre className="tab max-h-72 overflow-auto border-t border-stone-2 px-3 py-2 text-[11.5px] leading-snug whitespace-pre-wrap text-ink-2">
           {part.state === 'output-error' ? part.errorText : JSON.stringify(part.output ?? part.input, null, 1)}
         </pre>
       ) : null}
@@ -122,29 +122,33 @@ function ActionTicket({ name, part, onApproval }: { name: string; part: AnyToolP
   const denied = part.state === 'output-denied' || (part.state === 'approval-responded' && part.approval?.approved === false);
 
   return (
-    <div className={cx('overflow-hidden rounded-xl border', done ? 'border-bangle/40' : denied ? 'border-line' : 'border-ink/25')}>
-      <div className={cx('flex items-center gap-2 px-3.5 py-2.5', done ? 'bg-bangle-soft' : 'bg-paper')}>
-        <Ticket size={16} className={done ? 'text-bangle' : 'text-lac'} aria-hidden />
-        <span className="text-[0.8rem] font-semibold text-ink-2">{LABELS[name]}</span>
-        {done ? <span className="ml-auto inline-flex items-center gap-1 text-[0.8rem] font-semibold text-bangle"><Check size={14} /> Saved</span> : null}
+    <div className={cx('overflow-hidden rounded-tile-s bg-stone', denied && 'opacity-80')}>
+      <div className="flex items-center gap-2 px-4 pt-3 pb-2">
+        <Ticket size={16} className={done ? 'text-st-scale' : 'text-lac'} aria-hidden />
+        <span className="text-[12.5px] font-[650] text-ink-2">{LABELS[name]}</span>
+        {done ? (
+          <span className="ml-auto inline-flex h-6 items-center gap-1 rounded-full bg-st-scale pr-[9px] pl-1.5 text-[12px] font-[700] text-white">
+            <Check size={14} aria-hidden /> Saved
+          </span>
+        ) : null}
       </div>
       <div className="perforated h-3 bg-transparent" aria-hidden>
-        <div className="mx-3 h-1.5 border-b border-dashed border-line-2" />
+        <div className="mx-3 h-1.5 border-b-[1.5px] border-dashed border-stone-3" />
       </div>
-      <div className="space-y-2 px-3.5 pb-3.5">
-        {name === 'create_task' ? <div className="font-semibold leading-snug text-ink">{String(i.title ?? 'Untitled task')}</div> : null}
-        {typeof i.description === 'string' ? <p className="text-[0.85rem] text-ink-2">{i.description}</p> : null}
-        <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 text-[0.82rem]">
+      <div className="space-y-2 px-4 pt-1 pb-4">
+        {name === 'create_task' ? <div className="text-[14.5px] leading-snug font-[650] text-ink">{String(i.title ?? 'Untitled task')}</div> : null}
+        {typeof i.description === 'string' ? <p className="text-[13px] text-ink-2">{i.description}</p> : null}
+        <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 text-[13px]">
           {rows
             .filter(([, v]) => v != null && v !== '')
             .map(([k, v]) => (
               <div key={k} className="contents">
-                <dt className="text-ink-3">{k}</dt>
+                <dt className="text-ink-2">{k}</dt>
                 <dd className="text-ink">{k === 'Owner' ? ownerName(String(v)) === String(v) ? String(v) : ownerName(String(v)) : String(v)}</dd>
               </div>
             ))}
         </dl>
-        {typeof i.evidence === 'string' ? <p className="rounded-md bg-paper px-2 py-1.5 text-[0.8rem] text-ink-2">Evidence: {i.evidence}</p> : null}
+        {typeof i.evidence === 'string' ? <p className="rounded-[10px] bg-ground px-2.5 py-2 text-[12.5px] text-ink-2">Evidence: {i.evidence}</p> : null}
 
         {part.state === 'approval-requested' && part.approval && !part.approval.isAutomatic ? (
           <div className="flex gap-2 pt-1">
@@ -156,23 +160,23 @@ function ActionTicket({ name, part, onApproval }: { name: string; part: AnyToolP
             </Button>
           </div>
         ) : null}
-        {part.state === 'approval-responded' && part.approval?.approved ? <p className="text-[0.82rem] text-ink-3">Approved. Saving…</p> : null}
-        {denied ? <p className="text-[0.82rem] text-ink-3">Declined. Nothing was saved.</p> : null}
+        {part.state === 'approval-responded' && part.approval?.approved ? <p className="text-[13px] text-ink-2">Approved. Saving…</p> : null}
+        {denied ? <p className="text-[13px] text-ink-2">Declined. Nothing was saved.</p> : null}
         {tearing ? (
-          <div className="ticket-stub-tear rounded-md border border-dashed border-line-2 bg-paper px-2.5 py-1.5 text-[0.78rem] font-semibold text-ink-2" aria-hidden>
+          <div className="ticket-stub-tear rounded-[10px] border-[1.5px] border-dashed border-stone-3 bg-ground px-2.5 py-1.5 text-[12px] font-[650] text-ink-2" aria-hidden>
             {name === 'create_task' ? 'Moving to the task board' : 'Applying the change'}
           </div>
         ) : null}
         {done && name === 'create_task' ? (
-          <p className="ticket-settle text-[0.82rem] text-bangle">
+          <p className="ticket-settle text-[13px] font-[600] text-st-scale">
             Task #{String(out.task_id)} is on the board.{' '}
             <Link href="/execute" className="font-semibold underline">
               Open Execute
             </Link>
           </p>
         ) : null}
-        {done && name !== 'create_task' ? <p className="text-[0.82rem] text-bangle">Updated. Dashboards now reflect the change.</p> : null}
-        {failed ? <p className="text-[0.82rem] text-lac">{String(out.error ?? part.errorText ?? 'Could not save.')}</p> : null}
+        {done && name !== 'create_task' ? <p className="text-[13px] font-[600] text-st-scale">Updated. Dashboards now reflect the change.</p> : null}
+        {failed ? <p className="text-[13px] font-[600] text-st-stop">{String(out.error ?? part.errorText ?? 'Could not save.')}</p> : null}
       </div>
     </div>
   );

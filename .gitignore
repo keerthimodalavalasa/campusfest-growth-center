@@ -26,3 +26,6 @@ deck/**/node_modules/
 deck/assets/icons3d/
 deck/assets/app/
 deck/directions/b-calm/app/
+
+# design prototypes (never shipped)
+.proto/

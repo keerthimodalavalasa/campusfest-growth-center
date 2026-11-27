@@ -1,39 +1,42 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Suspense, type ComponentType, type ReactNode } from 'react';
-import { ActivityDuotone, ChartBarDuotone, CompassDuotone, KanbanDuotone, Layers2Duotone, LayoutGridDuotone, MapDuotone, SparklesDuotone } from 'runeicons-react';
+import { Suspense, type ReactNode } from 'react';
+import { MessageSquareTextDuotone } from 'runeicons-react';
 import { useApp } from '@/lib/app-state';
 import { CampaignTape } from './CampaignTape';
 import { Copilot } from '@/components/copilot/Copilot';
-import { cx } from '@/components/ui';
+import { TipLayer } from '@/components/tooltip';
+import { cx, ErrorNote, Ico } from '@/components/ui';
 
-const NAV: { href: string; label: string; icon: ComponentType<{ size?: number }> }[] = [
-  { href: '/', label: 'Overview', icon: LayoutGridDuotone },
-  { href: '/plan', label: 'Plan 2027', icon: MapDuotone },
-  { href: '/campaigns', label: 'Campaigns', icon: ChartBarDuotone },
-  { href: '/diagnose', label: 'Diagnose', icon: ActivityDuotone },
-  { href: '/decide', label: 'Decide', icon: CompassDuotone },
-  { href: '/execute', label: 'Execute', icon: KanbanDuotone },
-  { href: '/data', label: 'Data', icon: Layers2Duotone },
+const NAV: { href: string; label: string }[] = [
+  { href: '/', label: 'Overview' },
+  { href: '/plan', label: 'Plan 2027' },
+  { href: '/campaigns', label: 'Campaigns' },
+  { href: '/diagnose', label: 'Diagnose' },
+  { href: '/decide', label: 'Decide' },
+  { href: '/execute', label: 'Execute' },
+  { href: '/data', label: 'Data' },
 ];
 
 const isActive = (path: string | null, href: string) => (href === '/' ? path === '/' : !!path?.startsWith(href));
 
-/** Rail links. Reads the pathname, so it renders inside its own Suspense boundary (Cache Components rule). */
-function RailLinks({ path }: { path: string | null }) {
+/** Nav pills. Reads the pathname, so it renders inside its own Suspense boundary (Cache Components rule). */
+function NavLinks({ path }: { path: string | null }) {
   return (
     <>
-      {NAV.map(({ href, label, icon: Icon }) => {
+      {NAV.map(({ href, label }) => {
         const active = isActive(path, href);
         return (
           <Link
             key={href}
             href={href}
             aria-current={active ? 'page' : undefined}
-            className={cx('rune-duo flex w-[74px] flex-col items-center gap-1 rounded-xl py-2 text-[0.72rem] font-medium transition-colors', active ? 'bg-ink text-white' : 'text-ink-2 hover:bg-paper-2 hover:text-ink')}
+            className={cx(
+              'flex h-9 shrink-0 items-center rounded-full px-3.5 text-[14px] font-[550] whitespace-nowrap transition-colors duration-150 max-[1200px]:px-2.5 max-[720px]:px-3',
+              active ? 'bg-ink text-white' : 'text-ink-2 hover:bg-stone hover:text-ink',
+            )}
           >
-            <Icon size={20} />
             {label}
           </Link>
         );
@@ -41,82 +44,58 @@ function RailLinks({ path }: { path: string | null }) {
     </>
   );
 }
-function ActiveRailLinks() {
-  return <RailLinks path={usePathname()} />;
-}
-
-function MobileLinks({ path }: { path: string | null }) {
-  return (
-    <>
-      {NAV.map(({ href, label }) => (
-        <Link key={href} href={href} aria-current={isActive(path, href) ? 'page' : undefined} className={cx('shrink-0 rounded-full px-3 py-1 text-[0.8rem]', isActive(path, href) ? 'bg-ink text-white' : 'bg-paper-2 text-ink-2')}>
-          {label}
-        </Link>
-      ))}
-    </>
-  );
-}
-function ActiveMobileLinks() {
-  return <MobileLinks path={usePathname()} />;
+function ActiveNavLinks() {
+  return <NavLinks path={usePathname()} />;
 }
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { copilotOpen, setCopilotOpen, metaError } = useApp();
 
   return (
-    <div className="flex min-h-screen">
-      <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-surface focus:px-3 focus:py-2">
+    <div className="min-h-screen bg-ground">
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-full focus:bg-ink focus:px-4 focus:py-2 focus:text-white">
         Skip to content
       </a>
-      <nav aria-label="Workspaces" className="sticky top-0 hidden h-screen w-[86px] shrink-0 flex-col items-center gap-1 border-r border-line bg-surface py-4 md:flex">
-        <Link href="/" className="mb-4 flex flex-col items-center" aria-label="CampusFest Growth Center home">
-          <span className="type-display grid size-10 place-items-center rounded-xl bg-lac text-[1.05rem] text-white">CF</span>
-        </Link>
-        <Suspense fallback={<RailLinks path={null} />}>
-          <ActiveRailLinks />
-        </Suspense>
-        <div className="mt-auto">
-          <button
-            onClick={() => setCopilotOpen(!copilotOpen)}
-            aria-pressed={copilotOpen}
-            className={cx('rune-duo flex w-[74px] flex-col items-center gap-1 rounded-xl py-2 text-[0.72rem] font-semibold', copilotOpen ? 'bg-lac text-white' : 'text-lac hover:bg-lac-soft')}
+      <header className="sticky top-0 z-30 border-b border-stone-2 bg-ground max-[720px]:static max-[720px]:border-b-0">
+        <div className="mx-auto flex h-16 max-w-[1440px] items-center gap-6 px-8 max-[1200px]:gap-4 max-[1200px]:px-6 max-[720px]:h-auto max-[720px]:flex-wrap max-[720px]:gap-2.5 max-[720px]:px-4 max-[720px]:pt-3">
+          <Link href="/" className="flex shrink-0 items-baseline gap-2 whitespace-nowrap" aria-label="CampusFest Growth Center, Overview">
+            <b className="text-[22px] leading-none font-[850] tracking-[-0.01em] [font-stretch:75%] max-[720px]:text-[20px]">CampusFest</b>
+            <span className="text-[14px] font-[500] text-ink-2 max-[900px]:hidden">Growth Center</span>
+          </Link>
+          <nav
+            aria-label="Workspaces"
+            className="flex min-w-0 flex-1 gap-0.5 max-[720px]:order-3 max-[720px]:basis-full max-[720px]:overflow-x-auto max-[720px]:border-b max-[720px]:border-stone-2 max-[720px]:pb-2.5 max-[720px]:[scrollbar-width:none]"
           >
-            <SparklesDuotone size={20} />
-            Copilot
-          </button>
-        </div>
-      </nav>
-
-      <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 border-b border-line bg-paper/95 backdrop-blur">
-          <div className="flex items-center gap-5 px-5 py-2.5">
-            <div className="hidden shrink-0 leading-tight lg:block">
-              <div className="type-title text-[0.98rem]">CampusFest Growth Center</div>
-              <div className="text-[0.75rem] text-ink-3">2025 data, Hyderabad 2027 plan</div>
-            </div>
-            <CampaignTape />
-            <button onClick={() => setCopilotOpen(!copilotOpen)} className="shrink-0 rounded-lg bg-lac px-3 py-2 text-[0.82rem] font-semibold text-white md:hidden">
-              Copilot
-            </button>
-          </div>
-          <nav aria-label="Workspaces" className="flex gap-1 overflow-x-auto px-3 pb-2 md:hidden">
-            <Suspense fallback={<MobileLinks path={null} />}>
-              <ActiveMobileLinks />
+            <Suspense fallback={<NavLinks path={null} />}>
+              <ActiveNavLinks />
             </Suspense>
           </nav>
-        </header>
-        <div className="flex min-h-0 flex-1">
-          <main id="main" className="min-w-0 flex-1 px-5 py-6 lg:px-8">
-            {metaError ? (
-              <div role="alert" className="mb-4 rounded-lg border border-lac/30 bg-lac-soft px-3 py-2 text-sm text-lac">
-                Could not load the dataset: {metaError}
-              </div>
-            ) : null}
-            {children}
-          </main>
-          <Copilot />
+          <button
+            type="button"
+            onClick={() => setCopilotOpen(!copilotOpen)}
+            aria-expanded={copilotOpen}
+            aria-haspopup="dialog"
+            className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full bg-bidri pr-4 pl-3 text-[14px] font-[650] whitespace-nowrap text-white transition-[transform,background-color] duration-150 ease-out hover:bg-[#343a42] active:scale-[0.97] max-[720px]:ml-auto max-[720px]:h-[38px]"
+          >
+            <Ico icon={MessageSquareTextDuotone} size={20} ia="var(--lac-pale)" ib="var(--bidri)" />
+            Ask the copilot
+          </button>
         </div>
+      </header>
+
+      <div className="mx-auto max-w-[1440px] px-8 pt-4 pb-12 max-[1200px]:px-6 max-[1200px]:pb-10 max-[720px]:px-4 max-[720px]:pt-3 max-[720px]:pb-8">
+        <CampaignTape />
+        <main id="main" className="min-w-0">
+          {metaError ? (
+            <div className="mb-3">
+              <ErrorNote>Could not load the dataset: {metaError}</ErrorNote>
+            </div>
+          ) : null}
+          {children}
+        </main>
       </div>
+      <Copilot />
+      <TipLayer />
     </div>
   );
 }

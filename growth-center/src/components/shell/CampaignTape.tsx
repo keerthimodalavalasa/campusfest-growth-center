@@ -1,9 +1,10 @@
 'use client';
-import { useCallback, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react';
+import { useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react';
 import { useApi } from '@/lib/api';
 import { useApp } from '@/lib/app-state';
-import { addDays, dateLabel, daysBetween, num } from '@/lib/format';
-import { cx } from '@/components/ui';
+import { addDays, dateLabel, daysBetween, inr, num } from '@/lib/format';
+import { cx, Segmented, Skeleton } from '@/components/ui';
+import { hideTip, showTip } from '@/components/tooltip';
 
 interface Tape {
   start: string;
@@ -14,42 +15,57 @@ interface Tape {
   days: { date: string; regs: number; visitors: number; spend: number }[];
 }
 
-const H = 40;
+const BAR_H = 42;
+type Preset = 'mid' | 'day1' | 'latest';
 
 /**
- * The campaign tape: a scrubbable timeline of the whole campaign. Bar height = registrations that day;
- * event days show verified visitors. Moving the handle rewinds every page to the end of that day (IST).
+ * The as-of tape: a limestone tile under the top bar. Each bar is a campaign day (registrations; event days show
+ * first entries). Drag, click or use the arrow keys to rewind every page to the end of any day (IST);
+ * the presets on the right jump to the three reference dates. The choice lives in the URL (?asOf=).
  */
 export function CampaignTape() {
-  const { asOf, setAsOf } = useApp();
+  const { asOf, setAsOf, meta } = useApp();
   const { data } = useApi<Tape>('/api/tape');
-  const ref = useRef<SVGSVGElement>(null);
-  const [hover, setHover] = useState<string | null>(null);
+  const barsRef = useRef<HTMLDivElement>(null);
   const [drag, setDrag] = useState(false);
 
   const n = data ? data.days.length : 0;
-  // registrations and event-day entries are scaled separately so campaign days stay readable
   const maxRegs = useMemo(() => (data ? Math.max(1, ...data.days.map((d) => d.regs)) : 1), [data]);
   const maxVis = useMemo(() => (data ? Math.max(1, ...data.days.map((d) => d.visitors)) : 1), [data]);
 
-  const dateAt = useCallback(
-    (clientX: number) => {
-      if (!data || !ref.current) return null;
-      const r = ref.current.getBoundingClientRect();
-      const i = Math.max(0, Math.min(n - 1, Math.floor(((clientX - r.left) / r.width) * n)));
-      return data.days[i]?.date ?? null;
-    },
-    [data, n],
-  );
-
-  if (!data || !asOf) return <div className="h-[58px] flex-1 animate-pulse rounded-lg bg-paper-2" aria-label="Loading timeline" />;
+  if (!data || !asOf) return <Skeleton className="mb-3 h-[90px] rounded-tile-l bg-stone max-[1200px]:h-[132px]" />;
 
   const idx = Math.max(0, Math.min(n - 1, daysBetween(data.start, asOf)));
-  const bw = 100 / n;
-  const shown = hover ?? asOf;
-  const shownDay = data.days.find((d) => d.date === shown);
+  const pos = (i: number) => ((i + 0.5) / n) * 100;
   const evI = daysBetween(data.start, data.eventStart);
   const evJ = daysBetween(data.start, data.eventEnd);
+  const revisions = data.targetChanges.slice(1);
+  const cut = Date.parse(`${asOf}T23:59:59.999+05:30`);
+  const version = meta?.targets.filter((t) => t.effectiveAt <= cut).pop()?.version ?? 'No target set yet';
+
+  const indexAt = (clientX: number) => {
+    const el = barsRef.current;
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    return Math.max(0, Math.min(n - 1, Math.floor(((clientX - r.left) / r.width) * n)));
+  };
+  const tipFor = (i: number, x: number, y: number) => {
+    const d = data.days[i];
+    if (!d) return;
+    showTip(
+      {
+        title: dateLabel(d.date, true),
+        rows: d.visitors
+          ? [{ color: 'var(--lac-bright)', label: 'First entries', value: num(d.visitors), swatch: 'square' }]
+          : [
+              { color: 'var(--nizami-2)', label: 'Registrations', value: num(d.regs), swatch: 'square' },
+              { label: 'Net spend', value: inr(d.spend) },
+            ],
+      },
+      x,
+      y,
+    );
+  };
 
   const onKey = (e: KeyboardEvent) => {
     const step = e.shiftKey ? 7 : 1;
@@ -60,39 +76,48 @@ export function CampaignTape() {
     else return;
     e.preventDefault();
   };
-  const onDown = (e: PointerEvent<SVGSVGElement>) => {
-    (e.target as Element).setPointerCapture?.(e.pointerId);
+  const onDown = (e: PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.setPointerCapture?.(e.pointerId);
     setDrag(true);
-    const d = dateAt(e.clientX);
-    if (d) setAsOf(d);
+    hideTip();
+    const i = indexAt(e.clientX);
+    if (i != null) setAsOf(data.days[i].date);
   };
-  const onMove = (e: PointerEvent<SVGSVGElement>) => {
-    const d = dateAt(e.clientX);
-    if (drag && d && d !== asOf) setAsOf(d);
-    setHover(drag ? null : d);
+  const onMove = (e: PointerEvent<HTMLDivElement>) => {
+    const i = indexAt(e.clientX);
+    if (i == null) return;
+    if (drag) {
+      if (data.days[i].date !== asOf) setAsOf(data.days[i].date);
+    } else if (e.pointerType !== 'touch') tipFor(i, e.clientX, e.clientY);
   };
 
-  const presets = [
-    { label: 'Mid-campaign', date: '2025-03-09' },
-    { label: 'Event day 1', date: data.eventStart },
-    { label: 'Latest', date: data.end },
+  const presets: { value: Preset; label: string; date: string }[] = [
+    { value: 'mid' as const, label: 'Mid-campaign', date: '2025-03-09' },
+    { value: 'day1' as const, label: 'Event day 1', date: data.eventStart },
+    { value: 'latest' as const, label: 'Latest', date: data.end },
   ].filter((p) => p.date >= data.start && p.date <= data.end);
+  const activePreset = presets.find((p) => p.date === asOf)?.value ?? null;
 
   return (
-    <div className="flex min-w-0 flex-1 items-center gap-4">
-      <div className="w-[9.5rem] shrink-0 leading-tight">
-        <div className="text-[0.75rem] text-ink-3">{hover ? 'Hovering' : 'Data as of'}</div>
-        <div className="type-title num text-[1.05rem]">{dateLabel(shown, true)}</div>
-        <div className="num text-[0.75rem] text-ink-3">
-          {shownDay ? (shownDay.visitors ? `${num(shownDay.visitors)} first entries that day` : shownDay.regs ? `${num(shownDay.regs)} registrations that day` : 'no new registrations') : ''}
+    <section
+      aria-label="Time travel"
+      className="field-stone mb-3 grid grid-cols-[220px_minmax(0,1fr)_auto] items-center gap-7 rounded-tile-l py-3.5 pr-4 pl-6 max-[1200px]:grid-cols-[190px_minmax(0,1fr)] max-[1200px]:gap-x-7 max-[1200px]:gap-y-3 max-[720px]:grid-cols-1 max-[720px]:gap-3.5 max-[720px]:p-4"
+    >
+      <div className="min-w-0">
+        <div className="text-[12.5px] font-[550] text-ink-2">Data as of</div>
+        <div className="num mt-[3px] mb-1.5 text-[30px] leading-none">{dateLabel(asOf, true)}</div>
+        <div className="flex items-center gap-1.5 text-[12.5px] font-[600] text-ink">
+          <i aria-hidden className="block size-2 rounded-[2px] bg-haldi" />
+          <span className="truncate">{version}</span>
         </div>
       </div>
-      <div className="min-w-0 flex-1">
-        <svg
-          ref={ref}
+
+      <div className="relative h-[62px] min-w-0">
+        <div
+          ref={barsRef}
           role="slider"
           tabIndex={0}
-          aria-label="Time travel: choose the as-of date"
+          aria-label="As-of date"
           aria-valuemin={0}
           aria-valuemax={n - 1}
           aria-valuenow={idx}
@@ -101,60 +126,57 @@ export function CampaignTape() {
           onPointerDown={onDown}
           onPointerMove={onMove}
           onPointerUp={() => setDrag(false)}
+          onPointerCancel={() => setDrag(false)}
           onPointerLeave={() => {
-            setHover(null);
+            hideTip();
             setDrag(false);
           }}
-          viewBox={`0 0 100 ${H}`}
-          preserveAspectRatio="none"
-          className="block h-[46px] w-full cursor-ew-resize touch-none select-none"
+          onBlur={() => hideTip()}
+          className="absolute inset-x-0 top-0 flex cursor-ew-resize touch-none items-end gap-px select-none"
+          style={{ height: BAR_H }}
         >
-          <rect x={evI * bw} y={0} width={(evJ - evI + 1) * bw} height={H} fill="var(--lac-soft)" />
           {data.days.map((d, i) => {
-            const h = d.visitors ? Math.max(4, (d.visitors / maxVis) * (H - 2)) : Math.max(0.8, (d.regs / maxRegs) * (H - 4));
+            const h = d.visitors ? Math.max(4, (d.visitors / maxVis) * BAR_H) : Math.max(1, (d.regs / maxRegs) * (BAR_H - 4));
             const future = i > idx;
-            return (
-              <rect
-                key={d.date}
-                x={i * bw + bw * 0.14}
-                width={bw * 0.72}
-                y={H - h}
-                height={h}
-                fill={d.visitors ? 'var(--lac)' : future ? 'var(--line-2)' : 'var(--ink)'}
-                opacity={future ? 0.7 : 1}
-              />
-            );
+            const bg = d.visitors ? (future ? 'var(--lac-pale)' : 'var(--lac)') : future ? 'var(--stone-3)' : 'var(--nizami)';
+            return <span key={d.date} className="block min-w-0 flex-1 rounded-t-[1.5px]" style={{ height: h, background: bg }} />;
           })}
-          {data.targetChanges.slice(1).map((t) => {
-            const i = daysBetween(data.start, t.date);
-            return <rect key={t.date} x={i * bw} y={0} width={0.18} height={H} fill="var(--zari-bright)" />;
-          })}
-          <rect x={(idx + 1) * bw - 0.25} y={0} width={0.5} height={H} fill="var(--sagar)" />
-        </svg>
-        <div className="relative mt-0.5 h-4 text-[0.7rem] text-ink-3" aria-hidden>
+        </div>
+        {revisions.map((t) => (
+          <div key={t.date} aria-hidden className="pointer-events-none absolute -top-1 h-[50px] w-0.5 rounded-[1px] bg-haldi" style={{ left: `${pos(daysBetween(data.start, t.date))}%` }} />
+        ))}
+        <div
+          aria-hidden
+          className={cx(
+            'pointer-events-none absolute -top-1.5 -ml-px h-[54px] w-0.5 rounded-[1px] bg-ink after:absolute after:-top-1 after:-left-1 after:size-2.5 after:rounded-full after:bg-ink after:shadow-[0_0_0_2px_var(--stone)] after:content-[""]',
+            !drag && 'transition-[left] duration-[260ms] ease-out motion-reduce:transition-none',
+          )}
+          style={{ left: `${pos(idx)}%` }}
+        />
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-3 text-[11.5px] leading-none font-[600] whitespace-nowrap text-ink-2">
           <span className="absolute left-0">{dateLabel(data.start)}</span>
-          {data.targetChanges.slice(1).map((t) => (
-            <span key={t.date} className="absolute -translate-x-1/2 text-zari" style={{ left: `${daysBetween(data.start, t.date) * bw}%` }}>
-              targets revised
+          {revisions.map((t) => (
+            <span key={t.date} className="absolute -translate-x-1/2 text-haldi-ink" style={{ left: `${pos(daysBetween(data.start, t.date))}%` }}>
+              Targets revised
             </span>
           ))}
-          <span className="absolute -translate-x-1/2 text-lac" style={{ left: `${(evI + 1) * bw}%` }}>
-            event
+          <span className="absolute -translate-x-1/2 text-lac" style={{ left: `${pos((evI + evJ) / 2)}%` }}>
+            Event
           </span>
-          {n - evI > 12 ? <span className="absolute right-0">{dateLabel(data.end)}</span> : null}
+          {n - evJ > 6 ? <span className="absolute right-0 max-[720px]:hidden">{dateLabel(data.end)}</span> : null}
         </div>
       </div>
-      <div className="hidden shrink-0 gap-1 xl:flex">
-        {presets.map((p) => (
-          <button
-            key={p.label}
-            onClick={() => setAsOf(p.date)}
-            className={cx('h-7 rounded-full px-2.5 text-[0.75rem] font-medium', asOf === p.date ? 'bg-ink text-white' : 'bg-paper-2 text-ink-2 hover:text-ink')}
-          >
-            {p.label}
-          </button>
-        ))}
-      </div>
-    </div>
+
+      <Segmented
+        label="Jump to date"
+        value={activePreset}
+        onChange={(k) => {
+          const p = presets.find((x) => x.value === k);
+          if (p) setAsOf(p.date);
+        }}
+        options={presets.map((p) => ({ value: p.value, label: p.label }))}
+        className="max-[1200px]:col-span-2 max-[1200px]:justify-self-start max-[720px]:col-span-1 max-[720px]:justify-self-stretch"
+      />
+    </section>
   );
 }

@@ -1,101 +1,141 @@
 'use client';
-import { useState } from 'react';
+import type { CSSProperties } from 'react';
 import type { EventDays } from '@/server/engine/eventday';
-import { dateLabel, num, pct } from '@/lib/format';
+import { num } from '@/lib/format';
+import { tipProps } from '@/components/tooltip';
 
-/**
- * Gate clock: arrivals at the gate by IST hour around a 24-hour face (idea after Bklit UI's radial dot bars, MIT).
- * Each hour holds two dot columns, one per event day; one dot = DOT people (first entries that day).
- * The gate is closed outside the scanned hours, which stay as faint ticks, so the shape itself shows opening hours.
- */
-const DOT = 20;
-/** Rotation: 12:00 sits at the top so the gate's daytime hours read as an arc over the face. */
-const ROT = Math.PI;
-const COLORS = ['var(--lac)', 'var(--ink)'];
+/*
+  The gate clock, drawn for the Bidri tile (dark metal with silver inlay).
+  Arrivals: one wedge per event day inside each opening hour on a 12-hour face, radius = sqrt(first entries)
+  so area reads as people. Countdown: one tick per campaign day, weeks longer, the event as a lac dot.
+*/
 
-export function GateClock({ data, size = 380 }: { data: EventDays; size?: number }) {
-  const [hover, setHover] = useState<{ day: number; hour: number } | null>(null);
-  const c = size / 2;
-  const r0 = size * 0.2; // inner radius
-  const days = data.days.slice(0, 2);
-  const maxDots = Math.max(1, ...days.flatMap((d) => d.hours.map((h) => Math.round(h.firstEntries / DOT))));
-  const avail = size * 0.43 - (r0 + 6);
-  const step = Math.min(size * 0.0155, avail / maxDots); // radial spacing between dots, fitted to the busiest hour
-  const dotR = Math.max(1.6, step * 0.36);
-  const totalByHour = (h: number) => days.reduce((s, d) => s + d.hours[h].firstEntries, 0);
-  const angle = (h: number, offset: number) => ((h + 0.5 + offset) / 24) * Math.PI * 2 - Math.PI / 2 + ROT;
+const S = 300;
+const C = S / 2;
+const DAY_COLORS = ['var(--lac-bright)', 'var(--lac-pale)', 'var(--silver)'];
+export const gateDayColor = (i: number) => DAY_COLORS[Math.min(i, DAY_COLORS.length - 1)];
+const v = (o: Record<string, string | number>) => o as CSSProperties;
 
-  const hovered = hover ? days[hover.day]?.hours[hover.hour] : null;
+function arcPath(r0: number, r1: number, a0: number, a1: number) {
+  const p = (r: number, a: number) => [C + r * Math.cos(a), C + r * Math.sin(a)];
+  const [x0, y0] = p(r1, a0);
+  const [x1, y1] = p(r1, a1);
+  const [x2, y2] = p(r0, a1);
+  const [x3, y3] = p(r0, a0);
+  const large = a1 - a0 > Math.PI ? 1 : 0;
+  return `M${x0.toFixed(2)} ${y0.toFixed(2)} A${r1} ${r1} 0 ${large} 1 ${x1.toFixed(2)} ${y1.toFixed(2)} L${x2.toFixed(2)} ${y2.toFixed(2)} A${r0} ${r0} 0 ${large} 0 ${x3.toFixed(2)} ${y3.toFixed(2)}Z`;
+}
 
+/** Radial gate clock: first entries by hour for each event day, unique visitors in the middle. */
+export function GateClock({ data, className }: { data: EventDays; className?: string }) {
+  const days = data.days;
+  const open = [...new Set(days.flatMap((d) => d.hours.filter((h) => h.firstEntries > 0).map((h) => h.hour)))].sort((a, b) => a - b);
+  const face = open.length && open[open.length - 1] - open[0] >= 12 ? 24 : 12;
+  const slot = (Math.PI * 2) / face;
+  const sub = slot / Math.max(1, days.length);
+  const max = Math.max(1, ...days.flatMap((d) => d.hours.map((h) => h.firstEntries)));
+  const r0 = 58;
+  const rMax = 136;
+  const angle = (h: number) => -Math.PI / 2 + ((h % face) / face) * Math.PI * 2;
+  const peak = days[0];
   return (
-    <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center sm:gap-6">
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`Arrivals by hour. ${days.map((d, i) => `Day ${i + 1}: ${d.uniqueVisitors} visitors, peak ${d.peakHour}:00`).join('. ')}`} className="max-w-full" onMouseLeave={() => setHover(null)}>
-        <circle cx={c} cy={c} r={r0 - 4} fill="var(--paper)" />
-        {Array.from({ length: 24 }, (_, h) => {
-          const a = (h / 24) * Math.PI * 2 - Math.PI / 2 + ROT;
-          const major = h % 6 === 0;
-          const x1 = c + Math.cos(a) * (r0 - 10);
-          const y1 = c + Math.sin(a) * (r0 - 10);
-          const x2 = c + Math.cos(a) * (r0 - (major ? 2 : 6));
-          const y2 = c + Math.sin(a) * (r0 - (major ? 2 : 6));
-          return <line key={h} x1={x1} y1={y1} x2={x2} y2={y2} stroke="var(--line-2)" strokeWidth={major ? 1.5 : 1} />;
-        })}
-        {[0, 6, 12, 18].map((h) => {
-          // keep labels clear of the dot columns around noon
-          const a = (h / 24) * Math.PI * 2 - Math.PI / 2 + ROT;
-          const rr = size * 0.47;
-          return (
-            <text key={h} x={c + Math.cos(a) * rr} y={c + Math.sin(a) * rr} textAnchor="middle" dominantBaseline="middle" fontSize={11} fill="var(--ink-3)" className="num">
-              {String(h).padStart(2, '0')}
+    <svg
+      viewBox={`0 0 ${S} ${S}`}
+      role="img"
+      aria-label={`First entries by hour. ${days
+        .filter((d) => d.uniqueVisitors)
+        .map((d, i) => `Day ${i + 1}: ${d.uniqueVisitors} visitors, peak ${d.peakHour}:00 with ${d.peakFirstEntries}`)
+        .join('. ')}`}
+      className={className}
+      style={{ overflow: 'visible' }}
+    >
+      <circle cx={C} cy={C} r={r0 - 4} fill="var(--bidri-2)" />
+      {Array.from({ length: 12 }, (_, k) => {
+        const a = -Math.PI / 2 + (k / 12) * Math.PI * 2;
+        return <line key={k} x1={C + 48 * Math.cos(a)} y1={C + 48 * Math.sin(a)} x2={C + 52 * Math.cos(a)} y2={C + 52 * Math.sin(a)} stroke="var(--bidri-3)" strokeWidth="2" strokeLinecap="round" />;
+      })}
+      {open.map((h, k) => {
+        const a0 = angle(h);
+        const mid = a0 + slot / 2;
+        const label = face === 12 ? (h % 12 === 0 ? 12 : h % 12) : h;
+        return (
+          <g key={h}>
+            <text x={C + 147 * Math.cos(mid)} y={C + 147 * Math.sin(mid)} textAnchor="middle" dominantBaseline="central" fill="var(--silver-2)" style={{ fontSize: 11.5, fontWeight: 600 }}>
+              {label}
             </text>
-          );
-        })}
-        {days.map((d, di) =>
-          d.hours.map((hr) => {
-            const n = Math.round(hr.firstEntries / DOT);
-            if (!n) return null;
-            const a = angle(hr.hour, di === 0 ? -0.2 : 0.2);
-            const active = hover && hover.day === di && hover.hour === hr.hour;
-            return (
-              <g key={`${di}-${hr.hour}`} onMouseEnter={() => setHover({ day: di, hour: hr.hour })} style={{ cursor: 'default' }}>
-                {Array.from({ length: n }, (_, k) => (
-                  <circle key={k} cx={c + Math.cos(a) * (r0 + 6 + k * step)} cy={c + Math.sin(a) * (r0 + 6 + k * step)} r={dotR} fill={COLORS[di]} opacity={hover && !active ? 0.35 : 1} />
-                ))}
-                {/* generous hit target along the column */}
-                <line x1={c + Math.cos(a) * r0} y1={c + Math.sin(a) * r0} x2={c + Math.cos(a) * (r0 + 6 + n * step)} y2={c + Math.sin(a) * (r0 + 6 + n * step)} stroke="transparent" strokeWidth={step * 1.6} />
-              </g>
-            );
-          }),
-        )}
-        <text x={c} y={c - 26} textAnchor="middle" fontSize={11} fill="var(--ink-3)">
-          {hovered ? `${String(hover!.hour).padStart(2, '0')}:00, day ${hover!.day + 1}` : 'unique visitors'}
+            {days.map((d, j) => {
+              const hr = d.hours.find((x) => x.hour === h);
+              if (!hr || hr.firstEntries <= 0) return null;
+              const s0 = a0 + j * sub + 0.03;
+              const s1 = a0 + (j + 1) * sub - 0.03;
+              const r1 = r0 + (rMax - r0) * Math.sqrt(hr.firstEntries / max);
+              return (
+                <path
+                  key={d.date}
+                  className="anim-fade"
+                  style={v({ '--d': `${120 + k * 50 + j * 25}ms` })}
+                  d={arcPath(r0, r1, s0, s1)}
+                  fill={gateDayColor(j)}
+                  {...tipProps({
+                    title: `Day ${j + 1}, ${h}:00 to ${h + 1}:00`,
+                    rows: [
+                      { color: gateDayColor(j), label: 'First entries', value: num(hr.firstEntries), swatch: 'square' },
+                      { label: 'All admissions', value: num(hr.admissions) },
+                    ],
+                  })}
+                />
+              );
+            })}
+          </g>
+        );
+      })}
+      <text x={C} y={C - 4} textAnchor="middle" fill="#fff" style={{ fontStretch: '75%', fontWeight: 800, fontSize: 34 }}>
+        {num(data.uniqueVisitors)}
+      </text>
+      <text x={C} y={C + 16} textAnchor="middle" fill="var(--silver)" style={{ fontSize: 11.5, fontWeight: 600 }}>
+        unique visitors
+      </text>
+      {peak && !open.length ? (
+        <text x={C} y={C + 96} textAnchor="middle" fill="var(--silver-2)" style={{ fontSize: 12, fontWeight: 600 }}>
+          No admissions yet
         </text>
-        <text x={c} y={c + 4} textAnchor="middle" fontSize={26} fontWeight={760} fill="var(--ink)" className="num" style={{ fontStretch: '115%' }}>
-          {num(hovered ? hovered.firstEntries : data.uniqueVisitors)}
-        </text>
-        <text x={c} y={c + 24} textAnchor="middle" fontSize={11} fill="var(--ink-3)">
-          {hovered ? `first entries, ${num(hovered.admissions)} scans` : `${num(data.bothDays)} came both days`}
-        </text>
-      </svg>
-      <div className="min-w-[13rem] space-y-3 text-[0.85rem]">
-        {days.map((d, i) => (
-          <div key={d.date}>
-            <div className="flex items-center gap-2 font-semibold text-ink">
-              <span className="inline-block size-2.5 rounded-full" style={{ background: COLORS[i] }} />
-              Day {i + 1}, {dateLabel(d.date)}
-            </div>
-            <div className="num mt-0.5 pl-[18px] text-ink-2">
-              {num(d.uniqueVisitors)} visitors{i > 0 ? `, ${num(d.newVisitors)} new` : ''}
-              <br />
-              peak {d.peakHour != null ? `${String(d.peakHour).padStart(2, '0')}:00` : '–'} with {num(d.peakFirstEntries)} first entries
-              <br />
-              manual scans {pct(d.manualShare)}
-            </div>
-          </div>
-        ))}
-        <p className="text-[0.75rem] text-ink-3">One dot = {DOT} first entries. Hover a column for the hour.</p>
-        {days.every((d) => totalByHour(0) === 0 && d.uniqueVisitors === 0) ? <p className="text-ink-3">No admissions yet at this date.</p> : null}
-      </div>
-    </div>
+      ) : null}
+    </svg>
+  );
+}
+
+/** Countdown face before the event: a tick per campaign day (weeks longer), filled up to the as-of day. */
+export function GateCountdown({ totalDays, doneDays, daysLeft, className }: { totalDays: number; doneDays: number; daysLeft: number; className?: string }) {
+  const total = Math.max(1, totalDays);
+  const ea = -Math.PI / 2 + (Math.PI * 2 * (total - 0.5)) / total;
+  return (
+    <svg viewBox={`0 0 ${S} ${S}`} role="img" aria-label={`${daysLeft} ${daysLeft === 1 ? 'day' : 'days'} until the gates open`} className={className} style={{ overflow: 'visible' }}>
+      {Array.from({ length: total }, (_, i) => {
+        const a = -Math.PI / 2 + (i / total) * Math.PI * 2;
+        const r1 = i % 7 === 0 ? 128 : 118;
+        const on = i < doneDays;
+        return (
+          <line
+            key={i}
+            className="anim-fade"
+            style={v({ '--d': `${Math.round(i * 6)}ms` })}
+            x1={C + 96 * Math.cos(a)}
+            y1={C + 96 * Math.sin(a)}
+            x2={C + r1 * Math.cos(a)}
+            y2={C + r1 * Math.sin(a)}
+            stroke={on ? 'var(--silver)' : 'var(--bidri-3)'}
+            strokeWidth={on ? 2.6 : 2}
+            strokeLinecap="round"
+          />
+        );
+      })}
+      <circle cx={C + 136 * Math.cos(ea)} cy={C + 136 * Math.sin(ea)} r="6" fill="var(--lac-bright)" />
+      <text x={C} y={C - 6} textAnchor="middle" fill="#fff" style={{ fontStretch: '75%', fontWeight: 800, fontSize: 76 }}>
+        {daysLeft}
+      </text>
+      <text x={C} y={C + 30} textAnchor="middle" fill="var(--silver)" style={{ fontSize: 13, fontWeight: 600 }}>
+        {daysLeft === 1 ? 'day to the gate' : 'days to the gate'}
+      </text>
+    </svg>
   );
 }
