@@ -6,7 +6,7 @@
 
 | Deliverable | Where |
 |---|---|
-| 3-slide strategy (PDF) | `deck/Keerthi_Modalavalasa_RISA_Growth_APM.pdf` |
+| 3-slide strategy (PDF) | Submitted separately, not kept in this repo |
 | Working product: dashboard, campaign and task manager, AI copilot | **Live: https://campusfest-growth-center-brown.vercel.app**. Source: `growth-center/` |
 | This README: research, assumptions, calculations, sources, framework, setup, tools, limitations | You are here |
 
@@ -70,9 +70,7 @@ research/
   chat_eval_rerun.md      output of partial re-runs (--only), kept apart from the full record
 growth-center/            the product (Next.js 16, TypeScript, Postgres)
   docs/design-spec.md     the "Charminar Bento" design system: tokens, tiles, charts, rules
-deck/                     the PDF; final slide sources in deck/directions/a-gate (HTML over three.js renders)
-                          plus two rejected design mockups; SLIDE1-3.md hold the exact slide copy
-tools/                    headless-Chrome tools (Playwright): screenshots, crops, the deck PDF,
+tools/                    headless-Chrome tools (Playwright): screenshots, crops, PDF export,
   overlap-audit.mjs       and the layout audit that checks every page for overlapping or spilling text
 ```
 
@@ -341,15 +339,18 @@ Then re-seed management data (`POST /api/admin/seed`).
 | Tool / source | Use | Notes |
 |---|---|---|
 | **Claude Code** (Anthropic, Claude Opus 5.5) | Research orchestration, analysis, model, app code, deck | Every number was checked against the data or the independent Python implementation. Screenshots of every page were reviewed, and the layout audit checks every page automatically |
-| Playwright (`playwright-core`) driving headless Chrome | Screenshots, the deck PDF, the layout audit | Apache-2.0 |
+| Playwright (`playwright-core`) driving headless Chrome | Screenshots, the layout audit, measuring the slides for the PowerPoint build | Apache-2.0 |
+| PptxGenJS, Microsoft PowerPoint | The deck: slides designed as 1920×1080 HTML, then every box, chart mark and line of text is rebuilt as a native PowerPoint shape or text box; the PDF is exported from PowerPoint | MIT |
+| Financial Times Visual Vocabulary (github.com/Financial-Times/chart-doctor) | Design reference for the deck: chart type chosen by relationship, direct labels, a source line per chart | Studied, not copied |
+| Source Serif 4 (Adobe), Libre Franklin (Impallari Type) | Deck typefaces | SIL Open Font License |
 | Google **Gemini 3.8 Flash**, with 3.5/3.1 Flash-Lite and 3.6 Flash as fallbacks (AI Studio, free tier) | Copilot model | Free-tier prompts may be used by Google, so only the synthetic dataset is sent. A production deployment would use a paid tier or pseudonymised tool outputs |
 | Next.js 16, React 19, Tailwind 4, Recharts 3, Vercel AI SDK 7, Neon serverless, PGlite, exceljs, zod, mathjs | App stack | Versions pinned in `package.json` |
 | **Rare UI** Fluid Orb (rareui.com) | Copilot avatar / thinking state | MIT + Commons Clause + Attribution. Credited in the app and here; source notice kept in `src/components/vendor/fluid-orb.tsx` |
 | **Rune Icons** (runeicons.com) | Duotone navigation icons | Apache-2.0 |
 | Bklit UI radial chart, Liveline, Sesama UI, UploadCN, Design Spells | Pattern ideas: gate clock, live line head, "vs last week" and "View data", drop zone, ticket tear | Ideas re-implemented from scratch; no code copied (`research/design-inspiration.md`) |
-| Mona Sans (GitHub), Archivo (Omnibus-Type) | Mona Sans in the app (condensed numerals); Archivo in the deck | SIL Open Font License |
-| three.js | Deck renders: the arch, bangle stacks and gate colonnade, drawn to exact data scale | MIT |
-| ShaderPad (misery.co), Bluu Next (Velvetyne), Bagnard (Sebastien Sanfilippo) | Only in the two rejected deck mockups (`deck/directions/b-calm`, `c-shader`) | MIT / SIL OFL |
+| Mona Sans (GitHub), Archivo (Omnibus-Type) | Mona Sans in the app (condensed numerals); Archivo in the earlier deck | SIL Open Font License |
+| three.js | Renders for an earlier deck draft (arch, bangle stacks, gate colonnade at exact data scale) | MIT |
+| ShaderPad (misery.co), Bluu Next (Velvetyne), Bagnard (Sebastien Sanfilippo) | Only in rejected deck mockups | MIT / SIL OFL |
 | Dataviz palette validator | Campaign colours | Passed lightness, chroma, CVD (ΔE ≥ 11.8) and normal-vision checks |
 
 ## 10. Known limitations
