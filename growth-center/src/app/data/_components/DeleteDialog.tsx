@@ -34,20 +34,20 @@ export function DeleteDialog({ target, onClose }: { target: { table: TableMeta; 
 
   return (
     <Dialog open onClose={onClose} title={`Delete ${what} ${id}?`} width={480}>
-      <div className="space-y-3 text-[0.9rem] text-ink-2">
+      <div className="space-y-3 text-[13.5px] text-ink-2">
         <p>
           This removes the row from {table.label}. Every page recomputes without it
           {carry ? (
             <>
               {' '}
-              from <span className="num font-semibold text-ink">{dateLabel(carry, true)}</span> onward
+              from <span className="tab font-[650] text-ink">{dateLabel(carry, true)}</span> onward
             </>
           ) : null}
           .
         </p>
         <p>To undo, add the row again, or use Reset to original data to reload the RISA workbook.</p>
         {err ? <ErrorNote>{err}</ErrorNote> : null}
-        <div className="flex justify-end gap-2 border-t border-line pt-3">
+        <div className="flex justify-end gap-2 pt-3 shadow-[inset_0_1px_0_var(--stone-2)]">
           <Button variant="ghost" onClick={onClose}>
             Keep the row
           </Button>

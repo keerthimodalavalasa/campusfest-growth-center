@@ -100,7 +100,7 @@ export function RowDialog({ state, onClose, onSaved }: { state: RowDialogState |
   return (
     <Dialog open onClose={onClose} title={title} width={680}>
       <form onSubmit={submit} noValidate className="space-y-4">
-        {state.note ? <p className="rounded-[var(--radius-control)] bg-sagar-soft px-3 py-2 text-[0.85rem] text-ink">{state.note}</p> : null}
+        {state.note ? <p className="rounded-tile-m bg-stone px-3.5 py-2.5 text-[13.5px] leading-[1.45] text-ink">{state.note}</p> : null}
         <div className="grid gap-x-4 gap-y-3 sm:grid-cols-2">
           {visibleCols.map((c) => {
             const v = vals[c.name] ?? '';
@@ -125,7 +125,7 @@ export function RowDialog({ state, onClose, onSaved }: { state: RowDialogState |
               value: v,
               disabled: ro,
               'aria-invalid': fieldErr[c.name] ? true : undefined,
-              style: fieldErr[c.name] ? { borderColor: 'var(--lac)' } : was ? { borderColor: 'var(--zari-bright)' } : undefined,
+              style: fieldErr[c.name] ? { borderColor: 'var(--st-stop)' } : was ? { borderColor: 'var(--haldi-track)' } : undefined,
             } as const;
             let input;
             if (c.type === 'enum' || c.type === 'bool') {
@@ -150,7 +150,7 @@ export function RowDialog({ state, onClose, onSaved }: { state: RowDialogState |
                   placeholder={c.type === 'ts' ? '2025-03-02 10:00' : isNumeric(c) ? '0' : undefined}
                   list={isCampaignCol(c) ? 'gc-data-campaigns' : isOwnerCol(c) ? 'gc-data-owners' : undefined}
                   autoComplete="off"
-                  className={cx((isNumeric(c) || c.type === 'ts' || c.type === 'date') && 'num')}
+                  className={cx((isNumeric(c) || c.type === 'ts' || c.type === 'date') && 'tab')}
                   onChange={(e) => set(c.name, e.target.value)}
                 />
               );
@@ -163,7 +163,7 @@ export function RowDialog({ state, onClose, onSaved }: { state: RowDialogState |
               </div>
             );
           })}
-          {state.mode === 'add' && table.pkGenerated ? <p className="self-end text-[0.82rem] text-ink-3">The {table.columns.find((c) => c.name === table.pk)?.label ?? 'ID'} is assigned when you add the row.</p> : null}
+          {state.mode === 'add' && table.pkGenerated ? <p className="self-end text-[12.5px] text-ink-2">The {table.columns.find((c) => c.name === table.pk)?.label ?? 'ID'} is assigned when you add the row.</p> : null}
         </div>
 
         <datalist id="gc-data-campaigns">
@@ -182,14 +182,14 @@ export function RowDialog({ state, onClose, onSaved }: { state: RowDialogState |
         </datalist>
 
         {carry && asOf ? (
-          <p className={cx('text-[0.84rem]', carriesLater ? 'text-zari' : 'text-ink-2')}>
+          <p className={cx('text-[13px]', carriesLater ? 'font-[600] text-ink' : 'text-ink-2')}>
             {carriesLater ? (
               <>
-                This row is dated <span className="num font-semibold">{dateLabel(carry, true)}</span>, after the date you are viewing ({dateLabel(asOf, true)}). It changes nothing on screen until you move the date to {dateLabel(carry)} or later.
+                This row is dated <span className="tab font-[650]">{dateLabel(carry, true)}</span>, after the date you are viewing ({dateLabel(asOf, true)}). It changes nothing on screen until you move the date to {dateLabel(carry)} or later.
               </>
             ) : (
               <>
-                This row is dated <span className="num font-semibold">{dateLabel(carry, true)}</span>. {versionedAdd ? 'Views of earlier dates do not change.' : 'It counts from that date onward; views of earlier dates do not change.'}
+                This row is dated <span className="tab font-[650]">{dateLabel(carry, true)}</span>. {versionedAdd ? 'Views of earlier dates do not change.' : 'It counts from that date onward; views of earlier dates do not change.'}
               </>
             )}
           </p>
@@ -199,8 +199,8 @@ export function RowDialog({ state, onClose, onSaved }: { state: RowDialogState |
 
         {formErr ? <ErrorNote>{formErr}</ErrorNote> : null}
 
-        <div className="flex flex-wrap items-center justify-end gap-2 border-t border-line pt-3">
-          {editing ? <span className="mr-auto text-[0.82rem] text-ink-3">{changed.length ? `${changed.length} field${changed.length > 1 ? 's' : ''} changed` : 'No changes yet'}</span> : null}
+        <div className="flex flex-wrap items-center justify-end gap-2 pt-3 shadow-[inset_0_1px_0_var(--stone-2)]">
+          {editing ? <span className="tab mr-auto text-[12.5px] font-[550] text-ink-2">{changed.length ? `${changed.length} field${changed.length > 1 ? 's' : ''} changed` : 'No changes yet'}</span> : null}
           <Button type="button" variant="ghost" onClick={onClose}>
             Cancel
           </Button>
@@ -235,11 +235,11 @@ function VersionContext({ tableKey, vals }: { tableKey: string; vals: Record<str
     const before = list.filter((t) => t.effectiveAt <= ms).pop() ?? null;
     const next = list.find((t) => t.effectiveAt > ms) ?? null;
     return (
-      <p className={cx('text-[0.84rem]', next ? 'text-zari' : 'text-ink-2')}>
+      <p className={cx('text-[13px]', next ? 'font-[600] text-ink' : 'text-ink-2')}>
         {before ? <>It replaces &ldquo;{before.version}&rdquo; from {dateLabel(istDate(ms), true)}. </> : <>No target version is in force before it. </>}
         {next ? (
           <>
-            &ldquo;{next.version}&rdquo; already takes effect on <span className="num font-semibold">{dateLabel(istDate(next.effectiveAt), true)}</span>, so this version only applies until then. Dates from then on still show &ldquo;{next.version}&rdquo;.
+            &ldquo;{next.version}&rdquo; already takes effect on <span className="tab font-[650]">{dateLabel(istDate(next.effectiveAt), true)}</span>, so this version only applies until then. Dates from then on still show &ldquo;{next.version}&rdquo;.
           </>
         ) : (
           <>It stays in force on every later date until another version is added.</>
@@ -252,11 +252,11 @@ function VersionContext({ tableKey, vals }: { tableKey: string; vals: Record<str
   const versions = hist.data.rows
     .filter((r) => asText(r.registration_id) === regId)
     .sort((a, b) => asText(a.effective_at).localeCompare(asText(b.effective_at)));
-  if (!versions.length) return <p className="text-[0.84rem] text-zari">{regId} has no status versions yet. Check the registration ID.</p>;
+  if (!versions.length) return <p className="text-[13px] font-[600] text-ink">{regId} has no status versions yet. Check the registration ID.</p>;
   const before = versions.filter((r) => asText(r.effective_at) <= at).pop() ?? null;
   const next = versions.find((r) => asText(r.effective_at) > at) ?? null;
   return (
-    <p className={cx('text-[0.84rem]', next ? 'text-zari' : 'text-ink-2')}>
+    <p className={cx('text-[13px]', next ? 'font-[600] text-ink' : 'text-ink-2')}>
       {before ? (
         <>
           Until this version, {regId} is {asText(before.status)} (since {dateLabel(asText(before.effective_at), true)}, {asText(before.history_id)}).{' '}
@@ -266,7 +266,7 @@ function VersionContext({ tableKey, vals }: { tableKey: string; vals: Record<str
       )}
       {next ? (
         <>
-          A later version already sets it to {asText(next.status)} on <span className="num font-semibold">{dateLabel(asText(next.effective_at), true)}</span> ({asText(next.history_id)}), so this one only holds until then.
+          A later version already sets it to {asText(next.status)} on <span className="tab font-[650]">{dateLabel(asText(next.effective_at), true)}</span> ({asText(next.history_id)}), so this one only holds until then.
         </>
       ) : (
         <>No later version exists, so this status holds on every later date.</>

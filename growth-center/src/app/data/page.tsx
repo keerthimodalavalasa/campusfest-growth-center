@@ -172,13 +172,21 @@ export default function DataPage() {
   };
 
   return (
-    <div className="space-y-5">
-      <PageHeader title="Source data" lede="Edit, add or delete rows in the seven source tables, import a workbook, or reset to the original. Every page recomputes from these rows, at the dates they carry." />
+    <div>
+      <PageHeader
+        title="Source data"
+        lede={
+          <>
+            Seven source tables. Every page recomputes from these rows, at the dates they carry. Totals as of <b className="font-[650] text-ink">{dateLabel(asOf, true)}</b>.
+          </>
+        }
+      />
 
       <LiveTotals />
 
-      <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="mt-3 grid grid-cols-[minmax(0,1fr)_340px] items-start gap-3 max-[1200px]:grid-cols-1">
         <TableBrowser
+          delay={160}
           tables={tables}
           table={table}
           onTable={(k) => {
@@ -192,14 +200,14 @@ export default function DataPage() {
           onNewVersion={(row) => newVersion(table, row)}
           onDelete={(row) => setToDelete({ table, row })}
         />
-        <EditHelper onAction={runAction} pending={pending} />
+        <EditHelper onAction={runAction} pending={pending} delay={200} />
       </div>
 
-      <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-2">
-        <ImportPanel />
-        <div className="space-y-5">
-          <ChangesPanel onOpen={(key, id) => show(key, byKey(key)?.pkGenerated ? '' : id)} />
-          <RulesPanel />
+      <div className="mt-3 grid grid-cols-2 items-start gap-3 max-[1024px]:grid-cols-1">
+        <ImportPanel delay={240} />
+        <div className="grid gap-3">
+          <ChangesPanel delay={280} onOpen={(key, id) => show(key, byKey(key)?.pkGenerated ? '' : id)} />
+          <RulesPanel delay={320} />
         </div>
       </div>
 
@@ -221,12 +229,16 @@ export default function DataPage() {
 
 function DataSkeleton() {
   return (
-    <div className="space-y-5">
-      <Skeleton className="h-12 w-96" />
-      <Skeleton className="h-[104px]" />
-      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
-        <Skeleton className="h-[560px]" />
-        <Skeleton className="h-[560px]" />
+    <div className="space-y-3" aria-busy="true" aria-label="Loading the source data">
+      <Skeleton className="mb-2 h-12 w-96 max-w-full bg-stone" />
+      <div className="grid grid-cols-4 gap-3 max-[1200px]:grid-cols-2 max-[560px]:grid-cols-1">
+        {[0, 1, 2, 3].map((k) => (
+          <Skeleton key={k} className="h-[180px] rounded-tile-s bg-stone" />
+        ))}
+      </div>
+      <div className="grid grid-cols-[minmax(0,1fr)_340px] gap-3 max-[1200px]:grid-cols-1">
+        <Skeleton className="h-[560px] rounded-tile-l bg-stone" />
+        <Skeleton className="h-[560px] rounded-tile-l bg-stone" />
       </div>
     </div>
   );

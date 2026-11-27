@@ -86,24 +86,6 @@ export function PageHeader({ title, lede, actions }: { title: string; lede?: Rea
   );
 }
 
-/**
- * Legacy panel API, now a limestone Tile (`tone="ink"` becomes the bidri tile).
- * New code should use <Tile> + <TileHead> directly.
- */
-export function Panel({ title, aside, children, className, tone = 'surface', pad = true, id }: { title?: ReactNode; aside?: ReactNode; children: ReactNode; className?: string; tone?: 'surface' | 'well' | 'ink'; pad?: boolean; id?: string }) {
-  return (
-    <Tile id={id} field={tone === 'ink' ? 'bidri' : 'stone'} pad={pad} className={className}>
-      {title || aside ? (
-        <div className="mb-3 flex items-start justify-between gap-3">
-          {title ? <h2 className="type-title text-[15px]">{title}</h2> : <span />}
-          {aside ? <div className="shrink-0 text-[12.5px] font-[550] text-k2">{aside}</div> : null}
-        </div>
-      ) : null}
-      {children}
-    </Tile>
-  );
-}
-
 /* ------------------------------------------------------------------ controls */
 
 type BtnVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'accent' | 'bidri';
@@ -193,8 +175,6 @@ export function StatusPill({ decision, className }: { decision: DecisionKey; cla
     </span>
   );
 }
-/** @deprecated alias of StatusPill, kept for pages not yet on Bento. */
-export const DecisionChip = StatusPill;
 
 export function SeverityChip({ severity }: { severity: keyof typeof SEVERITY }) {
   const s = SEVERITY[severity];

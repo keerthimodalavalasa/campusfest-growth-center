@@ -6,11 +6,16 @@ import { api, mutate } from '@/lib/api';
 import type { MetaCampaign, TeamMember } from '@/lib/app-state';
 import { dateLabel, inr, pct } from '@/lib/format';
 import { CampaignDot } from '@/components/charts';
-import { Button, Chip, Dialog, Field, Select, Table, Td, TextArea, TextInput, Th } from '@/components/ui';
+import { PlusDuotone, Settings2Duotone } from 'runeicons-react';
+import { Button, Chip, Dialog, ErrorNote, Field, Ico, Select, Table, Td, TextArea, TextInput, Th, Tile, TileHead } from '@/components/ui';
 import { CAMPAIGN_STATUS_LABEL, CAMPAIGN_STATUSES, groupIN, parseInr, type ChangeRow } from './model';
 import { MiniSelect } from './TaskBits';
 
 interface Props {
+  /** load error for the spend column, shown above the table */
+  spendError?: string | null;
+  onRetrySpend?: () => void;
+  delay?: number;
   campaigns: MetaCampaign[];
   team: TeamMember[];
   asOf: string | null;
@@ -71,7 +76,7 @@ function useCampaignNotes(ids: string[], changes: ChangeRow[] | null, cheapDate:
   }, [base, changes, error]);
 }
 
-export function CampaignManager({ campaigns, team, asOf, spend, changes, historyStart }: Props) {
+export function CampaignManager({ campaigns, team, asOf, spend, changes, historyStart, spendError, onRetrySpend, delay }: Props) {
   const [creating, setCreating] = useState(false);
   const { notes, error: notesError } = useCampaignNotes(
     campaigns.map((c) => c.id),
@@ -80,24 +85,32 @@ export function CampaignManager({ campaigns, team, asOf, spend, changes, history
   );
 
   return (
-    <>
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-        <p className="max-w-[70ch] text-[0.85rem] text-ink-2">Status and owner save as soon as you pick them. Budget and notes save when you leave the field. Every change goes to the activity log, and analytics refresh straight away.</p>
-        <Button variant="secondary" onClick={() => setCreating(true)}>
+    <Tile field="stone" delay={delay} aria-label="Campaigns">
+      <TileHead icon={Settings2Duotone} aside={`${campaigns.length} campaigns, ${campaigns.filter((c) => c.origin === 'app').length} added in app`}>
+        Campaigns
+      </TileHead>
+      <div className="mt-2 mb-3 flex flex-wrap items-center justify-between gap-3">
+        <p className="text-[12.5px] font-[550] text-ink-2">Edits save as you make them, go to the activity log and refresh every page.</p>
+        <Button size="sm" variant="secondary" onClick={() => setCreating(true)} icon={<Ico icon={PlusDuotone} size={15} ia="var(--ink)" ib="var(--stone-3)" />}>
           New campaign
         </Button>
       </div>
-      {notesError ? <p className="mb-2 text-[0.82rem] text-lac">Could not load campaign notes ({notesError}). Notes are read-only until the page is reloaded.</p> : null}
+      {spendError ? (
+        <div className="mb-3">
+          <ErrorNote onRetry={onRetrySpend}>Could not load campaign spend: {spendError}</ErrorNote>
+        </div>
+      ) : null}
+      {notesError ? <p className="mb-2 text-[12.5px] font-[600] text-st-stop">Could not load campaign notes ({notesError}). Notes are read-only until the page is reloaded.</p> : null}
       <Table>
         <thead>
           <tr>
-            <Th className="text-left">Campaign</Th>
-            <Th className="text-left">Origin</Th>
-            <Th className="text-left">Status</Th>
-            <Th className="text-left">Owner</Th>
+            <Th>Campaign</Th>
+            <Th>Origin</Th>
+            <Th>Status</Th>
+            <Th>Owner</Th>
             <Th align="right">Planned budget</Th>
             <Th align="right">Net spend{asOf ? ` by ${dateLabel(asOf)}` : ''}</Th>
-            <Th className="min-w-[14rem] text-left">Notes</Th>
+            <Th className="min-w-[14rem]">Notes</Th>
           </tr>
         </thead>
         <tbody>
@@ -107,7 +120,7 @@ export function CampaignManager({ campaigns, team, asOf, spend, changes, history
         </tbody>
       </Table>
       <NewCampaignDialog open={creating} onClose={() => setCreating(false)} team={team} />
-    </>
+    </Tile>
   );
 }
 
@@ -180,12 +193,12 @@ function CampaignRow({ c, team, spend, notes, notesFailed }: { c: MetaCampaign; 
 
   const share = spend != null && c.plannedBudget ? spend / c.plannedBudget : null;
   return (
-    <tr className="hover:bg-paper">
+    <tr className="transition-colors duration-150 hover:bg-stone-2/60">
       <Td className="whitespace-nowrap">
-        <Link href={`/campaigns/${c.id}`} className="font-medium text-ink hover:underline">
+        <Link href={`/campaigns/${c.id}`} className="font-[650] text-ink hover:underline">
           <CampaignDot id={c.id}>{c.name}</CampaignDot>
         </Link>
-        <div className="pl-[18px] text-[0.75rem] text-ink-3">
+        <div className="tab pl-[18px] text-[12px] text-ink-2">
           {c.id}
           {c.channel ? `, ${c.channel.replace(/_/g, ' ')}` : ''}
         </div>
@@ -193,14 +206,16 @@ function CampaignRow({ c, team, spend, notes, notesFailed }: { c: MetaCampaign; 
       <Td>
         {c.origin === 'app' ? (
           <div className="flex items-center gap-1">
-            <Chip fg="var(--sagar)" bg="var(--sagar-soft)">Added in app</Chip>
+            <Chip bg="var(--ground)" className="shadow-[inset_0_0_0_1.5px_var(--stone-3)]">
+              Added in app
+            </Chip>
             <Button size="sm" variant="ghost" onClick={() => setConfirmDelete(true)} aria-label={`Delete ${c.name}`}>
               Delete
             </Button>
             <Dialog open={confirmDelete} onClose={() => setConfirmDelete(false)} title={`Delete ${c.name}?`} width={460}>
-              <div className="space-y-3 text-[0.9rem] text-ink-2">
+              <div className="space-y-3 text-[13.5px] text-ink-2">
                 <p>This removes the campaign. Tasks linked to it stay on the board without a campaign. Campaigns that already have data rows cannot be deleted; set them to stopped instead.</p>
-                <div className="flex justify-end gap-2 border-t border-line pt-3">
+                <div className="flex justify-end gap-2 pt-3 shadow-[inset_0_1px_0_var(--stone-2)]">
                   <Button variant="ghost" onClick={() => setConfirmDelete(false)}>
                     Cancel
                   </Button>
@@ -224,7 +239,6 @@ function CampaignRow({ c, team, spend, notes, notesFailed }: { c: MetaCampaign; 
             setStatus(v);
             if (!(await saveCampaign(c, { status: v }, 'status'))) setStatus(c.status);
           }}
-          className="h-8 text-[0.82rem] text-ink"
         >
           {CAMPAIGN_STATUSES.map((s) => (
             <option key={s} value={s}>
@@ -243,7 +257,7 @@ function CampaignRow({ c, team, spend, notes, notesFailed }: { c: MetaCampaign; 
             setOwner(v);
             if (!(await saveCampaign(c, { owner_id: v || null }, 'owner'))) setOwner(c.ownerId ?? '');
           }}
-          className="h-8 max-w-[11rem] text-[0.82rem] text-ink"
+          className="max-w-[11rem]"
         >
           <option value="">Unassigned</option>
           {team.map((t) => (
@@ -256,7 +270,7 @@ function CampaignRow({ c, team, spend, notes, notesFailed }: { c: MetaCampaign; 
       <Td align="right">
         <label className="relative inline-flex items-center">
           <span className="sr-only">Planned budget for {c.name} in rupees</span>
-          <span className="pointer-events-none absolute left-2 text-[0.82rem] text-ink-3" aria-hidden>
+          <span className="pointer-events-none absolute left-3 text-[12.5px] font-[600] text-ink-2" aria-hidden>
             ₹
           </span>
           <input
@@ -273,13 +287,20 @@ function CampaignRow({ c, team, spend, notes, notesFailed }: { c: MetaCampaign; 
                 setFocus(null);
               }
             }}
-            className="num h-8 w-[8.5rem] rounded-[6px] border border-line-2 bg-surface pl-5 pr-2 text-right text-[0.85rem] text-ink placeholder:text-ink-3 focus:border-sagar focus:outline-none"
+            className="tab h-8 w-[8.5rem] rounded-full border-[1.5px] border-stone-3 bg-ground pr-3 pl-6 text-right text-[12.5px] font-[600] text-ink transition-colors duration-150 placeholder:font-[550] placeholder:text-ink-2/80 hover:border-ink-2/60 focus:border-ink focus:outline-none"
           />
         </label>
       </Td>
       <Td align="right" className="whitespace-nowrap">
-        {spend == null ? <span className="inline-block h-3 w-16 animate-pulse rounded bg-paper-2" aria-label="Loading spend" /> : inr(spend)}
-        {share != null ? <div className="text-[0.75rem] text-ink-3">{pct(share)} of plan</div> : null}
+        {spend == null ? <span className="inline-block h-3 w-16 animate-pulse rounded bg-stone-2" aria-label="Loading spend" /> : <span className="font-[600]">{inr(spend)}</span>}
+        {share != null ? (
+          <div className="mt-1 flex items-center justify-end gap-1.5 text-[11.5px] font-[550] text-ink-2">
+            <span aria-hidden className="relative block h-1.5 w-12 rounded-full bg-stone-2">
+              <i className="absolute inset-y-0 left-0 block rounded-full bg-haldi" style={{ width: `${Math.min(100, share * 100)}%` }} />
+            </span>
+            {pct(share, 0)} of plan
+          </div>
+        ) : null}
       </Td>
       <Td>
         <input
@@ -298,7 +319,7 @@ function CampaignRow({ c, team, spend, notes, notesFailed }: { c: MetaCampaign; 
             }
           }}
           title={note || undefined}
-          className="h-8 w-full min-w-[14rem] rounded-[6px] border border-line-2 bg-surface px-2 text-[0.85rem] text-ink placeholder:text-ink-3 focus:border-sagar focus:outline-none disabled:bg-paper-2"
+          className="h-8 w-full min-w-[14rem] rounded-full border-[1.5px] border-stone-3 bg-ground px-3 text-[12.5px] text-ink transition-colors duration-150 placeholder:text-ink-2/80 hover:border-ink-2/60 focus:border-ink focus:outline-none disabled:bg-stone-2"
         />
       </Td>
     </tr>
@@ -394,7 +415,7 @@ function NewCampaignDialog({ open, onClose, team }: { open: boolean; onClose: ()
             </Select>
           </Field>
           <Field label="Planned budget (₹)">
-            <TextInput inputMode="numeric" value={f.budget} onChange={set('budget')} placeholder="e.g. 50,000" className="num" />
+            <TextInput inputMode="numeric" value={f.budget} onChange={set('budget')} placeholder="e.g. 50,000" className="tab" />
           </Field>
           <Field label="Planned start">
             <TextInput type="date" value={f.planned_start_at} onChange={set('planned_start_at')} />
@@ -412,8 +433,8 @@ function NewCampaignDialog({ open, onClose, team }: { open: boolean; onClose: ()
         <Field label="Notes">
           <TextArea value={f.notes} onChange={set('notes')} className="min-h-14" />
         </Field>
-        <p className="text-[0.8rem] text-ink-3">The campaign gets the next free ID (C08, C09 and so on). It has no marketing activity until rows are added on the Data page.</p>
-        {err ? <p className="text-[0.85rem] text-lac">{err}</p> : null}
+        <p className="text-[12.5px] text-ink-2">The campaign gets the next free ID (C08, C09 and so on). It has no marketing activity until rows are added on the Data page.</p>
+        {err ? <p className="text-[13px] font-[600] text-st-stop">{err}</p> : null}
         <div className="flex justify-end gap-2 pt-1">
           <Button variant="ghost" onClick={onClose}>
             Cancel

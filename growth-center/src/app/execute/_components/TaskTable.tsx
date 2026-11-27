@@ -1,11 +1,10 @@
 'use client';
 import { useMemo, useState, type ReactNode } from 'react';
-import { ChevronDown, ChevronUp, Flag, Trash2 } from 'lucide-react';
-import { dateLabel, num } from '@/lib/format';
+import { ChevronDownDuotone, ChevronUpDuotone, FlagDuotone, Trash2Duotone } from 'runeicons-react';
 import { CampaignDot } from '@/components/charts';
-import { cx, Table, Td, Th } from '@/components/ui';
-import { overdueDays, PRIORITY_RANK, type TaskRow, type TaskStatus } from './model';
-import { PriorityChip, SourceMark, StatusSelect, TaskDecisionChip } from './TaskBits';
+import { cx, Ico, Table, Td, Th } from '@/components/ui';
+import { PRIORITY_RANK, type TaskRow, type TaskStatus } from './model';
+import { Avatar, DueChip, PriorityMark, SourceMark, StatusSelect, TaskDecisionChip } from './TaskBits';
 
 type SortKey = 'due' | 'priority';
 type Sort = { key: SortKey; dir: 'asc' | 'desc' };
@@ -41,81 +40,81 @@ export function TaskTable({ tasks, today, onMove, onOpen, onDelete }: { tasks: T
 
   return (
     // `relative` keeps the visually hidden header text inside the scroll container (otherwise it widens the page)
-    <Table className="relative rounded-[var(--radius-panel)] border border-line bg-surface">
+    <Table className="relative">
       <thead>
         <tr>
-          <Th className="min-w-[15rem] text-left">Task</Th>
-          <Th className="text-left">Status</Th>
+          <Th className="min-w-[15rem]">Task</Th>
+          <Th>Status</Th>
           <SortTh label="Due date" active={sort.key === 'due'} dir={sort.dir} onClick={() => toggle('due')} hint={sort.dir === 'asc' ? 'earliest first' : 'latest first'} />
           <SortTh label="Priority" active={sort.key === 'priority'} dir={sort.dir} onClick={() => toggle('priority')} hint={sort.dir === 'asc' ? 'highest first' : 'lowest first'} />
-          <Th className="text-left">Owner</Th>
-          <Th className="text-left">Campaign and 2027 bet</Th>
-          <Th className="text-left">Decision</Th>
+          <Th>Owner</Th>
+          <Th>Campaign and 2027 bet</Th>
+          <Th>Decision</Th>
           <Th>
             <span className="sr-only">Actions</span>
           </Th>
         </tr>
       </thead>
       <tbody>
-        {rows.map((t) => {
-          const late = overdueDays(t, today);
-          return (
-            <tr key={t.id} className="hover:bg-paper">
-              <Td>
-                <button onClick={() => onOpen(t)} className={cx('text-left font-medium text-ink hover:underline', t.status === 'done' && 'text-ink-2 line-through decoration-ink-3')}>
-                  {t.title}
-                </button>
-                <div className="mt-0.5">
-                  <SourceMark source={t.source} />
+        {rows.map((t) => (
+          <tr key={t.id} className="transition-colors duration-150 hover:bg-stone-2/60">
+            <Td>
+              <button type="button" onClick={() => onOpen(t)} className={cx('text-left text-[13.5px] font-[650] text-ink hover:underline', t.status === 'done' && 'text-ink-2 line-through decoration-stone-3')}>
+                {t.title}
+              </button>
+              <div className="mt-1">
+                <SourceMark source={t.source} label />
+              </div>
+            </Td>
+            <Td>
+              <StatusSelect task={t} onMove={onMove} />
+            </Td>
+            <Td className="whitespace-nowrap">
+              <DueChip task={t} today={today} />
+            </Td>
+            <Td>
+              <PriorityMark priority={t.priority} />
+            </Td>
+            <Td className="whitespace-nowrap">
+              <span className="inline-flex items-center gap-2 font-[550] text-ink-2">
+                <Avatar name={t.owner_name} />
+                {t.owner_name ?? 'Unassigned'}
+              </span>
+            </Td>
+            <Td className="max-w-[13rem]">
+              <div className="truncate font-[550]">{t.campaign_id ? <CampaignDot id={t.campaign_id}>{t.campaign_name ?? t.campaign_id}</CampaignDot> : <span className="text-ink-2">No campaign</span>}</div>
+              {t.initiative_id ? (
+                <div className="mt-0.5 flex min-w-0 items-center gap-1.5 text-[12px] text-ink-2" title={`2027 bet: ${t.initiative_name ?? t.initiative_id}`}>
+                  <Ico icon={FlagDuotone} size={13} ia="var(--ink-2)" ib="var(--stone-3)" />
+                  <span className="sr-only">2027 bet: </span>
+                  <span className="truncate">{t.initiative_name ?? t.initiative_id}</span>
                 </div>
-              </Td>
-              <Td>
-                <StatusSelect task={t} onMove={onMove} />
-              </Td>
-              <Td className="whitespace-nowrap">
-                <span className="num">{t.due_date ? dateLabel(t.due_date, t.due_date.slice(0, 4) !== today.slice(0, 4)) : 'No due date'}</span>
-                {late ? (
-                  <div className="num text-[0.78rem] font-semibold text-lac">
-                    Overdue by {num(late)} {late === 1 ? 'day' : 'days'}
-                  </div>
-                ) : null}
-              </Td>
-              <Td>
-                <PriorityChip priority={t.priority} />
-              </Td>
-              <Td className="whitespace-nowrap text-ink-2">{t.owner_name ?? 'Unassigned'}</Td>
-              <Td className="max-w-[13rem]">
-                <div className="truncate">{t.campaign_id ? <CampaignDot id={t.campaign_id}>{t.campaign_name ?? t.campaign_id}</CampaignDot> : <span className="text-ink-3">No campaign</span>}</div>
-                {t.initiative_id ? (
-                  <div className="mt-0.5 flex min-w-0 items-center gap-1.5 text-[0.8rem] text-ink-2" title={`2027 bet: ${t.initiative_name ?? t.initiative_id}`}>
-                    <Flag size={12} className="shrink-0 text-ink-3" aria-label="2027 bet" />
-                    <span className="truncate">{t.initiative_name ?? t.initiative_id}</span>
-                  </div>
-                ) : null}
-              </Td>
-              <Td>
-                {t.decision ? <TaskDecisionChip decision={t.decision} /> : <span className="text-ink-3">None</span>}
-              </Td>
-              <Td align="right" className="font-sans">
-                <button onClick={() => onDelete(t)} aria-label={`Delete task “${t.title}”`} className="rounded-md p-1.5 text-ink-3 hover:bg-lac-soft hover:text-lac">
-                  <Trash2 size={14} aria-hidden />
-                </button>
-              </Td>
-            </tr>
-          );
-        })}
+              ) : null}
+            </Td>
+            <Td>{t.decision ? <TaskDecisionChip decision={t.decision} /> : <span className="text-ink-2">None</span>}</Td>
+            <Td align="right">
+              <button
+                type="button"
+                onClick={() => onDelete(t)}
+                aria-label={`Delete task “${t.title}”`}
+                className="grid size-8 place-items-center rounded-full transition-[background-color,transform] duration-150 hover:bg-stone-2 active:scale-[0.95]"
+              >
+                <Ico icon={Trash2Duotone} size={16} ia="var(--ink-2)" ib="var(--stone-3)" />
+              </button>
+            </Td>
+          </tr>
+        ))}
       </tbody>
     </Table>
   );
 }
 
 function SortTh({ label, active, dir, onClick, hint }: { label: string; active: boolean; dir: 'asc' | 'desc'; onClick: () => void; hint: string }): ReactNode {
-  const Icon = dir === 'asc' ? ChevronUp : ChevronDown;
   return (
-    <th aria-sort={active ? (dir === 'asc' ? 'ascending' : 'descending') : 'none'} className="type-condensed whitespace-nowrap border-b border-line-2 px-2.5 py-2 text-left text-[0.8rem] font-semibold text-ink-2">
-      <button onClick={onClick} className={cx('inline-flex items-center gap-1 rounded px-1 -mx-1 hover:bg-paper-2 hover:text-ink', active && 'text-ink')} title={active ? `Sorted ${hint}` : `Sort by ${label.toLowerCase()}`}>
+    <th aria-sort={active ? (dir === 'asc' ? 'ascending' : 'descending') : 'none'} className="border-b-[1.5px] border-stone-3 px-2.5 py-2 text-left text-[12.5px] font-[600] whitespace-nowrap text-ink-2">
+      <button type="button" onClick={onClick} className={cx('-mx-1.5 inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 transition-colors duration-150 hover:bg-stone-2 hover:text-ink', active && 'text-ink')} title={active ? `Sorted ${hint}` : `Sort by ${label.toLowerCase()}`}>
         {label}
-        {active ? <Icon size={13} aria-hidden /> : <span className="inline-block w-[13px]" aria-hidden />}
+        {active ? <Ico icon={dir === 'asc' ? ChevronUpDuotone : ChevronDownDuotone} size={14} ia="currentColor" ib="currentColor" /> : <span className="inline-block w-[14px]" aria-hidden />}
       </button>
     </th>
   );

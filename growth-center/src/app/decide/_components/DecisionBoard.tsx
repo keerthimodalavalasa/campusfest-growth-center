@@ -1,22 +1,31 @@
 'use client';
-import Link from 'next/link';
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { toast } from 'sonner';
-import { Check, X } from 'lucide-react';
+import { CheckDuotone, ClipboardListDuotone, PauseDuotone, PlayDuotone, XDuotone } from 'runeicons-react';
 import type { CampaignMetrics } from '@/server/engine/snapshot';
 import { mutate } from '@/lib/api';
 import { DECISION } from '@/lib/colors';
 import { dateLabel, inr, inrShort, num } from '@/lib/format';
-import { Button, Chip } from '@/components/ui';
-import { CampaignDot } from '@/components/charts';
+import { Button, cx, Ico } from '@/components/ui';
+import { CampaignCard } from '@/components/CampaignCard';
+import { GLYPH } from '@/components/RuleStrip';
+import { tipProps } from '@/components/tooltip';
 import type { TaskDraft } from '@/components/TaskDialog';
-import { COLUMNS, isPost, passReason, perUnit, ratioLabel, shortCheck, taskDecision, tidy, type Decision, type DecideResponse, type Recommendation } from './types';
+import { StatusText } from '@/app/campaigns/_components/shared';
+import { checkChip, COLUMNS, isPost, passReason, shortAction, taskDecision, tidy, type Decision, type DecideResponse, type Recommendation } from './types';
 
-/** Stop / Change / Keep / Scale columns, one card per campaign. */
+/**
+ * Stop / Change / Keep / Scale as four lanes. Each lane is a hairline tray headed by its status block (glyph, word,
+ * count); the campaigns inside are the shared limestone CampaignCard with the checks and the actions as its footer.
+ */
 export function DecisionBoard({ data, onCreateTask }: { data: DecideResponse; onCreateTask: (d: TaskDraft) => void }) {
   const [busy, setBusy] = useState<string | null>(null);
   const campaigns = new Map(data.campaigns.map((c) => [c.campaignId, c]));
   const post = isPost(data.phase);
+  const totalExpected = data.campaigns.reduce((s, c) => s + c.expectedVisitors, 0);
+  const visShare = (m: CampaignMetrics) => (post ? (m.shares.visitors ?? 0) : totalExpected > 0 ? m.expectedVisitors / totalExpected : 0);
+  const shown = data.recommendations.map((r) => campaigns.get(r.campaignId)).filter((m): m is CampaignMetrics => !!m);
+  const maxShare = Math.max(0.01, ...shown.flatMap((m) => [m.shares.spend ?? 0, visShare(m)]));
 
   const setStatus = async (rec: Recommendation, status: string, previous: string) => {
     setBusy(rec.campaignId);
@@ -60,45 +69,65 @@ export function DecisionBoard({ data, onCreateTask }: { data: DecideResponse; on
     };
   };
 
+  let order = 0;
   return (
-    <section aria-label="Decision board" className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
-      {COLUMNS.map((d) => {
+    <section aria-label="Decision board" className="grid grid-cols-4 items-start gap-3 max-[1200px]:grid-cols-2 max-[640px]:grid-cols-1">
+      {COLUMNS.map((d, col) => {
         const recs = data.recommendations.filter((r) => r.decision === d);
         const spend = recs.reduce((s, r) => s + r.spend, 0);
         const visitors = recs.reduce((s, r) => s + r.visitorsOrExpected, 0);
         return (
-          <div key={d} className="flex min-w-0 flex-col overflow-hidden rounded-[var(--radius-panel)] bg-paper-2">
-            <div className="h-1 shrink-0" style={{ background: DECISION[d].fg }} aria-hidden />
-            <div className="px-3.5 pb-2.5 pt-3">
-              <div className="flex items-baseline justify-between gap-2">
-                <h2 className="type-title text-[1.08rem]" style={{ color: DECISION[d].fg }}>
-                  {DECISION[d].label}
-                  <span className="num ml-1.5 text-[0.95rem] font-medium text-ink-3">{recs.length}</span>
-                </h2>
-                {recs.length ? (
-                  <span className="num text-right text-[0.78rem] text-ink-2">
-                    {inrShort(spend)} spend, {num(visitors)} {post ? 'visitors' : 'exp. visitors'}
-                  </span>
-                ) : null}
+          <div key={d} role="group" aria-label={`${DECISION[d].label}: ${recs.length} ${recs.length === 1 ? 'campaign' : 'campaigns'}`} className="anim-settle flex min-w-0 flex-col rounded-tile-l p-2 shadow-[inset_0_0_0_1.5px_var(--stone-2)]" style={{ '--d': `${160 + col * 40}ms` } as CSSProperties}>
+            <header className="px-2 pt-1.5 pb-3">
+              <div className="flex items-center gap-2.5">
+                <span aria-hidden className="grid size-8 shrink-0 place-items-center rounded-icon" style={{ background: DECISION[d].fg }}>
+                  <Ico icon={GLYPH[d]} size={18} ia="#fff" ib="#fff" />
+                </span>
+                <h3 className="text-[16px] leading-none font-[700]">{DECISION[d].label}</h3>
+                <span className="num ml-auto text-[32px] leading-[0.85]">{recs.length}</span>
               </div>
-              <p className="mt-0.5 text-[0.78rem] text-ink-3">{columnRule(d, data)}</p>
-            </div>
-            <div className="flex flex-1 flex-col gap-2.5 px-2.5 pb-2.5">
+              <p className="mt-2.5 text-[12.5px] leading-[1.35] font-[550] text-ink-2">{laneRule(d, data)}</p>
+              <p className="tab mt-0.5 min-h-[17px] text-[12.5px] leading-[1.35] font-[650] text-ink">
+                {recs.length ? `${inrShort(spend)} spend, ${num(visitors)} ${post ? 'visitors' : 'expected'}` : null}
+              </p>
+            </header>
+            <div className="flex flex-col gap-2">
               {recs.length ? (
-                recs.map((r) => (
-                  <DecisionCard
-                    key={r.campaignId}
-                    rec={r}
-                    data={data}
-                    campaign={campaigns.get(r.campaignId)}
-                    busy={busy === r.campaignId}
-                    onCreateTask={() => onCreateTask(draftFor(r))}
-                    onPause={(prev) => setStatus(r, 'paused', prev)}
-                    onResume={() => setStatus(r, 'active', 'paused')}
-                  />
-                ))
+                recs.map((r) => {
+                  const m = campaigns.get(r.campaignId);
+                  const i = order++;
+                  if (!m) return null;
+                  const status = m.status ?? 'active';
+                  return (
+                    <CampaignCard
+                      key={r.campaignId}
+                      m={m}
+                      rec={r}
+                      pre={!post}
+                      visitorShare={visShare(m)}
+                      maxShare={maxShare}
+                      delay={220 + i * 40}
+                      meta={
+                        <span className="flex flex-wrap items-center gap-x-2">
+                          <StatusText status={status} />
+                          <span className="truncate">{r.ownerName ?? 'No owner'}</span>
+                        </span>
+                      }
+                      footer={
+                        <CardFooter
+                          rec={r}
+                          status={status}
+                          busy={busy === r.campaignId}
+                          onCreateTask={() => onCreateTask(draftFor(r))}
+                          onPause={() => setStatus(r, 'paused', status)}
+                          onResume={() => setStatus(r, 'active', 'paused')}
+                        />
+                      }
+                    />
+                  );
+                })
               ) : (
-                <p className="px-1 pb-2 text-[0.84rem] text-ink-2">No campaign is in {DECISION[d].label} at this date.</p>
+                <p className="rounded-tile-m border-[1.5px] border-dashed border-stone-3 px-3.5 py-5 text-[13px] font-[550] text-ink-2">No campaign here at this date.</p>
               )}
             </div>
           </div>
@@ -108,150 +137,68 @@ export function DecisionBoard({ data, onCreateTask }: { data: DecideResponse; on
   );
 }
 
-function columnRule(d: Decision, data: DecideResponse) {
+function laneRule(d: Decision, data: DecideResponse) {
   const t = data.thresholds;
   const s = data.settings;
   if (t.scaleAtOrBelow == null || t.changeAbove == null || t.stopAtOrAbove == null) {
-    return { stop: 'Cost far above the median', change: 'A failed guardrail', keep: 'Guardrails pass, cost near the median', scale: 'Every guardrail passes' }[d];
+    return { stop: 'Cost far above the median', change: 'A failed guardrail', keep: 'Guardrails pass, cost near median', scale: 'Every guardrail passes' }[d];
   }
   return {
-    stop: `Cost at or above ${inr(t.stopAtOrAbove)} (${s.stopCostFactor}× the median)`,
-    change: `Cost above ${inr(t.changeAbove)}, or any failed guardrail`,
-    keep: `Cost from ${inr(t.scaleAtOrBelow)} to ${inr(t.changeAbove)}, guardrails pass`,
-    scale: `Cost at or below ${inr(t.scaleAtOrBelow)} and every guardrail passes`,
+    stop: `Cost ≥ ${inr(t.stopAtOrAbove)}, ${s.stopCostFactor}× the median`,
+    change: `Cost > ${inr(t.changeAbove)}, or a failed guardrail`,
+    keep: `Cost ${inr(t.scaleAtOrBelow)} to ${inr(t.changeAbove)}, guardrails pass`,
+    scale: `Cost ≤ ${inr(t.scaleAtOrBelow)}, every guardrail passes`,
   }[d];
 }
 
-const ratioColor = (r: number | null, s: DecideResponse['settings']) => {
-  if (r == null) return 'var(--ink-2)';
-  if (r >= s.stopCostFactor) return 'var(--lac)';
-  if (r > s.changeCostFactor) return 'var(--zari)';
-  if (r <= s.scaleCostFactor) return 'var(--bangle)';
-  return 'var(--ink-2)';
-};
-
-function DecisionCard({
-  rec,
-  data,
-  campaign,
-  busy,
-  onCreateTask,
-  onPause,
-  onResume,
-}: {
-  rec: Recommendation;
-  data: DecideResponse;
-  campaign: CampaignMetrics | undefined;
-  busy: boolean;
-  onCreateTask: () => void;
-  onPause: (previousStatus: string) => void;
-  onResume: () => void;
-}) {
-  const s = data.settings;
-  const post = isPost(data.phase);
-  const failed = rec.checks.filter((k) => !k.passed);
-  const status = campaign?.status ?? 'active';
+/** The card footer: one chip per check (failed ones solid), the action in a few words, and the buttons. */
+function CardFooter({ rec, status, busy, onCreateTask, onPause, onResume }: { rec: Recommendation; status: string; busy: boolean; onCreateTask: () => void; onPause: () => void; onResume: () => void }) {
   const paused = status === 'paused';
   const actionable = rec.decision === 'stop' || rec.decision === 'change';
-
+  const failing = rec.checks.filter((k) => !k.passed).length;
   return (
-    <article className="rounded-[10px] border border-line bg-surface p-3.5" aria-label={`${rec.name}: ${DECISION[rec.decision].label}`}>
-      <header className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <Link href={`/campaigns/${rec.campaignId}`} className="font-semibold leading-snug text-ink hover:underline">
-            <CampaignDot id={rec.campaignId}>{rec.name}</CampaignDot>
-          </Link>
-          <div className="pl-[18px] text-[0.8rem] text-ink-3">{rec.ownerName ?? 'No owner'}</div>
+    // lifted above the card's full-size link so the chips and buttons stay their own targets
+    <div className="relative z-[1] mt-auto pt-3">
+      <div className="pt-3 shadow-[inset_0_1px_0_var(--stone-2)]">
+        <div className="flex items-baseline justify-between gap-2 text-[12px] font-[600] text-ink-2">
+          <span>Checks</span>
+          <span className="tab">{rec.checks.length ? (failing ? `${failing} of ${rec.checks.length} fail` : 'all pass') : 'not enough data'}</span>
         </div>
-        {status !== 'active' ? <Chip className="capitalize">{status}</Chip> : null}
-      </header>
-
-      <div className="mt-2.5 flex flex-wrap items-baseline gap-x-2">
-        {rec.efficiency != null ? (
-          <>
-            <span className="num type-title text-[1.3rem] text-ink">{inr(rec.efficiency)}</span>
-            <span className="text-[0.78rem] text-ink-3">{perUnit(data.phase)}</span>
-            <span className="num ml-auto text-[0.86rem] font-semibold" style={{ color: ratioColor(rec.ratioToMedian, s) }}>
-              {ratioLabel(rec.ratioToMedian)} median
-            </span>
-          </>
-        ) : (
-          <span className="type-title text-[1.05rem] text-ink-2">{rec.spend <= 0 ? 'No paid spend' : 'No efficiency yet'}</span>
-        )}
-      </div>
-      <div className="num text-[0.78rem] text-ink-3">
-        {inr(rec.spend)} spend, {num(rec.visitorsOrExpected)} {post ? 'verified visitors' : 'expected visitors'}
-      </div>
-
-      {failed.length ? (
-        <div className="mt-2.5">
-          <div className="text-[0.78rem] text-ink-3">
-            <span className="num">{failed.length}</span> of <span className="num">{rec.checks.length}</span> checks failed
-          </div>
-          <ul className="mt-1 space-y-1 text-[0.83rem] leading-snug text-ink">
-            {failed.map((k) => (
-              <li key={k.rule} className="flex gap-1.5">
-                <X size={14} strokeWidth={2.4} className="mt-[3px] shrink-0 text-lac" aria-hidden />
-                <span className="num">
-                  <span className="sr-only">Failed: </span>
-                  {tidy(shortCheck(k, rec, s))}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : (
-        <p className="mt-2.5 flex gap-1.5 text-[0.83rem] leading-snug text-ink">
-          <Check size={14} strokeWidth={2.4} className="mt-[3px] shrink-0 text-bangle" aria-hidden />
-          <span className="num">
-            <span className="sr-only">Passed: </span>
-            {passReason(rec, data.phase)}
-          </span>
-        </p>
-      )}
-
-      {rec.checks.length ? (
-        <details className="mt-1.5 text-[0.78rem]">
-          <summary className="cursor-pointer text-ink-3 hover:text-ink">
-            {rec.checks.length === 1 ? (
-              'The one check'
-            ) : (
-              <>
-                All <span className="num">{rec.checks.length}</span> checks
-              </>
-            )}
-          </summary>
-          <ul className="mt-1.5 space-y-1 text-ink-2">
+        {rec.checks.length ? (
+          <ul className="mt-1.5 flex flex-wrap gap-1" aria-label="Checks">
             {rec.checks.map((k) => (
-              <li key={k.rule} className="flex gap-1.5">
-                {k.passed ? <Check size={13} strokeWidth={2.4} className="mt-[2px] shrink-0 text-bangle" aria-hidden /> : <X size={13} strokeWidth={2.4} className="mt-[2px] shrink-0 text-lac" aria-hidden />}
-                <span className="num">
-                  <span className="sr-only">{k.passed ? 'Passed: ' : 'Failed: '}</span>
-                  <span className="font-medium text-ink">{k.rule}.</span> {tidy(k.detail)}
-                </span>
+              <li
+                key={k.rule}
+                tabIndex={0}
+                {...tipProps({ title: k.rule, notes: [tidy(k.detail)] })}
+                className={cx('inline-flex h-[22px] cursor-default items-center gap-1 rounded-full pr-2 pl-1 text-[11.5px] leading-none font-[650] whitespace-nowrap', k.passed ? 'bg-stone-2 text-ink' : 'bg-st-stop text-white')}
+              >
+                <Ico icon={k.passed ? CheckDuotone : XDuotone} size={13} ia={k.passed ? 'var(--ink)' : '#fff'} ib={k.passed ? 'var(--ink)' : '#fff'} />
+                <span className="sr-only">{k.passed ? 'Passed: ' : 'Failed: '}</span>
+                {checkChip(k, rec)}
               </li>
             ))}
           </ul>
-        </details>
-      ) : null}
-
-      <p className="mt-2.5 border-t border-line pt-2.5 text-[0.82rem] leading-snug text-ink-2">{tidy(rec.suggestedAction)}</p>
-
-      <div className="mt-2.5 flex flex-wrap gap-1.5">
-        <Button size="sm" variant="secondary" onClick={onCreateTask}>
-          Create task
-        </Button>
-        {actionable && !paused && status !== 'stopped' && status !== 'completed' ? (
-          <Button size="sm" variant="danger" onClick={() => onPause(status)} disabled={busy}>
-            {busy ? 'Pausing…' : 'Pause campaign'}
-          </Button>
         ) : null}
-        {paused ? (
-          <Button size="sm" variant="ghost" onClick={onResume} disabled={busy}>
-            {busy ? 'Saving…' : 'Set active again'}
+        <p tabIndex={0} {...tipProps({ title: 'Suggested action', notes: [tidy(rec.suggestedAction)] })} className="mt-2.5 w-fit cursor-default rounded-md text-[13px] leading-[1.35] font-[650] text-ink">
+          {shortAction(rec)}
+        </p>
+        <div className="mt-2.5 flex flex-wrap gap-1.5">
+          <Button size="sm" variant="secondary" onClick={onCreateTask} icon={<Ico icon={ClipboardListDuotone} size={15} ia="var(--ink)" ib="var(--stone-3)" />}>
+            Create task
           </Button>
-        ) : null}
+          {actionable && !paused && status !== 'stopped' && status !== 'completed' ? (
+            <Button size="sm" variant="danger" onClick={onPause} disabled={busy} icon={<Ico icon={PauseDuotone} size={15} ia="var(--st-stop)" ib="color-mix(in srgb, var(--st-stop) 40%, transparent)" />}>
+              {busy ? 'Pausing…' : 'Pause campaign'}
+            </Button>
+          ) : null}
+          {paused ? (
+            <Button size="sm" variant="ghost" onClick={onResume} disabled={busy} icon={<Ico icon={PlayDuotone} size={15} ia="var(--ink)" ib="var(--stone-3)" />}>
+              {busy ? 'Saving…' : 'Set active again'}
+            </Button>
+          ) : null}
+        </div>
       </div>
-    </article>
+    </div>
   );
 }

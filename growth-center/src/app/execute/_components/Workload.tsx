@@ -1,8 +1,12 @@
 'use client';
+import type { CSSProperties } from 'react';
+import { UsersDuotone } from 'runeicons-react';
 import { num } from '@/lib/format';
 import type { TeamMember } from '@/lib/app-state';
-import { cx } from '@/components/ui';
+import { cx, Tile, TileHead } from '@/components/ui';
+import { tipProps } from '@/components/tooltip';
 import { overdueDays, type TaskRow } from './model';
+import { Avatar } from './TaskBits';
 
 interface Load {
   id: string;
@@ -13,8 +17,11 @@ interface Load {
   high: number;
 }
 
-/** Per-owner open work: open tasks, how many are overdue, how many are high priority. Click an owner to filter the board. */
-export function Workload({ tasks, team, today, selected, onSelect }: { tasks: TaskRow[]; team: TeamMember[]; today: string; selected: string; onSelect?: (ownerId: string) => void }) {
+/**
+ * Open work per owner as bars on one scale (the busiest owner is the full width): the solid ink part is overdue,
+ * the limestone part is on time. Each row is a button that filters the board to that owner.
+ */
+export function Workload({ tasks, team, today, selected, onSelect, delay = 0, className }: { tasks: TaskRow[]; team: TeamMember[]; today: string; selected: string; onSelect?: (ownerId: string) => void; delay?: number; className?: string }) {
   const known = new Set(team.map((m) => m.ownerId));
   const openTasks = tasks.filter((t) => t.status !== 'done');
   const load = (id: string, name: string, role: string | null): Load => {
@@ -27,59 +34,74 @@ export function Workload({ tasks, team, today, selected, onSelect }: { tasks: Ta
   const max = Math.max(1, ...rows.map((r) => r.open));
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(10rem,1fr))] gap-1.5 rounded-[var(--radius-panel)] bg-paper-2 p-1.5">
-      {rows.map((r) => {
-        const on = selected === r.id;
-        const body = (
-          <>
-            <div className="min-w-0">
-              <div className="truncate text-[0.88rem] font-semibold text-ink">{r.name}</div>
-              <div className="truncate text-[0.75rem] text-ink-3" title={r.role ?? undefined}>
-                {r.role ?? 'No role set'}
-              </div>
-            </div>
-            <div className="flex justify-between gap-2">
-              <Stat label="Open" value={r.open} />
-              <Stat label="Overdue" value={r.overdue} tone={r.overdue ? 'var(--lac)' : undefined} />
-              <Stat label="High" value={r.high} tone={r.high ? 'var(--zari)' : undefined} />
-            </div>
-            <div className="relative h-1.5 w-full rounded-full bg-paper-2" role="img" aria-label={`${r.open} open, ${r.overdue} overdue`} title="Open tasks, crimson part overdue, scaled to the busiest owner">
-              <div className="absolute inset-y-0 left-0 rounded-full bg-ink-3" style={{ width: `${(r.open / max) * 100}%` }} />
-              <div className="absolute inset-y-0 left-0 rounded-full bg-lac" style={{ width: `${(r.overdue / max) * 100}%` }} />
-            </div>
-          </>
-        );
-        const base = 'flex min-w-0 flex-col gap-2 rounded-[10px] border px-3.5 py-3 text-left';
-        // with no tasks there is nothing to filter, so the cards are plain figures rather than buttons
-        if (!onSelect)
-          return (
-            <div key={r.id} className={cx(base, 'border-transparent bg-surface')}>
-              {body}
-            </div>
+    <Tile field="stone" size="s" delay={delay} className={cx('flex flex-col', className)} aria-label="Team workload">
+      <TileHead
+        icon={UsersDuotone}
+        aside={
+          <span className="flex items-center gap-3">
+            <span className="inline-flex items-center gap-1.5">
+              <i aria-hidden className="block h-2.5 w-3.5 rounded-full bg-ink" />
+              Overdue
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <i aria-hidden className="block h-2.5 w-3.5 rounded-full bg-stone-3" />
+              On time
+            </span>
+          </span>
+        }
+      >
+        Team workload
+      </TileHead>
+      <ul className="mt-2.5 grid gap-px" aria-label={onSelect ? 'Open tasks per owner; select an owner to filter the board' : 'Open tasks per owner'}>
+        {rows.map((r, i) => {
+          const on = selected === r.id;
+          const body = (
+            <>
+              <Avatar name={r.id === '__none' ? null : r.name} inverse={on} />
+              <span className="min-w-0">
+                <span className="block truncate text-[13px] leading-[1.2] font-[650]">{r.name}</span>
+                <span className={cx('block truncate text-[11.5px] leading-[1.25] font-[550]', on ? 'text-silver' : 'text-ink-2')}>{r.role ?? 'No role set'}</span>
+              </span>
+              <span className={cx('relative h-2.5 rounded-full', on ? 'bg-bidri-3' : 'bg-stone-2')} aria-hidden>
+                <i className="anim-grow-x absolute inset-y-0 left-0 block rounded-full bg-stone-3" style={{ width: `${(r.open / max) * 100}%`, '--d': `${delay + 120 + i * 40}ms` } as CSSProperties} />
+                {r.overdue ? <i className={cx('anim-grow-x absolute inset-y-0 left-0 block rounded-full', on ? 'bg-white' : 'bg-ink')} style={{ width: `${(r.overdue / max) * 100}%`, '--d': `${delay + 160 + i * 40}ms` } as CSSProperties} /> : null}
+              </span>
+              <span className="tab text-right text-[12px] leading-[1.2] font-[600] whitespace-nowrap">
+                <b className="text-[14px] font-[750]">{num(r.open)}</b> open
+                <span className={cx('block text-[11.5px] font-[550]', on ? 'text-silver' : 'text-ink-2')}>{r.overdue ? `${num(r.overdue)} late` : 'none late'}</span>
+              </span>
+            </>
           );
-        return (
-          <button
-            key={r.id}
-            onClick={() => onSelect(on ? '' : r.id)}
-            aria-pressed={on}
-            title={on ? 'Show every owner' : `Show only ${r.name}'s tasks`}
-            className={cx(base, 'transition-colors', on ? 'border-sagar bg-sagar-soft' : 'border-transparent bg-surface hover:border-line-2')}
-          >
-            {body}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-function Stat({ label, value, tone }: { label: string; value: number; tone?: string }) {
-  return (
-    <div>
-      <div className="num type-title text-[1.15rem] leading-none" style={{ color: tone ?? (value ? 'var(--ink)' : 'var(--ink-3)') }}>
-        {num(value)}
-      </div>
-      <div className="mt-0.5 text-[0.72rem] text-ink-3">{label}</div>
-    </div>
+          const cls = 'grid w-full grid-cols-[22px_minmax(0,9rem)_minmax(0,1fr)_4.25rem] items-center gap-x-2.5 rounded-[12px] px-2 py-[5px] text-left max-[420px]:grid-cols-[22px_minmax(0,6.5rem)_minmax(0,1fr)_4rem]';
+          const tip = tipProps({
+            title: r.name,
+            rows: [
+              { label: 'Open', value: num(r.open) },
+              { color: 'var(--ink)', label: 'Overdue', value: num(r.overdue), swatch: 'square' },
+              { label: 'High priority', value: num(r.high) },
+            ],
+          });
+          return (
+            <li key={r.id}>
+              {onSelect ? (
+                <button
+                  type="button"
+                  onClick={() => onSelect(on ? '' : r.id)}
+                  aria-pressed={on}
+                  aria-label={`${r.name}: ${r.open} open, ${r.overdue} overdue. ${on ? 'Show every owner' : `Show only ${r.name}'s tasks`}`}
+                  {...tip}
+                  className={cx(cls, 'transition-colors duration-150', on ? 'bg-ink text-white' : 'hover:bg-stone-2')}
+                >
+                  {body}
+                </button>
+              ) : (
+                // with no tasks there is nothing to filter, so the rows are plain figures rather than buttons
+                <div className={cls}>{body}</div>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </Tile>
   );
 }

@@ -38,14 +38,14 @@ export const FAMILY = {
 export type FamilyKey = keyof typeof FAMILY;
 
 /**
- * Status calls: reserved colours that always travel with a glyph and a label.
- * `fg` is the status colour (text-safe on white), `bg` a faint tint kept for pages not yet on Bento.
+ * Status calls: reserved colours that always travel with a glyph and a label (`StatusPill`, `RuleStrip`).
+ * `fg` is the status colour, text-safe on white and limestone. There are no status tints: zones are neutral washes.
  */
 export const DECISION = {
-  scale: { label: 'Scale', fg: 'var(--st-scale)', bg: '#dcede5', glyph: 'up' },
-  keep: { label: 'Keep', fg: 'var(--st-keep)', bg: '#e6e8eb', glyph: 'check' },
-  change: { label: 'Change', fg: 'var(--st-change)', bg: '#fbedcc', glyph: 'rotate' },
-  stop: { label: 'Stop', fg: 'var(--st-stop)', bg: '#f8dcde', glyph: 'stop' },
+  scale: { label: 'Scale', fg: 'var(--st-scale)', glyph: 'up' },
+  keep: { label: 'Keep', fg: 'var(--st-keep)', glyph: 'check' },
+  change: { label: 'Change', fg: 'var(--st-change)', glyph: 'rotate' },
+  stop: { label: 'Stop', fg: 'var(--st-stop)', glyph: 'stop' },
 } as const;
 export type DecisionKey = keyof typeof DECISION;
 

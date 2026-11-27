@@ -1,8 +1,9 @@
 'use client';
+import { FilePlusDuotone, HistoryDuotone, ImportDuotone, PencilDuotone, Trash2Duotone } from 'runeicons-react';
 import { useApi } from '@/lib/api';
 import { useApp, type TableMeta } from '@/lib/app-state';
 import { inr, istTime, num1 } from '@/lib/format';
-import { EmptyState, ErrorNote, Panel, Skeleton, Table, Td, Th } from '@/components/ui';
+import { EmptyState, ErrorNote, Ico, Skeleton, Tile, TileHead, cx, type IconComponent } from '@/components/ui';
 import { isMoney, isNumeric, tsText } from './shared';
 
 interface Change {
@@ -15,7 +16,9 @@ interface Change {
   detail: unknown;
 }
 
-const ACTION: Record<string, string> = { insert: 'Added', update: 'Edited', delete: 'Deleted', import: 'Imported' };
+const ACTION: Record<string, string> = { insert: 'Added', update: 'Edited', delete: 'Deleted', import: 'Imported', reset: 'Reset' };
+/** Timeline nodes: a delete is the heavy one (solid ink); the rest sit on limestone. */
+const NODE: Record<string, { icon: IconComponent; solid?: boolean }> = { insert: { icon: FilePlusDuotone }, update: { icon: PencilDuotone }, delete: { icon: Trash2Duotone, solid: true }, import: { icon: ImportDuotone }, reset: { icon: ImportDuotone } };
 type Obj = Record<string, unknown>;
 const isObj = (v: unknown): v is Obj => typeof v === 'object' && v !== null && !Array.isArray(v);
 
@@ -63,8 +66,8 @@ function summarise(values: Obj, t: TableMeta | undefined): string {
     .join('; ');
 }
 
-/** The change log, limited to the source tables and dataset imports. */
-export function ChangesPanel({ onOpen }: { onOpen: (tableKey: string, id: string) => void }) {
+/** The change log as a timeline, limited to the source tables and dataset imports. */
+export function ChangesPanel({ onOpen, delay }: { onOpen: (tableKey: string, id: string) => void; delay?: number }) {
   const { meta } = useApp();
   const q = useApi<{ changes: Change[] }>('/api/changes');
   const tables = new Map((meta?.tables ?? []).map((t) => [t.key, t]));
@@ -73,52 +76,70 @@ export function ChangesPanel({ onOpen }: { onOpen: (tableKey: string, id: string
   const gone = (c: Change) => rows.some((o) => o.id > c.id && o.entity === c.entity && o.entity_id === c.entity_id && o.action === 'delete');
 
   return (
-    <Panel title="Recent data changes" aside={q.data ? <span className="num">{rows.length} shown</span> : null}>
+    <Tile field="stone" delay={delay} className="flex flex-col" aria-label="Recent data changes">
+      <TileHead icon={HistoryDuotone} aside={q.data ? <span className="tab">{rows.length} shown</span> : null}>
+        Recent data changes
+      </TileHead>
       {q.error ? (
-        <ErrorNote onRetry={q.refresh}>Could not load the change log: {q.error}</ErrorNote>
+        <div className="mt-3">
+          <ErrorNote onRetry={q.refresh}>Could not load the change log: {q.error}</ErrorNote>
+        </div>
       ) : !q.data || !meta ? (
-        <Skeleton className="h-60" />
+        <Skeleton className="mt-3 h-60" />
       ) : rows.length === 0 ? (
-        <EmptyState title="No data changes yet">Edit a row in the source tables, or try one of the examples in the helper. Each save is listed here.</EmptyState>
+        <div className="mt-3">
+          <EmptyState title="No data changes yet">Edit a row in the source tables, or try one of the examples beside them. Each save is listed here.</EmptyState>
+        </div>
       ) : (
-        <Table className="max-h-[560px] overflow-y-auto">
-          <thead className="sticky top-0 bg-surface">
-            <tr>
-              <Th className="text-left">Time (IST)</Th>
-              <Th className="text-left">Actor</Th>
-              <Th className="text-left">Action</Th>
-              <Th className="text-left">Row</Th>
-              <Th className="text-left">What changed</Th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((c) => {
+        <div role="region" aria-label="Data changes, newest first" tabIndex={0} className="-mx-2 mt-3 max-h-[560px] overflow-y-auto px-2">
+          <ol>
+            {rows.map((c, i) => {
               const t = tables.get(c.entity);
               const what = describe(c, t);
+              const at = Date.parse(c.at);
+              const [day, time] = Number.isFinite(at) ? istTime(at).split(', ') : [c.at, ''];
+              const prevAt = i ? Date.parse(rows[i - 1].at) : NaN;
+              const newDay = !i || !Number.isFinite(prevAt) || istTime(prevAt).split(', ')[0] !== day;
+              const node = NODE[c.action] ?? NODE.update;
+              const last = i === rows.length - 1;
+              const openable = t && c.entity_id && c.action !== 'delete' && !gone(c);
               return (
-                <tr key={c.id} className="align-top">
-                  <Td className="num whitespace-nowrap">{istTime(Date.parse(c.at))}</Td>
-                  <Td className="whitespace-nowrap capitalize">{c.actor}</Td>
-                  <Td className="whitespace-nowrap">{ACTION[c.action] ?? c.action}</Td>
-                  <Td className="whitespace-nowrap">
-                    {t && c.entity_id && c.action !== 'delete' && !gone(c) ? (
-                      <button type="button" className="font-medium text-sagar hover:underline" onClick={() => onOpen(t.key, c.entity_id!)} aria-label={`Show ${c.entity_id} in ${t.label}`}>
-                        {c.entity_id}
-                      </button>
-                    ) : (
-                      <span className="text-ink">{c.entity_id ?? 'All tables'}</span>
-                    )}
-                    {t ? <div className="text-[0.78rem] text-ink-3">{t.label}</div> : null}
-                  </Td>
-                  <Td className="min-w-[12rem] text-[0.82rem] text-ink-2" title={what}>
-                    <span className="line-clamp-2">{what || '–'}</span>
-                  </Td>
-                </tr>
+                <li key={c.id}>
+                  {newDay ? <div className={cx('tab pb-2 text-[12px] font-[700] text-ink', i > 0 && 'pt-1')}>{day}</div> : null}
+                  <div className="relative grid grid-cols-[28px_minmax(0,1fr)] gap-x-3 pb-3.5">
+                    {!last ? <i aria-hidden className="absolute top-8 bottom-0 left-[13.25px] block w-[1.5px] rounded-full bg-stone-3" /> : null}
+                    <span className={cx('grid size-7 place-items-center rounded-full', node.solid ? 'bg-ink' : 'bg-stone-2')} aria-hidden>
+                      <Ico icon={node.icon} size={15} ia={node.solid ? '#fff' : 'var(--ink)'} ib={node.solid ? 'rgba(255,255,255,0.55)' : 'var(--ink-2)'} />
+                    </span>
+                    <div className="min-w-0 pt-0.5">
+                      <div className="flex flex-wrap items-baseline gap-x-1.5 text-[13px] leading-[1.35]">
+                        <span className="font-[650]">{ACTION[c.action] ?? c.action}</span>
+                        {openable ? (
+                          <button type="button" className="tab font-[650] underline decoration-stone-3 underline-offset-2 hover:decoration-ink" onClick={() => onOpen(t.key, c.entity_id!)} aria-label={`Show ${c.entity_id} in ${t.label}`}>
+                            {c.entity_id}
+                          </button>
+                        ) : (
+                          <span className="tab font-[600]">{c.entity_id ?? 'all tables'}</span>
+                        )}
+                        {t ? <span className="text-[12px] font-[550] text-ink-2">in {t.label}</span> : null}
+                      </div>
+                      {what ? (
+                        <div className="mt-0.5 line-clamp-2 text-[12px] leading-[1.4] text-ink-2" title={what}>
+                          {what}
+                        </div>
+                      ) : null}
+                      <div className="tab mt-0.5 text-[11.5px] font-[550] text-ink-2">
+                        {time ? `${time} IST, ` : ''}
+                        <span className="capitalize">{c.actor}</span>
+                      </div>
+                    </div>
+                  </div>
+                </li>
               );
             })}
-          </tbody>
-        </Table>
+          </ol>
+        </div>
       )}
-    </Panel>
+    </Tile>
   );
 }

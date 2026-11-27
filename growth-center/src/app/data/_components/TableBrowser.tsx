@@ -1,10 +1,12 @@
 'use client';
 import { useEffect, useState, type ReactNode } from 'react';
+import { ClockDuotone, FilePlusDuotone, Grid3x3Duotone, PencilDuotone, PlusDuotone, SearchDuotone, Trash2Duotone } from 'runeicons-react';
 import { useApi } from '@/lib/api';
 import { useApp, type ColumnSpec, type TableMeta } from '@/lib/app-state';
 import { dateLabel, inr, num, num1 } from '@/lib/format';
-import { Button, Chip, EmptyState, ErrorNote, Panel, Skeleton, Table, Tabs, Td, TextInput, Th, cx } from '@/components/ui';
+import { Button, Chip, EmptyState, ErrorNote, Ico, Skeleton, Table, Tabs, Td, TextInput, Th, Tile, TileHead, cx, type IconComponent } from '@/components/ui';
 import { CampaignDot } from '@/components/charts';
+import { tipProps } from '@/components/tooltip';
 import { SEARCHES, SEARCH_SHORT, VERSIONED, asText, carryDate, isCampaignCol, isMoney, isNumeric, isOwnerCol, singular, type Row } from './shared';
 
 const PAGE = 50;
@@ -19,10 +21,11 @@ interface Props {
   onAdd: () => void;
   onNewVersion: (row: Row) => void;
   onDelete: (row: Row) => void;
+  delay?: number;
 }
 
-/** Table picker, debounced search and a paginated grid of one source table. */
-export function TableBrowser({ tables, table, onTable, query, onQuery, onEdit, onAdd, onNewVersion, onDelete }: Props) {
+/** Table picker, debounced search and a paginated grid of one source table, with edit, new version and delete on every row. */
+export function TableBrowser({ tables, table, onTable, query, onQuery, onEdit, onAdd, onNewVersion, onDelete, delay }: Props) {
   const { asOf } = useApp();
   const [input, setInput] = useState(query);
   const [syncedQuery, setSyncedQuery] = useState(query);
@@ -66,35 +69,43 @@ export function TableBrowser({ tables, table, onTable, query, onQuery, onEdit, o
       : null;
 
   return (
-    <Panel
-      id="table-browser"
-      title="Source tables"
-      aside={
-        <Button size="sm" variant="primary" onClick={onAdd} disabled={!table.insertable}>
-          Add {singular(table.key)}
-        </Button>
-      }
-    >
-      <div className="-mx-1 overflow-x-auto whitespace-nowrap px-1 pb-1">
+    <Tile field="stone" id="table-browser" delay={delay} className="min-w-0 scroll-mt-24" aria-label="Source tables">
+      <TileHead
+        icon={Grid3x3Duotone}
+        aside={
+          <Button size="sm" variant="primary" onClick={onAdd} disabled={!table.insertable} icon={<Ico icon={PlusDuotone} size={15} ia="#fff" ib="rgba(255,255,255,0.5)" />}>
+            Add {singular(table.key)}
+          </Button>
+        }
+      >
+        Source tables
+      </TileHead>
+
+      <div className="mt-3 -mx-1 overflow-x-auto px-1 pb-1 whitespace-nowrap">
         <Tabs value={table.key} onChange={onTable} options={tables.map((t) => ({ value: t.key, label: t.label }))} />
       </div>
 
-      <div className="mt-3 flex flex-wrap items-end justify-between gap-3">
-        <p className="max-w-[68ch] text-[0.88rem] text-ink-2">
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+        <p className="max-w-[64ch] text-[12.5px] leading-[1.4] font-[550] text-ink-2">
           {table.description}
-          {versioned ? <span className="text-ink-3"> Use New version on a row to record a change at a date.</span> : null}
+          {versioned ? <> Use New version on a row to record a change at a date.</> : null}
         </p>
-        <label className="flex w-full flex-col gap-1 text-[0.82rem] sm:w-80">
+        <label className="relative flex w-full items-center sm:w-80">
           <span className="sr-only">
             Search {table.label} by {SEARCHES[table.key] ?? 'any column'}
           </span>
-          <TextInput type="search" value={input} onChange={(e) => setInput(e.target.value)} placeholder={`Search ${SEARCH_SHORT[table.key] ?? 'this table'}`} title={`Searches ${SEARCHES[table.key] ?? 'this table'}`} />
+          <span className="pointer-events-none absolute left-3">
+            <Ico icon={SearchDuotone} size={16} ia="var(--stone-3)" ib="var(--ink-2)" />
+          </span>
+          <TextInput type="search" value={input} onChange={(e) => setInput(e.target.value)} placeholder={`Search ${SEARCH_SHORT[table.key] ?? 'this table'}`} title={`Searches ${SEARCHES[table.key] ?? 'this table'}`} className="!rounded-full !pl-9" />
         </label>
       </div>
 
       <div className="mt-3">
         {res.error ? (
-          <ErrorNote onRetry={res.refresh}>Could not load {table.label}: {res.error}</ErrorNote>
+          <ErrorNote onRetry={res.refresh}>
+            Could not load {table.label}: {res.error}
+          </ErrorNote>
         ) : !data ? (
           <div className="space-y-2">
             {Array.from({ length: 8 }, (_, i) => (
@@ -128,16 +139,16 @@ export function TableBrowser({ tables, table, onTable, query, onQuery, onEdit, o
             </EmptyState>
           )
         ) : (
-          <div className={cx('transition-opacity', res.loading && 'opacity-60')} aria-busy={res.loading}>
-            <Table className="max-h-[min(70vh,720px)] overflow-y-auto rounded-[var(--radius-control)] border border-line">
-              <thead className="sticky top-0 z-[1] bg-surface">
+          <div className={cx('transition-opacity duration-150', res.loading && 'opacity-60')} aria-busy={res.loading}>
+            <Table className="max-h-[min(70vh,720px)] overflow-y-auto">
+              <thead className="sticky top-0 z-[1] bg-stone">
                 <tr>
                   {table.columns.map((c) => (
-                    <Th key={c.name} align={isNumeric(c) ? "right" : "left"} className={isNumeric(c) ? undefined : "text-left"}>
+                    <Th key={c.name} align={isNumeric(c) ? 'right' : 'left'}>
                       {c.label}
                     </Th>
                   ))}
-                  <Th className="sticky right-0 bg-surface text-right">
+                  <Th align="right" className="sticky right-0 bg-stone">
                     <span className="sr-only">Row actions</span>
                   </Th>
                 </tr>
@@ -147,32 +158,26 @@ export function TableBrowser({ tables, table, onTable, query, onQuery, onEdit, o
                   const id = asText(r[table.pk]);
                   const later = isLater(r);
                   return (
-                    <tr key={id} className={cx('group hover:bg-paper', later && 'text-ink-3')}>
+                    <tr key={id} onDoubleClick={() => onEdit(r)} className={cx('group transition-colors duration-150 hover:bg-stone-2', later && 'text-ink-2')}>
                       {table.columns.map((c) => (
                         <Cell
                           key={c.name}
                           c={c}
                           v={r[c.name]}
                           pk={c.name === table.pk}
-                          later={later}
-                          badge={c.name === 'target_version' && id === inForceId ? <Chip className="ml-2 h-5 px-2 text-[0.72rem]" fg="var(--sagar)" bg="var(--sagar-soft)">In force</Chip> : null}
+                          later={later && c.name === table.pk ? asOf : null}
+                          badge={c.name === 'target_version' && id === inForceId ? (
+                            <Chip className="ml-2 h-5 px-2 text-[11px]" fg="#fff" bg="var(--ink)">
+                              In force
+                            </Chip>
+                          ) : null}
                         />
                       ))}
-                      <Td className="sticky right-0 bg-surface whitespace-nowrap text-right text-ink shadow-[-1px_0_0_var(--line)] group-hover:bg-paper">
-                        <div className="-my-1 flex justify-end gap-0.5">
-                          <RowAction onClick={() => onEdit(r)} label={`Edit ${id}`}>
-                            Edit
-                          </RowAction>
-                          {versioned && table.insertable ? (
-                            <RowAction onClick={() => onNewVersion(r)} label={`Add a new version based on ${id}`}>
-                              New version
-                            </RowAction>
-                          ) : null}
-                          {table.deletable ? (
-                            <RowAction onClick={() => onDelete(r)} label={`Delete ${id}`} danger>
-                              Delete
-                            </RowAction>
-                          ) : null}
+                      <Td className="sticky right-0 bg-stone !py-1 text-right whitespace-nowrap shadow-[-1.5px_0_0_var(--stone-2)] transition-colors duration-150 group-hover:bg-stone-2">
+                        <div className="flex justify-end gap-0.5">
+                          <RowAction onClick={() => onEdit(r)} label={`Edit ${id}`} tip="Edit" icon={PencilDuotone} />
+                          {versioned && table.insertable ? <RowAction onClick={() => onNewVersion(r)} label={`Add a new version based on ${id}`} tip="New version" icon={FilePlusDuotone} /> : null}
+                          {table.deletable ? <RowAction onClick={() => onDelete(r)} label={`Delete ${id}`} tip="Delete" icon={Trash2Duotone} danger /> : null}
                         </div>
                       </Td>
                     </tr>
@@ -180,14 +185,18 @@ export function TableBrowser({ tables, table, onTable, query, onQuery, onEdit, o
                 })}
               </tbody>
             </Table>
-            <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-[0.85rem] text-ink-2">
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-[12.5px] font-[550] text-ink-2">
               <span>
-                Rows <span className="num font-semibold text-ink">{num(offset + 1)}</span>–<span className="num font-semibold text-ink">{num(offset + data.rows.length)}</span> of{' '}
-                <span className="num font-semibold text-ink">{num(data.total)}</span>
+                Rows{' '}
+                <span className="tab font-[700] text-ink">
+                  {num(offset + 1)}–{num(offset + data.rows.length)}
+                </span>{' '}
+                of <span className="tab font-[700] text-ink">{num(data.total)}</span>
                 {query ? <> matching &ldquo;{query}&rdquo;</> : null}
                 {laterCount && asOf ? (
-                  <span className="text-ink-3">
-                    . Grey rows (<span className="num">{num(laterCount)}</span> on this page) are dated after {dateLabel(asOf, true)} and do not count at that date.
+                  <span className="ml-2 inline-flex items-center gap-1">
+                    <Ico icon={ClockDuotone} size={14} ia="var(--ink-2)" ib="var(--stone-3)" />
+                    <span className="tab">{num(laterCount)}</span> greyed rows are dated after {dateLabel(asOf, true)}
                   </span>
                 ) : null}
               </span>
@@ -203,27 +212,32 @@ export function TableBrowser({ tables, table, onTable, query, onQuery, onEdit, o
           </div>
         )}
       </div>
-    </Panel>
+    </Tile>
   );
 }
 
-/** Compact text button for per-row actions, so wide tables keep their last columns visible. */
-function RowAction({ onClick, label, danger, children }: { onClick: () => void; label: string; danger?: boolean; children: ReactNode }) {
+/** Icon-only row action (with its words in a tooltip and the label for assistive tech), so wide tables keep their last columns visible. */
+function RowAction({ onClick, label, tip, icon, danger }: { onClick: () => void; label: string; tip: string; icon: IconComponent; danger?: boolean }) {
   return (
     <button
       type="button"
       onClick={onClick}
       aria-label={label}
-      className={cx('h-7 rounded-md px-1.5 text-[0.82rem] font-medium', danger ? 'text-ink-2 hover:bg-lac-soft hover:text-lac' : 'text-ink-2 hover:bg-paper-2 hover:text-ink')}
+      {...tipProps({ title: tip })}
+      className={cx(
+        'grid size-7 place-items-center rounded-full transition-[background-color,transform] duration-150 [--ia:var(--ink)] [--ib:var(--stone-3)] active:scale-[0.95]',
+        // delete stays quiet until it is the target: the stop colour appears on hover and focus only
+        danger ? 'hover:bg-[#f8dcde] hover:[--ia:var(--st-stop)] focus-visible:[--ia:var(--st-stop)]' : 'hover:bg-ground',
+      )}
     >
-      {children}
+      <Ico icon={icon} size={16} />
     </button>
   );
 }
 
-function Cell({ c, v, pk, later, badge }: { c: ColumnSpec; v: Row[string]; pk: boolean; later: boolean; badge?: ReactNode }) {
+function Cell({ c, v, pk, later, badge }: { c: ColumnSpec; v: Row[string]; pk: boolean; /** the viewed date, on the ID cell of a row dated after it */ later: string | null; badge?: ReactNode }) {
   const { campaignName, ownerName } = useApp();
-  if (v == null || v === '') return <Td align={isNumeric(c) ? 'right' : 'left'} className="text-ink-3">–</Td>;
+  if (v == null || v === '') return <Td align={isNumeric(c) ? 'right' : 'left'} className="text-ink-2">–</Td>;
   const s = String(v);
   if (isNumeric(c)) {
     const n = Number(s);
@@ -233,23 +247,25 @@ function Cell({ c, v, pk, later, badge }: { c: ColumnSpec; v: Row[string]; pk: b
       </Td>
     );
   }
-  if (c.type === 'date') return <Td className="num whitespace-nowrap">{s}</Td>;
+  if (c.type === 'date') return <Td className="tab whitespace-nowrap">{s}</Td>;
   if (c.type === 'ts')
     return (
-      <Td className="num whitespace-nowrap">
+      <Td className="tab whitespace-nowrap">
         {s.slice(0, 16)}
-        {s.length > 16 ? <span className="text-ink-3">{s.slice(16)}</span> : null}
+        {s.length > 16 ? <span className="text-ink-2">{s.slice(16)}</span> : null}
       </Td>
     );
   if (isCampaignCol(c))
     return (
       <Td className="whitespace-nowrap" title={campaignName(s)}>
-        <CampaignDot id={s}>{s}</CampaignDot>
+        <CampaignDot id={s}>
+          <span className="tab">{s}</span>
+        </CampaignDot>
       </Td>
     );
   if (isOwnerCol(c))
     return (
-      <Td className="whitespace-nowrap" title={ownerName(s)}>
+      <Td className="tab whitespace-nowrap" title={ownerName(s)}>
         {s}
       </Td>
     );
@@ -260,8 +276,14 @@ function Cell({ c, v, pk, later, badge }: { c: ColumnSpec; v: Row[string]; pk: b
       </Td>
     );
   return (
-    <Td className={cx('whitespace-nowrap', pk && 'font-medium', pk && !later && 'text-ink')} title={s.length > 24 ? s : undefined}>
-      <span className="flex items-center">
+    <Td className={cx('whitespace-nowrap', pk && 'tab font-[650]', pk && !later && 'text-ink')} title={s.length > 24 ? s : undefined}>
+      <span className="flex items-center gap-1.5">
+        {later ? (
+          <span tabIndex={0} {...tipProps({ title: 'Dated later', notes: [`This row is dated after ${dateLabel(later, true)}, so it does not count at that date.`] })} className="shrink-0 cursor-default rounded-full">
+            <Ico icon={ClockDuotone} size={14} ia="var(--ink-2)" ib="var(--stone-3)" />
+            <span className="sr-only">Dated after {dateLabel(later, true)}: </span>
+          </span>
+        ) : null}
         <span className="block max-w-[13rem] truncate">{s}</span>
         {badge}
       </span>

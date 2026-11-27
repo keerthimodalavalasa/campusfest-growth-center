@@ -10,18 +10,18 @@
 - Radii by hierarchy: `rounded-tile-hero` 28, `rounded-tile-l` 22, `rounded-tile-s` 18, `rounded-tile-m` 14, `rounded-icon` 10, pills `rounded-full`. Gutter 12.
 - Type: Mona Sans (variable `wdth`). Words at width 100, sentence case. `num` = poster-condensed numerals (wdth 75, weight 790, proportional) for every figure; `tab` = tabular figures for axes, tooltips and tables. `type-display` (condensed heavy page titles), `type-title` (labels).
 - Tiles (`src/components/ui.tsx`): `Tile` (`field="lac|nizami|haldi|pista|stone|bidri"`, `size="hero|l|s|m"`, `delay` joins the load sequence) and `TileHead` (icon + label + aside). A field sets local inks: use `text-k2` for secondary text and `--rule` / `border-rule` for hairlines; duotone icons (`Ico`, Rune icons) pick up `--ia` / `--ib`.
-- Other components (`src/components/ui.tsx`): `PageHeader`, `Panel` (legacy API, now a stone Tile), `Button` (primary | secondary | ghost | danger | accent | bidri; sm | md; pills), `Field`, `TextInput`, `Select`, `TextArea`, `Chip`, `StatusPill` (`DecisionChip` alias), `SeverityChip`, `Pips`, `Delta`, `Figure`, `Meter`, `Skeleton`, `ErrorNote`, `EmptyState`, `Tabs`, `Segmented`, `Dialog`, `Table`/`Th`/`Td`, `Ico`, `cx()`.
+- Other components (`src/components/ui.tsx`): `PageHeader`, `Button` (primary | secondary | ghost | danger | accent | bidri; sm | md; pills), `Field`, `TextInput`, `Select`, `TextArea`, `Chip`, `StatusPill`, `SeverityChip`, `Pips`, `Delta`, `Figure`, `Meter`, `Skeleton`, `ErrorNote`, `EmptyState`, `Tabs`, `Segmented`, `Dialog`, `Table`/`Th`/`Td`, `Ico`, `cx()`.
 - Marks (`src/components/viz.tsx`): `Ring`, `Gauge` (hatched when assumed), `Waffle` + `WaffleKey`, `StepFunnel`, `Sparkline`, `MiniBars`, `MicroRing`, `CountUp`, `useElementWidth`, `usePrefersReducedMotion`. Gate: `GateClock` (radial arrivals) and `GateCountdown` in `src/components/GateClock.tsx`.
 - Page kit (stage 2, reuse before building your own):
   - `src/components/tiles.tsx`: `MetricTile` (the header-row KPI tile, promoted from the Overview's attainment tiles: icon, label, micro-visual top-right, numeral, sub, footer), `HowThisWorks` (collapsed methodology, `wide` for tables), `GroupHead` (a heading on the page ground above a group of tiles).
   - `src/components/signals.tsx`: `signalView(sig, snapshot, maxOptOut)` and `SignalTile` (the Overview's signal tile; pass `onSelect` for a button tile, or `actions` for an article with a footer of buttons).
-  - `src/components/RuleStrip.tsx`: the Scale / Keep / Change / Stop bands on a cost-to-median axis, with campaign dots (many) or a caret and an `active` band (one).
+  - `src/components/RuleStrip.tsx`: the Scale / Keep / Change / Stop bands on a cost-to-median axis, with campaign dots (many) or a caret and an `active` band (one). Also `CallWaffle` (one glyph square per campaign's call) and `GLYPH` (the status glyph per call).
   - `src/components/CampaignCard.tsx`: one campaign as a limestone card (colour cap, call pill, cost per visitor, spend vs visitor shares, show-up ring); `meta` and `footer` slots.
   - `StepFunnel` leaks take `highlight` to mark the biggest drop.
 - Charts (`src/components/charts.tsx`): `axisProps`, `gridProps`, `cursorProps` (hairline crosshair), `barCursorProps`, `ChartTip` (dark tooltip), `Legend` (line / dotted / square / bar swatches), `Swatch`, `CampaignDot`. `ChartData` is the "View data" disclosure. For hand-drawn SVG/HTML marks use `tipProps(content)` from `src/components/tooltip.tsx` (one shared dark tooltip).
 - Colours: `CAMPAIGN_COLORS` / `campaignColor(id)` in `src/lib/colors.ts`, one fixed palette for every chart (colour follows the campaign, never its rank). `DECISION`, `SEVERITY`, `FAMILY` live there too.
 - Motion: one orchestrated load per page (`anim-settle`, `anim-grow-y`, `anim-grow-x`, `anim-fade`, `anim-arc` with `--d` delays; mount-only, never replayed on scrub). Reduced motion keeps short fades only.
-- Legacy names (`paper`, `surface`, `line`, `ink-3`, `bangle`, `zari`, `sagar`, …) still resolve to Bento values so old pages render on-theme; they are deprecated and go away once every page is migrated.
+- Every page is on Bento. The pre-Bento names (`paper`, `surface`, `line`, `ink-3`, `bangle`, `zari`, `sagar`, `--radius-panel`, `--radius-control`), the `Panel` and `DecisionChip` components and the status tints (`DECISION[k].bg`) have been removed; do not reintroduce them. Icons are Rune duotones through `Ico`; `lucide-react` is no longer imported anywhere.
 - Formatting (`src/lib/format.ts`): `num`, `num1`, `inr` (₹2,74,000), `inrShort` (₹2.74L), `pct` (share 0-1 to "68.8%"), `signed`, `dateLabel` ("12 Apr" / "12 Apr 2025"), `istTime`, `addDays`, `todayIST`.
 - Data access (`src/lib/api.ts`, `src/lib/app-state.tsx`):
   - `useApi<T>(url)` for reads. It auto-refetches whenever any data changes anywhere.
@@ -34,7 +34,7 @@
 
 ## Rules (hard)
 - Never write ALL-CAPS labels, eyebrow labels above headings, middle-dot strings ("A · B"), arrows appended to buttons or links, or monospace data labels.
-- Do not wrap everything in identical cards. Use `Panel` for real groupings and wells or plain sections elsewhere.
+- Do not wrap everything in identical cards. Use a `Tile` for real groupings, `bg-stone-2/60` wells inside a tile, and plain sections elsewhere.
 - Use sentence case and plain verbs. Buttons say exactly what happens ("Create task", "Save changes", "Reset to original data"). Errors say what failed and how to fix it. Empty states invite the next action.
 - Every number uses the formatters and the `num` class. Rates are percentages with one decimal. Money is INR with Indian grouping.
 - Charts: no dual axes. Show a legend whenever there are 2 or more series. Use `campaignColor` for campaigns and a dark tooltip (`ChartTip` or `tipProps`) on every chart. Give each chart a nearby table or exact numbers (`ChartData`). Recharts animation may run once on mount only (see the Overview pace chart); never on refetch.

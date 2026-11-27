@@ -1,15 +1,15 @@
 'use client';
 import Link from 'next/link';
 import { useMemo, useState, type CSSProperties } from 'react';
-import { ArrowUpRightDuotone, CheckDuotone, ChartAreaDuotone, CircleCheckDuotone, IndianRupeeDuotone, LayoutGridDuotone, PlusDuotone, RotateCwDuotone, SlidersHorizontalDuotone, SquareStopDuotone, UsersDuotone, WalletDuotone } from 'runeicons-react';
+import { ChartAreaDuotone, CircleCheckDuotone, IndianRupeeDuotone, LayoutGridDuotone, PlusDuotone, SlidersHorizontalDuotone, UsersDuotone, WalletDuotone } from 'runeicons-react';
 import { useApi } from '@/lib/api';
 import { useApp, useAsOfUrl } from '@/lib/app-state';
 import { campaignColor, DECISION, type DecisionKey } from '@/lib/colors';
 import { dateLabel, inr, inrShort, num, pct } from '@/lib/format';
-import { Button, EmptyState, ErrorNote, Ico, PageHeader, Segmented, Skeleton, StatusPill, Tile, TileHead, type IconComponent } from '@/components/ui';
+import { Button, EmptyState, ErrorNote, Ico, PageHeader, Segmented, Skeleton, StatusPill, Tile, TileHead } from '@/components/ui';
 import { CampaignCard } from '@/components/CampaignCard';
 import { Legend } from '@/components/charts';
-import { RuleStrip } from '@/components/RuleStrip';
+import { CallWaffle, GLYPH, RuleStrip } from '@/components/RuleStrip';
 import { tipProps } from '@/components/tooltip';
 import { GroupHead, HowThisWorks, MetricTile } from '@/components/tiles';
 import { CountUp, Gauge, MiniBars, Ring } from '@/components/viz';
@@ -18,7 +18,6 @@ import { EfficiencyScatter, type ScatterPoint } from './_components/EfficiencySc
 import { NewCampaignDialog } from './_components/NewCampaignDialog';
 import { isPostEvent, StatusText, times, UNATTRIBUTED, type CampaignsResponse } from './_components/shared';
 
-const GLYPH: Record<DecisionKey, IconComponent> = { scale: ArrowUpRightDuotone, keep: CheckDuotone, change: RotateCwDuotone, stop: SquareStopDuotone };
 const ORDER: DecisionKey[] = ['scale', 'keep', 'change', 'stop'];
 
 export default function CampaignsPage() {
@@ -350,20 +349,6 @@ export default function CampaignsPage() {
         </>
       )}
       {dialog}
-    </div>
-  );
-}
-
-/** One square per campaign, filled with its call's colour and carrying the call's glyph (never colour alone). */
-function CallWaffle({ decisions }: { decisions: DecisionKey[] }) {
-  const sorted = [...decisions].sort((a, b) => ORDER.indexOf(a) - ORDER.indexOf(b));
-  return (
-    <div className="grid grid-cols-4 gap-1" role="img" aria-label={ORDER.map((k) => `${sorted.filter((x) => x === k).length} ${DECISION[k].label.toLowerCase()}`).join(', ')}>
-      {sorted.map((k, i) => (
-        <span key={i} className="anim-fade grid size-4 place-items-center rounded-[4px]" style={{ background: DECISION[k].fg, '--d': `${200 + i * 30}ms` } as CSSProperties}>
-          <Ico icon={GLYPH[k]} size={11} ia="#fff" ib="#fff" />
-        </span>
-      ))}
     </div>
   );
 }

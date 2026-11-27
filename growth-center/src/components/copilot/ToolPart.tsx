@@ -1,10 +1,10 @@
 'use client';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { Check, ChevronDown, CircleAlert, Database, LoaderCircle, Ticket } from 'lucide-react';
+import { CheckDuotone, ChevronDownDuotone, CircleAlertDuotone, ClipboardListDuotone, RefreshCwDuotone, ServerDuotone } from 'runeicons-react';
 import { useApp } from '@/lib/app-state';
 import { dateLabel } from '@/lib/format';
-import { Button, cx } from '@/components/ui';
+import { Button, cx, Ico } from '@/components/ui';
 
 export interface AnyToolPart {
   type: string;
@@ -63,10 +63,10 @@ function Receipt({ name, part }: { name: string; part: AnyToolPart }) {
   return (
     <div className="rounded-[12px] shadow-[inset_0_0_0_1.5px_var(--stone-2)] text-[12.5px]">
       <button type="button" onClick={() => setOpen(!open)} className="flex w-full items-center gap-2 rounded-[12px] px-3 py-2 text-left text-ink-2 transition-colors duration-150 hover:bg-stone" aria-expanded={open} disabled={running}>
-        {running ? <LoaderCircle size={14} className="animate-spin text-ink-2" /> : failed ? <CircleAlert size={14} className="text-st-change" /> : <Database size={14} className="text-nizami" />}
+        {running ? <Ico icon={RefreshCwDuotone} size={15} ia="var(--ink-2)" ib="var(--stone-3)" className="animate-spin" /> : failed ? <Ico icon={CircleAlertDuotone} size={15} ia="var(--st-change)" ib="color-mix(in srgb, var(--st-change) 35%, transparent)" /> : <Ico icon={ServerDuotone} size={15} ia="var(--nizami)" ib="var(--nizami-2)" />}
         <span className="font-[650] text-ink">{LABELS[name] ?? name}</span>
         {detail ? <span className="truncate text-ink-2">{detail}</span> : null}
-        {!running ? <ChevronDown size={14} className={cx('ml-auto shrink-0 text-ink-2 transition-transform duration-200 ease-out', open && 'rotate-180')} /> : null}
+        {!running ? <Ico icon={ChevronDownDuotone} size={15} ia="var(--ink-2)" ib="var(--ink-2)" className={cx('ml-auto shrink-0 transition-transform duration-200 ease-out', open && 'rotate-180')} /> : null}
       </button>
       {open ? (
         <pre className="tab max-h-72 overflow-auto border-t border-stone-2 px-3 py-2 text-[11.5px] leading-snug whitespace-pre-wrap text-ink-2">
@@ -124,11 +124,11 @@ function ActionTicket({ name, part, onApproval }: { name: string; part: AnyToolP
   return (
     <div className={cx('overflow-hidden rounded-tile-s bg-stone', denied && 'opacity-80')}>
       <div className="flex items-center gap-2 px-4 pt-3 pb-2">
-        <Ticket size={16} className={done ? 'text-st-scale' : 'text-lac'} aria-hidden />
+        <Ico icon={ClipboardListDuotone} size={17} ia={done ? 'var(--st-scale)' : 'var(--lac)'} ib={done ? 'color-mix(in srgb, var(--st-scale) 35%, transparent)' : 'var(--lac-pale)'} />
         <span className="text-[12.5px] font-[650] text-ink-2">{LABELS[name]}</span>
         {done ? (
           <span className="ml-auto inline-flex h-6 items-center gap-1 rounded-full bg-st-scale pr-[9px] pl-1.5 text-[12px] font-[700] text-white">
-            <Check size={14} aria-hidden /> Saved
+            <Ico icon={CheckDuotone} size={14} ia="#fff" ib="#fff" /> Saved
           </span>
         ) : null}
       </div>

@@ -7,7 +7,22 @@ import { cx, Ico, type IconComponent } from '@/components/ui';
 import { tipProps, type TipContent } from '@/components/tooltip';
 import { useElementWidth } from '@/components/viz';
 
-const GLYPH: Record<DecisionKey, IconComponent> = { scale: ArrowUpRightDuotone, keep: CheckDuotone, change: RotateCwDuotone, stop: SquareStopDuotone };
+export const GLYPH: Record<DecisionKey, IconComponent> = { scale: ArrowUpRightDuotone, keep: CheckDuotone, change: RotateCwDuotone, stop: SquareStopDuotone };
+const CALL_ORDER: DecisionKey[] = ['scale', 'keep', 'change', 'stop'];
+
+/** One square per campaign, filled with its call's colour and carrying the call's glyph (never colour alone). */
+export function CallWaffle({ decisions, delay = 200 }: { decisions: DecisionKey[]; delay?: number }) {
+  const sorted = [...decisions].sort((a, b) => CALL_ORDER.indexOf(a) - CALL_ORDER.indexOf(b));
+  return (
+    <div className="grid grid-cols-4 gap-1" role="img" aria-label={CALL_ORDER.map((k) => `${sorted.filter((x) => x === k).length} ${DECISION[k].label.toLowerCase()}`).join(', ')}>
+      {sorted.map((k, i) => (
+        <span key={i} className="anim-fade grid size-4 place-items-center rounded-[4px]" style={{ background: DECISION[k].fg, '--d': `${delay + i * 30}ms` } as CSSProperties}>
+          <Ico icon={GLYPH[k]} size={11} ia="#fff" ib="#fff" />
+        </span>
+      ))}
+    </div>
+  );
+}
 
 export interface RulePoint {
   id: string;

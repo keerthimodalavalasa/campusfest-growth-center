@@ -1,12 +1,16 @@
 'use client';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { Plus, X } from 'lucide-react';
+import type { CSSProperties } from 'react';
+import { ArrowLeftRightDuotone, ClipboardListDuotone, PlusDuotone, TriangleAlertDuotone, XDuotone } from 'runeicons-react';
 import type { Simulation } from '@/server/engine/simulate';
 import { api } from '@/lib/api';
-import { dateLabel, inr, num, pct, signed } from '@/lib/format';
-import { Button, ErrorNote, Panel, Select, Skeleton, Table, Td, TextInput, Th, cx } from '@/components/ui';
-import { axisProps, CampaignDot, ChartTip, gridProps, Legend } from '@/components/charts';
+import { dateLabel, inr, num, signed } from '@/lib/format';
+import { Button, cx, Delta, ErrorNote, Ico, Select, Skeleton, Table, Td, TextInput, Th, Tile, TileHead } from '@/components/ui';
+import { campaignColor } from '@/lib/colors';
+import { ChartData } from '@/components/ChartData';
+import { HowThisWorks } from '@/components/tiles';
+import { tipProps } from '@/components/tooltip';
+import { ResponseCurve } from './ResponseCurve';
 import type { TaskDraft } from '@/components/TaskDialog';
 import { isPost, tidy, type DecideResponse } from './types';
 
@@ -33,7 +37,7 @@ const parseAmount = (s: string) => {
 };
 
 /** Move budget between campaigns and model the effect on (expected) visitors. Nothing is saved. */
-export function BudgetSimulator({ data, onCreateTask }: { data: DecideResponse; onCreateTask: (d: TaskDraft) => void }) {
+export function BudgetSimulator({ data, onCreateTask, delay = 0 }: { data: DecideResponse; onCreateTask: (d: TaskDraft) => void; delay?: number }) {
   const seq = useRef(1);
   const [rows, setRows] = useState<MoveRow[]>([{ key: 0, from: '', to: '', amount: '' }]);
   const [run, setRun] = useState<Run | null>(null);
@@ -130,27 +134,31 @@ export function BudgetSimulator({ data, onCreateTask }: { data: DecideResponse; 
     };
   };
 
+
   const doubling = Math.pow(2, k);
-  const halving = Math.pow(0.5, k);
 
   return (
-    <Panel title="Budget simulator" aside="Models a what-if. Nothing is saved." id="simulator">
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
+    <Tile field="stone" id="simulator" delay={delay} className="scroll-mt-24" aria-label="Budget simulator">
+      <TileHead icon={ArrowLeftRightDuotone} aside="a what-if, nothing is saved">
+        Budget simulator
+      </TileHead>
+      <div className="mt-4 grid grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-x-8 gap-y-6 max-[1200px]:grid-cols-1">
         {/* moves editor */}
         <div className="min-w-0">
-          <div className="hidden grid-cols-[minmax(0,1fr)_minmax(0,1fr)_8.5rem_2rem] gap-2 pb-1 text-[0.8rem] font-medium text-ink-2 sm:grid">
+          <div className="hidden grid-cols-[minmax(0,1fr)_minmax(0,1fr)_8.5rem_2.5rem] gap-2 pb-1.5 text-[12.5px] font-[600] text-ink-2 sm:grid">
             <span>Move budget from</span>
             <span>To</span>
-            <span>Amount (₹)</span>
+            <span className="text-right">Amount, ₹</span>
             <span />
           </div>
           <ol className="space-y-2.5">
             {rows.map((r, i) => {
               const e = showErrors ? rowError(r) : null;
               const w = rowWarning(r);
+              const suggested = r.rationale && r.rationale.asOf === data.asOf ? r.rationale.text : null;
               return (
                 <li key={r.key}>
-                  <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_8.5rem_2rem]">
+                  <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_8.5rem_2.5rem]">
                     <Select aria-label={`Move ${i + 1}: from campaign`} value={r.from} onChange={(ev) => update(r.key, { from: ev.target.value })}>
                       <option value="">Choose a campaign</option>
                       {camps.map((c) => (
@@ -175,29 +183,43 @@ export function BudgetSimulator({ data, onCreateTask }: { data: DecideResponse; 
                       placeholder="e.g. 15000"
                       value={r.amount}
                       onChange={(ev) => update(r.key, { amount: ev.target.value })}
-                      className={cx('num text-right', e && 'border-lac')}
+                      className={cx('tab text-right', e && '!border-st-stop')}
                     />
-                    <button type="button" onClick={() => remove(r.key)} aria-label={`Remove move ${i + 1}`} className="grid size-9 place-items-center rounded-[var(--radius-control)] text-ink-3 hover:bg-paper-2 hover:text-ink">
-                      <X size={16} aria-hidden />
+                    <button
+                      type="button"
+                      onClick={() => remove(r.key)}
+                      aria-label={`Remove move ${i + 1}`}
+                      className="grid size-10 place-items-center rounded-full transition-[background-color,transform] duration-150 hover:bg-stone-2 active:scale-[0.95]"
+                    >
+                      <Ico icon={XDuotone} size={18} ia="var(--ink-2)" ib="var(--ink-2)" />
                     </button>
                   </div>
                   {e ? (
-                    <p id={`move-${r.key}-msg`} className="mt-1 text-[0.8rem] text-lac">
+                    <p id={`move-${r.key}-msg`} className="mt-1 text-[12.5px] font-[600] text-st-stop">
                       {e}
                     </p>
                   ) : null}
                   {!e && w ? (
-                    <p id={`move-${r.key}-msg`} className="mt-1 text-[0.8rem] text-zari">
+                    <p id={`move-${r.key}-msg`} className="mt-1 flex items-center gap-1.5 text-[12.5px] font-[550] text-ink-2">
+                      <Ico icon={TriangleAlertDuotone} size={14} ia="var(--ink)" ib="var(--stone-3)" />
                       {w}
                     </p>
                   ) : null}
-                  {r.rationale && r.rationale.asOf === data.asOf ? <p className="num mt-1 text-[0.78rem] text-ink-3">Suggested because {r.rationale.text}</p> : null}
+                  {suggested ? (
+                    <span
+                      tabIndex={0}
+                      {...tipProps({ title: 'Why this move', notes: [suggested] })}
+                      className="mt-1.5 inline-flex h-[22px] cursor-default items-center rounded-full bg-stone-2 px-2 text-[11.5px] font-[650] text-ink-2"
+                    >
+                      Suggested by the rules
+                    </span>
+                  ) : null}
                 </li>
               );
             })}
           </ol>
           <div className="mt-3 flex flex-wrap items-center gap-2">
-            <Button size="sm" variant="ghost" onClick={add} icon={<Plus size={15} aria-hidden />}>
+            <Button size="sm" variant="ghost" onClick={add} icon={<Ico icon={PlusDuotone} size={15} ia="var(--ink)" ib="var(--stone-3)" />}>
               Add a move
             </Button>
             <Button size="sm" variant="secondary" onClick={loadSuggested} disabled={!data.reallocations.length} title={data.reallocations.length ? undefined : 'No suggestion at this date'}>
@@ -206,191 +228,200 @@ export function BudgetSimulator({ data, onCreateTask }: { data: DecideResponse; 
             <Button size="sm" variant="ghost" onClick={clear}>
               Clear
             </Button>
-            <span className="num ml-auto text-[0.82rem] text-ink-2">{totalMoved > 0 ? `${inr(totalMoved)} moved, total spend unchanged` : null}</span>
+            <span className="tab ml-auto text-[12.5px] font-[600] text-ink-2">{totalMoved > 0 ? `${inr(totalMoved)} moved, total spend unchanged` : null}</span>
           </div>
-          {!data.reallocations.length ? <p className="mt-2 text-[0.8rem] text-ink-3">No suggested moves at this date: they need at least one Stop campaign with spend and one Scale campaign to receive it.</p> : null}
-          <div className="mt-4 flex items-center gap-3">
+          {!data.reallocations.length ? <p className="mt-2 text-[12.5px] text-ink-2">No suggested moves at this date: they need a Stop campaign with spend and a Scale campaign to receive it.</p> : null}
+          <div className="mt-4 flex flex-wrap items-center gap-3">
             <Button variant="primary" onClick={onRun} disabled={running}>
               {running ? 'Running…' : 'Run simulation'}
             </Button>
-            {showErrors && !valid ? <span className="text-[0.82rem] text-lac">{active.length ? 'Fix the moves marked in red first.' : 'Add at least one move first.'}</span> : null}
+            {showErrors && !valid ? <span className="text-[12.5px] font-[600] text-st-stop">{active.length ? 'Fix the moves marked in red first.' : 'Add at least one move first.'}</span> : null}
           </div>
 
-          <div className="mt-5 rounded-[var(--radius-control)] bg-paper-2 px-3.5 py-3 text-[0.82rem] text-ink-2">
-            <p className="font-medium text-ink">Assumptions</p>
-            <p className="num mt-1">{run ? tidy(run.sim.basis) : `${post ? 'Actual verified visitors' : 'Expected visitors (confirmed × show-rate assumption)'} as of ${dateLabel(data.asOf, true)}; response curve V = V0 × (spend ratio)^${k}.`}</p>
-            <p className="num mt-1">
-              Spend elasticity {k}: doubling a campaign&apos;s spend multiplies its visitors by {doubling.toFixed(2)}, halving it by {halving.toFixed(2)}. This is a planning assumption for diminishing returns, not a measured curve.
-              {post ? ' After the event this is a counterfactual: what the same total budget might have produced.' : ''}
-            </p>
+          <div className="mt-5 flex flex-wrap items-center gap-4 rounded-tile-m bg-stone-2/60 px-4 py-3.5">
+            <ResponseCurve k={k} />
+            <div className="min-w-0 flex-1 basis-[13rem]">
+              <div className="text-[13.5px] font-[650]">Response curve, assumed</div>
+              <p className="mt-0.5 text-[12.5px] leading-[1.4] font-[550] text-ink-2">
+                Elasticity <span className="tab font-[700] text-ink">{k}</span>: doubling spend gives <span className="tab font-[700] text-ink">×{doubling.toFixed(2)}</span> the visitors.
+              </p>
+              <HowThisWorks className="mt-1.5">
+                <p>{run ? tidy(run.sim.basis) : `${post ? 'Actual verified visitors' : 'Expected visitors (confirmed × show-rate assumption)'} as of ${dateLabel(data.asOf, true)}; response curve V = V0 × (spend ratio)^${k}.`}</p>
+                <p>This is a planning assumption for diminishing returns, not a measured curve. The dashed diagonal is what no diminishing returns would look like.{post ? ' After the event this is a counterfactual: what the same total budget might have produced.' : ''}</p>
+              </HowThisWorks>
+            </div>
           </div>
         </div>
 
-        {/* result summary */}
+        {/* result */}
         <div className="min-w-0">
           {err ? <ErrorNote onRetry={run ? () => void simulate(run.moves) : onRun}>{err}</ErrorNote> : null}
-          {running && !run ? <Skeleton className="h-40" /> : null}
+          {running && !run ? <Skeleton className="h-56" /> : null}
           {run ? (
-            <RunSummary run={run} unit={unit} post={post} stale={run.stamp !== stamp} onTask={() => onCreateTask(planDraft(run))} />
+            <RunResult run={run} unit={unit} post={post} stale={run.stamp !== stamp} onTask={() => onCreateTask(planDraft(run))} />
           ) : !running ? (
-            <div className="flex h-full min-h-40 flex-col justify-center rounded-[var(--radius-panel)] border border-dashed border-line-2 px-5 py-6">
-              <p className="font-semibold text-ink">No simulation yet</p>
-              <p className="mt-1 text-[0.88rem] text-ink-2">
-                {data.reallocations.length ? 'Load the suggested moves or add your own, then run the simulation to see the change in ' : 'Add a move, then run the simulation to see the change in '}
-                {unit}, campaign by campaign.
+            <div className="flex h-full min-h-48 flex-col justify-center rounded-tile-m border-[1.5px] border-dashed border-stone-3 px-5 py-6">
+              <p className="text-[15px] font-[650] text-ink">No simulation yet</p>
+              <p className="mt-1 text-[13px] text-ink-2">
+                {data.reallocations.length ? 'Load the suggested moves, then run them' : 'Add a move, then run it'} to see the change in {unit}, campaign by campaign.
               </p>
             </div>
           ) : null}
         </div>
       </div>
-
-      {run ? <RunDetail run={run} unit={unit} /> : null}
-    </Panel>
+    </Tile>
   );
 }
 
-function RunSummary({ run, unit, post, stale, onTask }: { run: Run; unit: string; post: boolean; stale: boolean; onTask: () => void }) {
-  const { sim } = run;
-  const tone = sim.delta > 0.5 ? 'var(--bangle)' : sim.delta < -0.5 ? 'var(--lac)' : 'var(--ink)';
-  const changePct = sim.totalBefore > 0 ? sim.delta / sim.totalBefore : null;
-  return (
-    <div className={cx('space-y-4', stale && 'opacity-60')}>
-      <div>
-        <div className="text-[0.85rem] text-ink-2">Net change in {unit}{post ? ', had the budget moved' : ''}</div>
-        <div className="num type-display mt-1 text-[2.6rem] leading-none" style={{ color: tone }}>
-          {signed(Math.round(sim.delta))}
-        </div>
-        <div className="num mt-1.5 text-[0.88rem] text-ink-2">
-          {num(sim.totalBefore)} to {num(sim.totalAfter)} {unit}
-          {changePct != null ? <span className="ml-1.5 font-semibold" style={{ color: tone }}>({changePct >= 0 ? '+' : '−'}{pct(Math.abs(changePct))})</span> : null}
-        </div>
-        <div className="mt-0.5 text-[0.8rem] text-ink-3">Run as of {dateLabel(run.asOf, true)}, elasticity {sim.elasticity}</div>
-      </div>
-      {sim.warnings.length ? (
-        <div className="rounded-[var(--radius-control)] border border-zari-bright/50 bg-zari-soft px-3 py-2 text-[0.82rem] text-zari">
-          <p className="font-semibold">{sim.warnings.length === 1 ? 'Warning' : `${sim.warnings.length} warnings`}</p>
-          <ul className="mt-0.5 list-disc pl-4">
-            {sim.warnings.map((w, i) => (
-              <li key={i}>{tidy(w)}</li>
-            ))}
-          </ul>
-        </div>
-      ) : (
-        <p className="text-[0.82rem] text-ink-3">No warnings: every move was within the source campaign&apos;s spend.</p>
-      )}
-      <Button variant="secondary" onClick={onTask}>
-        Turn this plan into a task
-      </Button>
-    </div>
-  );
-}
-
-function RunDetail({ run, unit }: { run: Run; unit: string }) {
+/** The result: the net change as the numeral, then a before-to-after dumbbell per changed campaign. */
+function RunResult({ run, unit, post, stale, onTask }: { run: Run; unit: string; post: boolean; stale: boolean; onTask: () => void }) {
   const { sim } = run;
   const changed = sim.rows.filter((r) => r.spendAfter !== r.spendBefore || Math.abs(r.delta) > 1e-9);
   const spendBefore = sim.rows.reduce((s, r) => s + r.spendBefore, 0);
   const spendAfter = sim.rows.reduce((s, r) => s + r.spendAfter, 0);
-  const chart = changed.map((r) => ({ id: r.campaignId, name: r.name, before: r.visitorsBefore, after: r.visitorsAfter, delta: r.delta }));
+  const max = Math.max(1, ...changed.flatMap((r) => [r.visitorsBefore, r.visitorsAfter])) * 1.06;
   const unitCap = unit.charAt(0).toUpperCase() + unit.slice(1);
-
-  if (!changed.length) return <p className="mt-5 border-t border-line pt-4 text-[0.88rem] text-ink-2">No campaign changed in this run. Check the warnings above.</p>;
+  const x = (v: number) => `${Math.max(0, Math.min(100, (v / max) * 100))}%`;
+  const changePct = sim.totalBefore > 0 ? sim.delta / sim.totalBefore : null;
 
   return (
-    <div className="mt-6 grid gap-6 border-t border-line pt-5 xl:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
-      <div className="min-w-0">
-        <h3 className="mb-2 text-[0.9rem] font-semibold text-ink">Before and after, changed campaigns</h3>
-        <Table>
-          <thead>
-            <tr>
-              <Th className="text-left">Campaign</Th>
-              <Th align="right">Spend before</Th>
-              <Th align="right">Spend after</Th>
-              <Th align="right">{unitCap} before</Th>
-              <Th align="right">After</Th>
-              <Th align="right">Change</Th>
-            </tr>
-          </thead>
-          <tbody>
-            {changed.map((r) => (
-              <tr key={r.campaignId}>
-                <Td>
-                  <CampaignDot id={r.campaignId}>
-                    <span className="whitespace-nowrap font-medium">{r.name}</span>
-                  </CampaignDot>
-                  {r.note ? <div className="pl-[18px] text-[0.75rem] text-ink-3">{r.note}</div> : null}
-                </Td>
-                <Td align="right">{inr(r.spendBefore)}</Td>
-                <Td align="right">{inr(r.spendAfter)}</Td>
-                <Td align="right">{num(r.visitorsBefore)}</Td>
-                <Td align="right">{num(r.visitorsAfter)}</Td>
-                <Td align="right" className="font-semibold">
-                  <span style={{ color: r.delta > 0 ? 'var(--bangle)' : r.delta < 0 ? 'var(--lac)' : undefined }}>{signed(Math.round(r.delta))}</span>
-                </Td>
-              </tr>
-            ))}
-            <tr className="bg-paper">
-              <Td className="font-semibold">All campaigns</Td>
-              <Td align="right">{inr(spendBefore)}</Td>
-              <Td align="right">{inr(spendAfter)}</Td>
-              <Td align="right">{num(sim.totalBefore)}</Td>
-              <Td align="right">{num(sim.totalAfter)}</Td>
-              <Td align="right" className="font-semibold">
-                {signed(Math.round(sim.delta))}
-              </Td>
-            </tr>
-          </tbody>
-        </Table>
-        <p className="mt-2 text-[0.78rem] text-ink-3">
-          <span className="num">{sim.rows.length - changed.length}</span> other campaigns are unchanged. Spend after can be lower than before when a move was capped. Unattributed walk-ins are not modelled.
-        </p>
+    <div className={cx('transition-opacity duration-200', stale && 'opacity-60')} aria-busy={stale}>
+      <div className="text-[13.5px] font-[650]">
+        Net change in {unit}
+        {post ? ', had the budget moved' : ''}
       </div>
-      <figure className="min-w-0">
-        <figcaption className="mb-2 flex flex-wrap items-center justify-between gap-2">
-          <span className="text-[0.9rem] font-semibold text-ink">{unitCap}, before and after</span>
-          <Legend
-            items={[
-              { label: 'Before', color: 'color-mix(in srgb, var(--ink-3) 45%, transparent)' },
-              { label: 'After, gain', color: 'var(--bangle)' },
-              { label: 'After, loss', color: 'var(--lac)' },
-            ]}
-          />
-        </figcaption>
-        <div style={{ height: chart.length * 56 + 36 }}>
-          <ResponsiveContainer debounce={250} width="100%" height="100%">
-            <BarChart data={chart} layout="vertical" margin={{ top: 4, right: 16, bottom: 0, left: 0 }} barGap={2} barCategoryGap="22%">
-              <CartesianGrid {...gridProps} vertical horizontal={false} />
-              <XAxis type="number" {...axisProps} tickFormatter={(v: number) => num(v)} />
-              <YAxis type="category" dataKey="name" {...axisProps} width={140} interval={0} />
-              <Tooltip
-                cursor={{ fill: 'var(--paper-2)' }}
-                content={(p) => {
-                  const row = (p.payload?.[0]?.payload ?? null) as (typeof chart)[number] | null;
-                  if (!p.active || !row) return null;
-                  const tone = row.delta >= 0 ? 'var(--bangle)' : 'var(--lac)';
-                  return (
-                    <ChartTip
-                      active
-                      label={row.name}
-                      payload={[
-                        { name: 'Before', value: row.before, color: 'var(--ink-3)' },
-                        { name: 'After', value: row.after, color: tone },
-                        { name: 'Change', value: row.delta, color: tone },
-                      ]}
-                      format={(v, name) => (name === 'Change' ? signed(Math.round(v)) : num(v))}
-                    />
-                  );
-                }}
-              />
-              <Bar dataKey="before" name="Before" fill="var(--ink-3)" fillOpacity={0.45} radius={[0, 3, 3, 0]} isAnimationActive={false} />
-              <Bar dataKey="after" name="After" radius={[0, 3, 3, 0]} isAnimationActive={false}>
-                {chart.map((c) => (
-                  <Cell key={c.id} fill={c.delta >= 0 ? 'var(--bangle)' : 'var(--lac)'} />
+      <div className="mt-2 flex flex-wrap items-end gap-x-3 gap-y-1">
+        <span className="num text-[58px] leading-[0.85]">{signed(Math.round(sim.delta))}</span>
+        <span className="pb-1 text-[13px] font-[600] text-ink-2">
+          <span className="tab">
+            {num(sim.totalBefore)} to {num(sim.totalAfter)}
+          </span>
+          {changePct != null ? <span className="tab ml-1.5 font-[700] text-ink">({signed(changePct * 100, (n) => `${n.toFixed(1)}%`)})</span> : null}
+        </span>
+      </div>
+      <div className="mt-1.5 text-[12px] font-[550] text-ink-2">
+        Run as of {dateLabel(run.asOf, true)}, elasticity <span className="tab">{sim.elasticity}</span>
+        {stale ? ', inputs changed, updating' : ''}
+      </div>
+
+      {changed.length ? (
+        <figure className="mt-4">
+          <figcaption className="mb-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12.5px] font-[550] text-ink-2">
+            <span className="font-[650] text-ink">{unitCap}, before and after</span>
+            <span className="inline-flex items-center gap-1.5">
+              <svg viewBox="0 0 12 12" className="size-3" aria-hidden>
+                <circle cx="6" cy="6" r="4.4" fill="var(--stone)" stroke="var(--ink-2)" strokeWidth="1.8" />
+              </svg>
+              Before
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <svg viewBox="0 0 12 12" className="size-3" aria-hidden>
+                <circle cx="6" cy="6" r="5.5" fill="var(--ink-2)" />
+              </svg>
+              After
+            </span>
+          </figcaption>
+          <ul className="grid gap-1">
+            {changed.map((r, i) => {
+              const color = campaignColor(r.campaignId);
+              const a = Math.min(r.visitorsBefore, r.visitorsAfter);
+              const b = Math.max(r.visitorsBefore, r.visitorsAfter);
+              return (
+                <li
+                  key={r.campaignId}
+                  tabIndex={0}
+                  {...tipProps({
+                    title: r.name,
+                    rows: [
+                      { label: 'Spend', value: `${inr(r.spendBefore)} to ${inr(r.spendAfter)}` },
+                      { color, label: 'Before', value: num(r.visitorsBefore), swatch: 'square' },
+                      { color, label: 'After', value: num(r.visitorsAfter), swatch: 'square' },
+                      { label: 'Change', value: signed(Math.round(r.delta)), total: true },
+                    ],
+                    notes: r.note ? [r.note] : [],
+                  })}
+                  className="grid cursor-default grid-cols-[minmax(0,8.5rem)_minmax(0,1fr)_3.75rem] items-center gap-3 rounded-md py-1 text-[12.5px] font-[600]"
+                >
+                  <span className="flex min-w-0 items-center gap-2">
+                    <i aria-hidden className="block size-2.5 shrink-0 rounded-[3px]" style={{ background: color }} />
+                    <span className="truncate">{r.name}</span>
+                  </span>
+                  <span className="relative h-5" aria-hidden>
+                    <i className="absolute top-1/2 left-0 block h-px w-full -translate-y-1/2 bg-stone-3" />
+                    <i className="anim-grow-x absolute top-1/2 block h-[3px] -translate-y-1/2 rounded-full" style={{ left: x(a), width: `calc(${x(b)} - ${x(a)})`, background: color, '--d': `${120 + i * 50}ms` } as CSSProperties} />
+                    <i className="absolute top-1/2 block size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 bg-stone" style={{ left: x(r.visitorsBefore), borderColor: color }} />
+                    <i className="anim-fade absolute top-1/2 block size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full shadow-[0_0_0_2px_var(--stone)]" style={{ left: x(r.visitorsAfter), background: color, '--d': `${300 + i * 50}ms` } as CSSProperties} />
+                  </span>
+                  <span className="text-right">
+                    <Delta now={r.visitorsAfter} prev={r.visitorsBefore} format={num} colored label="from the moves" />
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+          <ChartData>
+            <Table>
+              <thead>
+                <tr>
+                  <Th>Campaign</Th>
+                  <Th align="right">Spend before</Th>
+                  <Th align="right">Spend after</Th>
+                  <Th align="right">Before</Th>
+                  <Th align="right">After</Th>
+                  <Th align="right">Change</Th>
+                </tr>
+              </thead>
+              <tbody>
+                {changed.map((r) => (
+                  <tr key={r.campaignId}>
+                    <Td>
+                      {r.name}
+                      {r.note ? <div className="text-[11.5px] text-ink-2">{r.note}</div> : null}
+                    </Td>
+                    <Td align="right">{inr(r.spendBefore)}</Td>
+                    <Td align="right">{inr(r.spendAfter)}</Td>
+                    <Td align="right">{num(r.visitorsBefore)}</Td>
+                    <Td align="right">{num(r.visitorsAfter)}</Td>
+                    <Td align="right">{signed(Math.round(r.delta))}</Td>
+                  </tr>
                 ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+                <tr className="font-[650]">
+                  <Td>All campaigns</Td>
+                  <Td align="right">{inr(spendBefore)}</Td>
+                  <Td align="right">{inr(spendAfter)}</Td>
+                  <Td align="right">{num(sim.totalBefore)}</Td>
+                  <Td align="right">{num(sim.totalAfter)}</Td>
+                  <Td align="right">{signed(Math.round(sim.delta))}</Td>
+                </tr>
+              </tbody>
+            </Table>
+            <p className="mt-1.5 text-ink-2">
+              {sim.rows.length - changed.length} other campaigns are unchanged. Spend after can be lower than before when a move was capped. Unattributed walk-ins are not modelled.
+            </p>
+          </ChartData>
+        </figure>
+      ) : (
+        <p className="mt-4 text-[13px] text-ink-2">No campaign changed in this run. Check the warnings below.</p>
+      )}
+
+      {sim.warnings.length ? (
+        <div className="mt-4 flex gap-2.5 rounded-tile-m bg-stone-2/60 px-3.5 py-3 text-[12.5px] text-ink">
+          <Ico icon={TriangleAlertDuotone} size={18} ia="var(--ink)" ib="var(--stone-3)" />
+          <div className="min-w-0">
+            <p className="font-[650]">{sim.warnings.length === 1 ? 'One warning' : `${sim.warnings.length} warnings`}</p>
+            <ul className="mt-0.5 space-y-0.5 text-ink-2">
+              {sim.warnings.map((w, i) => (
+                <li key={i}>{tidy(w)}</li>
+              ))}
+            </ul>
+          </div>
         </div>
-      </figure>
+      ) : (
+        <p className="mt-3 text-[12.5px] font-[550] text-ink-2">No warnings: every move was within the source campaign&apos;s spend.</p>
+      )}
+      <Button variant="secondary" className="mt-4" onClick={onTask} icon={<Ico icon={ClipboardListDuotone} size={16} ia="var(--ink)" ib="var(--stone-3)" />}>
+        Turn this plan into a task
+      </Button>
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import { CircleCheckDuotone, CircleDotDuotone, HandDuotone, PlayDuotone } from 'runeicons-react';
+import type { IconComponent } from '@/components/ui';
 import { daysBetween } from '@/lib/format';
 
 /** Row shape of GET /api/tasks (src/server/mutations.ts listTasks: tasks.* plus joined names). */
@@ -48,6 +50,27 @@ export const STATUSES: { value: TaskStatus; label: string }[] = [
   { value: 'done', label: 'Done' },
 ];
 export const STATUS_LABEL: Record<string, string> = Object.fromEntries(STATUSES.map((s) => [s.value, s.label]));
+
+/**
+ * Lane heads: a glyph block per task status. Same fills as the task chips on the campaign detail page
+ * (to do stone, in progress a deeper stone, blocked solid, done ink), so a status reads the same everywhere.
+ */
+export const LANE: Record<TaskStatus, { icon: IconComponent; bg: string; ia: string; ib: string }> = {
+  todo: { icon: CircleDotDuotone, bg: 'var(--stone-2)', ia: 'var(--ink)', ib: 'var(--ink-2)' },
+  in_progress: { icon: PlayDuotone, bg: 'var(--stone-3)', ia: 'var(--ink)', ib: 'var(--ink-2)' },
+  blocked: { icon: HandDuotone, bg: 'var(--st-stop)', ia: '#fff', ib: '#fff' },
+  // the glyph's check is drawn white, so its disc takes a lighter bidri step to stay visible on ink
+  done: { icon: CircleCheckDuotone, bg: 'var(--ink)', ia: 'var(--bidri-3)', ib: '#fff' },
+};
+
+/** "Meera Iyer" -> "MI", "Keerthi M" -> "KM". */
+export const initials = (name: string | null | undefined) =>
+  (name ?? '')
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0]!.toUpperCase())
+    .join('');
 
 export const PRIORITY_RANK: Record<string, number> = { high: 0, medium: 1, low: 2 };
 export const PRIORITY_LABEL: Record<string, string> = { high: 'High', medium: 'Medium', low: 'Low' };

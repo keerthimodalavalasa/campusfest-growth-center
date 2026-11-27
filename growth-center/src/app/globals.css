@@ -59,27 +59,6 @@
   /* motion */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
-
-  /*
-    Legacy aliases (deprecated). The pre-Bento pages still use these names; they now resolve to Bento
-    values so every page renders on-theme. Stage 2 migrates the pages and deletes this block.
-  */
-  --paper: var(--stone-2);
-  --paper-2: var(--stone-2);
-  --surface: var(--ground);
-  --ink-3: var(--ink-2); /* old tertiary grey failed 4.5:1 on stone */
-  --line: var(--stone-2);
-  --line-2: var(--stone-3);
-  --bangle: var(--st-scale);
-  --bangle-soft: #dcede5;
-  --zari: var(--st-change);
-  --zari-bright: var(--haldi);
-  --zari-soft: #fbedcc;
-  --sagar: var(--nizami);
-  --sagar-soft: var(--nizami-soft);
-  --focus: var(--ink);
-  --radius-panel: 18px;
-  --radius-control: 12px;
 }
 
 @theme inline {
@@ -124,21 +103,6 @@
   /* field-local inks: a Tile sets these, children use text-k2 / border-rule */
   --color-k2: var(--k2, var(--ink-2));
   --color-rule: var(--rule, var(--stone-2));
-
-  /* legacy aliases (deprecated, see :root) */
-  --color-paper: var(--paper);
-  --color-paper-2: var(--paper-2);
-  --color-surface: var(--surface);
-  --color-ink-3: var(--ink-3);
-  --color-line: var(--line);
-  --color-line-2: var(--line-2);
-  --color-bangle: var(--bangle);
-  --color-bangle-soft: var(--bangle-soft);
-  --color-zari: var(--zari);
-  --color-zari-bright: var(--zari-bright);
-  --color-zari-soft: var(--zari-soft);
-  --color-sagar: var(--sagar);
-  --color-sagar-soft: var(--sagar-soft);
 
   --font-sans: var(--font-mona), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 

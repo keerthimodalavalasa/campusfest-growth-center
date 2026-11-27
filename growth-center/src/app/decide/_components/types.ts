@@ -45,6 +45,42 @@ export function passReason(rec: Recommendation, phase: DecisionBoard['phase']): 
   return tidy(rec.reasons[0] ?? `Every check passes.`);
 }
 
+/** A check as a chip label of a few words with its number: "Cost 3.48×", "Opt-outs 8.8%", "Cancels +3.7 pts". */
+export function checkChip(check: Recommendation['checks'][number], rec: Recommendation): string {
+  const d = check.detail;
+  switch (check.rule) {
+    case 'Efficiency':
+      return rec.spend <= 0 || rec.ratioToMedian == null ? 'No paid spend' : `Cost ${ratioLabel(rec.ratioToMedian)}`;
+    case 'Opt-out guardrail': {
+      const m = d.match(/(\d+(?:\.\d+)?%)/);
+      return m ? `Opt-outs ${m[1]}` : 'Opt-outs';
+    }
+    case 'Cancellation guardrail': {
+      const m = d.match(/\(([+-]?\d+(?:\.\d+)?) pts/);
+      return m ? `Cancels ${m[1].startsWith('-') ? `−${m[1].slice(1)}` : m[1].startsWith('+') ? m[1] : `+${m[1]}`} pts` : 'Cancellations';
+    }
+    case 'Show-up quality': {
+      const m = d.match(/(\d+(?:\.\d+)?%)/);
+      return m ? `Show-up ${m[1]}` : 'Show-up';
+    }
+    case 'Momentum': {
+      const m = d.match(/last 7 days (\d+) vs previous 7 days (\d+)/);
+      return m ? `Sign-ups ${m[1]} vs ${m[2]}` : 'Momentum';
+    }
+    default:
+      return check.rule;
+  }
+}
+
+/** The suggested action in six words or fewer; the full sentence stays in the tooltip and the task. */
+export function shortAction(rec: Recommendation): string {
+  if (rec.decision === 'stop') return 'Pause spend, move budget to Scale';
+  if (rec.decision === 'scale') return 'Add about 20% a week';
+  if (rec.decision === 'keep') return 'Hold budget, review weekly';
+  const failed = rec.checks.filter((k) => !k.passed && k.rule !== 'Efficiency');
+  return failed.length ? `Fix ${failed[0].rule.replace(/ guardrail| quality/i, '').toLowerCase()}, re-test a week` : 'Cut cost, re-test a week';
+}
+
 /** Task decisions allowed by the tasks API: keep maps to monitor. */
 export const taskDecision = (d: Decision) => (d === 'keep' ? 'monitor' : d);
 

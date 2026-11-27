@@ -2,8 +2,7 @@
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport, lastAssistantMessageIsCompleteWithApprovalResponses, type UIMessage } from 'ai';
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
-import { Square } from 'lucide-react';
-import { ArrowUpDuotone, RotateCcwDuotone, XDuotone } from 'runeicons-react';
+import { ArrowUpDuotone, RotateCcwDuotone, SquareStopDuotone, XDuotone } from 'runeicons-react';
 import { notifyDataChanged } from '@/lib/api';
 import { useApp } from '@/lib/app-state';
 import { dateLabel } from '@/lib/format';
@@ -240,7 +239,7 @@ export function Copilot() {
             />
             {busy ? (
               <button type="button" onClick={() => stop()} className="grid size-10 shrink-0 place-items-center rounded-full bg-stone-2 text-ink transition-transform duration-150 active:scale-[0.95]" aria-label="Stop">
-                <Square size={14} fill="currentColor" />
+                <Ico icon={SquareStopDuotone} size={18} ia="var(--ink)" ib="var(--ink)" />
               </button>
             ) : (
               <button

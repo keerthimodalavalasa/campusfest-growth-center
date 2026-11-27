@@ -1,15 +1,16 @@
 'use client';
-import { useState, type ReactNode } from 'react';
-import { Server, Sparkles, UserRound } from 'lucide-react';
+import { useState } from 'react';
+import { CircleUserDuotone, ServerDuotone, SparklesDuotone } from 'runeicons-react';
 import { useApp, type ColumnSpec } from '@/lib/app-state';
 import { dateLabel, inr, istTime, num1, pct } from '@/lib/format';
-import { Button, cx } from '@/components/ui';
+import { Button, cx, Ico, type IconComponent } from '@/components/ui';
 import { CAMPAIGN_STATUS_LABEL, PRIORITY_LABEL, STATUS_LABEL, type ChangeRow, type InitiativeLite, type TaskRow } from './model';
 
-const ACTOR: Record<string, { label: string; icon: ReactNode; tone: string }> = {
-  copilot: { label: 'Copilot', icon: <Sparkles size={13} aria-hidden />, tone: 'bg-lac-soft text-lac' },
-  user: { label: 'User', icon: <UserRound size={13} aria-hidden />, tone: 'bg-paper-2 text-ink-2' },
-  system: { label: 'System', icon: <Server size={13} aria-hidden />, tone: 'bg-paper-2 text-ink-3' },
+/** Timeline nodes: the copilot in its bidri and lac (as on its button in the top bar), people and the system on limestone. */
+const ACTOR: Record<string, { label: string; icon: IconComponent; bg: string; ia: string; ib: string }> = {
+  copilot: { label: 'Copilot', icon: SparklesDuotone, bg: 'var(--bidri)', ia: 'var(--lac-pale)', ib: 'var(--silver-2)' },
+  user: { label: 'User', icon: CircleUserDuotone, bg: 'var(--stone-2)', ia: 'var(--ink)', ib: 'var(--ink-2)' },
+  system: { label: 'System', icon: ServerDuotone, bg: 'var(--stone-2)', ia: 'var(--ink)', ib: 'var(--ink-2)' },
 };
 
 const VERB: Record<string, string> = { create: 'created', update: 'updated', delete: 'deleted', insert: 'added', import: 'imported', reset: 'reset' };
@@ -133,27 +134,36 @@ export function ActivityFeed({ changes, tasks, initiatives, compact = false }: {
     return null;
   };
 
-  if (!changes.length) return <p className="text-[0.88rem] text-ink-2">No changes yet. Edits to tasks, campaigns and data will appear here.</p>;
+  if (!changes.length) return <p className="mt-3 text-[13.5px] text-ink-2">No changes yet. Edits to tasks, campaigns and data will appear here.</p>;
 
+  const list = changes.slice(0, shown);
   return (
-    <div role="region" aria-label="Change log, newest first" tabIndex={0} className={cx('-mx-5 overflow-y-auto px-5', compact ? 'max-h-[20rem]' : 'max-h-[26rem] @[72rem]:max-h-[calc(100vh-15rem)]')}>
-      <ol className="space-y-0">
-        {changes.slice(0, shown).map((c) => {
-          const a = ACTOR[c.actor] ?? { label: c.actor, icon: null, tone: 'bg-paper-2 text-ink-2' };
+    <div role="region" aria-label="Change log, newest first" tabIndex={0} className={cx('-mx-2 mt-3 overflow-y-auto px-2', compact ? 'max-h-[22rem]' : 'max-h-[34rem] min-[1200px]:max-h-[calc(100vh-13rem)]')}>
+      <ol>
+        {list.map((c, i) => {
+          const a = ACTOR[c.actor] ?? { label: c.actor, icon: CircleUserDuotone, bg: 'var(--stone-2)', ia: 'var(--ink-2)', ib: 'var(--stone-3)' };
           const extra = detail(c);
           const at = Date.parse(c.at);
+          const [day, time] = Number.isFinite(at) ? istTime(at).split(', ') : [c.at, ''];
+          const prevAt = i ? Date.parse(list[i - 1].at) : NaN;
+          const newDay = !i || !Number.isFinite(prevAt) || istTime(prevAt).split(', ')[0] !== day;
+          const last = i === list.length - 1;
           return (
-            <li key={c.id} className={cx('flex gap-2.5 border-b border-line py-2.5 last:border-0', c.actor === 'copilot' && 'relative before:absolute before:-left-3 before:inset-y-1.5 before:w-0.5 before:rounded before:bg-lac before:content-[""]')}>
-              <span className={cx('mt-0.5 inline-flex size-6 shrink-0 items-center justify-center rounded-full', a.tone)} title={a.label}>
-                {a.icon}
-              </span>
-              <div className="min-w-0 flex-1">
-                <div className="text-[0.85rem] leading-snug text-ink">
-                  <span className={cx('font-semibold', c.actor === 'copilot' && 'text-lac')}>{a.label}</span> {VERB[c.action] ?? c.action} <span className="break-words">{subject(c)}</span>
-                </div>
-                {extra ? <div className="mt-0.5 break-words text-[0.78rem] text-ink-2">{extra}</div> : null}
-                <div className="num mt-0.5 text-[0.74rem] text-ink-3" title={Number.isFinite(at) ? new Date(at).toISOString() : c.at}>
-                  {Number.isFinite(at) ? `${istTime(at)} IST` : c.at}
+            <li key={c.id}>
+              {newDay ? <div className={cx('tab pb-2 text-[12px] font-[700] text-ink', i > 0 && 'pt-1')}>{day}</div> : null}
+              <div className="relative grid grid-cols-[28px_minmax(0,1fr)] gap-x-3 pb-3.5">
+                {!last ? <i aria-hidden className="absolute top-8 bottom-0 left-[13.25px] block w-[1.5px] rounded-full bg-stone-3" /> : null}
+                <span className="grid size-7 place-items-center rounded-full" style={{ background: a.bg }} title={a.label}>
+                  <Ico icon={a.icon} size={15} ia={a.ia} ib={a.ib} />
+                </span>
+                <div className="min-w-0 pt-0.5">
+                  <div className="text-[13px] leading-[1.35] text-ink">
+                    <span className="font-[650]">{a.label}</span> {VERB[c.action] ?? c.action} <span className="break-words">{subject(c)}</span>
+                  </div>
+                  {extra ? <div className="mt-0.5 text-[12px] leading-[1.4] break-words text-ink-2">{extra}</div> : null}
+                  <div className="tab mt-0.5 text-[11.5px] font-[550] text-ink-2" title={Number.isFinite(at) ? new Date(at).toISOString() : c.at}>
+                    {time ? `${time} IST` : null}
+                  </div>
                 </div>
               </div>
             </li>
@@ -161,7 +171,7 @@ export function ActivityFeed({ changes, tasks, initiatives, compact = false }: {
         })}
       </ol>
       {changes.length > shown ? (
-        <Button size="sm" variant="ghost" className="mt-2 -ml-2" onClick={() => setShown((n) => n + PAGE)}>
+        <Button size="sm" variant="ghost" className="-ml-1" onClick={() => setShown((n) => n + PAGE)}>
           Show {Math.min(PAGE, changes.length - shown)} older changes
         </Button>
       ) : null}

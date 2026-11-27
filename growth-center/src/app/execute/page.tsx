@@ -1,12 +1,14 @@
 'use client';
 import { useCallback, useMemo, useRef, useState, useSyncExternalStore } from 'react';
-import { Plus, Sparkles } from 'lucide-react';
+import { CalendarDuotone, ClipboardListDuotone, ClockAlertDuotone, HistoryDuotone, KanbanDuotone, MessageSquareTextDuotone, PlusDuotone } from 'runeicons-react';
 import { toast } from 'sonner';
 import type { CampaignMetrics } from '@/server/engine/snapshot';
 import { mutate, useApi } from '@/lib/api';
 import { useApp, useAsOfUrl } from '@/lib/app-state';
-import { dateLabel, num, todayIST } from '@/lib/format';
-import { Button, EmptyState, ErrorNote, PageHeader, Panel, Skeleton, Tabs } from '@/components/ui';
+import { addDays, dateLabel, num, todayIST } from '@/lib/format';
+import { Button, EmptyState, ErrorNote, Ico, PageHeader, Segmented, Skeleton, Tile, TileHead } from '@/components/ui';
+import { GroupHead, MetricTile } from '@/components/tiles';
+import { CountUp, MiniBars, Ring } from '@/components/viz';
 import { TaskDialog, type TaskDraft } from '@/components/TaskDialog';
 import { overdueDays, SOURCES, STATUS_LABEL, type ChangeRow, type InitiativeLite, type TaskRow, type TaskStatus } from './_components/model';
 import { DeleteTaskDialog, MiniSelect } from './_components/TaskBits';
@@ -111,63 +113,122 @@ export default function ExecutePage() {
   if (tasksQ.error && !tasksQ.data) return <ErrorNote onRetry={tasksQ.refresh}>Could not load tasks: {tasksQ.error}</ErrorNote>;
   if (!tasksQ.data || !meta || !today) return <ExecuteSkeleton />;
 
-  const lede = (
-    <>
-      <span className="num font-semibold text-ink">{num(open.length)}</span> open {open.length === 1 ? 'task' : 'tasks'},{' '}
-      <span className="num font-semibold" style={{ color: overdue ? 'var(--lac)' : undefined }}>
-        {num(overdue)}
-      </span>{' '}
-      overdue and <span className="num font-semibold text-ink">{num(blocked)}</span> blocked. Due dates count from today in IST ({dateLabel(today, true)}); the as-of date only changes the spend column.
-    </>
+  // header-row figures
+  const done = all.length - open.length;
+  const inProgress = open.filter((t) => t.status === 'in_progress').length;
+  const days = Array.from({ length: 14 }, (_, i) => addDays(today, i));
+  const dueByDay = days.map((d) => open.filter((t) => t.due_date === d).length);
+  const dueSoon = dueByDay.reduce((s, n) => s + n, 0);
+  const oldestLate = Math.max(0, ...open.map((t) => overdueDays(t, today)));
+
+  const newTaskButton = (
+    <Button variant="primary" icon={<Ico icon={PlusDuotone} size={16} ia="#fff" ib="rgba(255,255,255,0.5)" />} onClick={newTask}>
+      New task
+    </Button>
+  );
+  const askButton = (
+    <Button variant="secondary" icon={<Ico icon={MessageSquareTextDuotone} size={18} ia="var(--lac)" ib="var(--lac-pale)" />} onClick={askForTasks}>
+      Draft this week&apos;s tasks
+    </Button>
   );
 
   return (
-    <div className="@container space-y-6">
+    <div>
       <PageHeader
         title="Run the work"
-        lede={lede}
+        lede={
+          <>
+            Due dates count from today, <b className="font-[650] text-ink">{dateLabel(today, true)}</b> in IST. The as-of date only changes spend.
+          </>
+        }
         actions={
-          <Button variant="secondary" icon={<Sparkles size={15} aria-hidden className="text-lac" />} onClick={askForTasks}>
-            Ask the copilot for this week&apos;s tasks
-          </Button>
+          <>
+            {askButton}
+            {newTaskButton}
+          </>
         }
       />
 
-      <section aria-labelledby="workload-h">
-        <div className="mb-2 flex items-baseline justify-between gap-3">
-          <h2 id="workload-h" className="type-title text-[1.02rem]">
-            Team workload
-          </h2>
-          <span className="text-[0.8rem] text-ink-3">{all.length ? 'Open tasks per owner. Select an owner to filter the board.' : 'Open tasks per owner. Nobody has any yet.'}</span>
-        </div>
-        <Workload tasks={all} team={meta.team} today={today} selected={filters.owner} onSelect={all.length ? (owner) => setFilters((f) => ({ ...f, owner })) : undefined} />
-      </section>
-
-      <div className="grid gap-5 @[72rem]:grid-cols-[minmax(0,1fr)_21rem]">
-        <section aria-labelledby="tasks-h" className="min-w-0">
-          <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-            <h2 id="tasks-h" className="type-title text-[1.02rem]">
-              Tasks
-            </h2>
-            <div className="flex flex-wrap items-center gap-2">
-              <Tabs<View>
-                value={view}
-                onChange={setView}
-                options={[
-                  { value: 'board', label: 'Board' },
-                  { value: 'table', label: 'Table' },
-                ]}
-              />
-              <Button variant="primary" icon={<Plus size={15} aria-hidden />} onClick={newTask}>
-                New task
-              </Button>
+      {/* header row: limestone only (tasks are not a metric family), each with its micro-visual */}
+      <div className="grid grid-cols-4 gap-3 max-[1200px]:grid-cols-2 max-[560px]:grid-cols-1">
+        <MetricTile
+          icon={ClipboardListDuotone}
+          ia="var(--ink)"
+          ib="var(--stone-3)"
+          title="Open tasks"
+          label="Open tasks"
+          delay={0}
+          className="min-h-[180px]"
+          viz={<Ring value={all.length ? done / all.length : 0} track="var(--stone-2)" arc="var(--ink)" ink="var(--ink)" label={`${all.length ? Math.round((done / all.length) * 100) : 0}% of all tasks done`} />}
+          value={<CountUp value={open.length} format={num} />}
+          sub={`of ${num(all.length)} tasks, ${num(done)} done`}
+          foot={
+            <span className="tab whitespace-nowrap">
+              {num(inProgress)} in progress, {num(blocked)} blocked
+            </span>
+          }
+        />
+        <MetricTile
+          icon={CalendarDuotone}
+          ia="var(--ink)"
+          ib="var(--stone-3)"
+          title="Due in the next 14 days"
+          label="Open tasks due in the next 14 days"
+          delay={40}
+          className="min-h-[180px]"
+          wideViz
+          vizClass="!top-[20px] !h-[40px] !w-[92px] max-[720px]:!h-[40px] max-[720px]:!w-[92px]"
+          viz={
+            // a baseline, so days with nothing due still read as days
+            <div className="border-b-[1.5px] border-stone-3">
+              <MiniBars values={dueByDay} color="var(--ink)" width={92} height={38} gap={2} label={`Open tasks due each day for 14 days from ${dateLabel(today)}`} />
             </div>
-          </div>
+          }
+          value={<CountUp value={dueSoon} format={num} />}
+          sub={`${dateLabel(today)} to ${dateLabel(days[13])}`}
+          foot={
+            overdue ? (
+              <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                <Ico icon={ClockAlertDuotone} size={16} ia="var(--ink)" ib="var(--stone-3)" />
+                <span className="tab">
+                  {num(overdue)} overdue, oldest {num(oldestLate)} {oldestLate === 1 ? 'day' : 'days'}
+                </span>
+              </span>
+            ) : (
+              <span className="text-ink-2">Nothing overdue</span>
+            )
+          }
+        />
+        <Workload
+          tasks={all}
+          team={meta.team}
+          today={today}
+          selected={filters.owner}
+          onSelect={all.length ? (owner) => setFilters((f) => ({ ...f, owner })) : undefined}
+          delay={80}
+          className="col-span-2 max-[560px]:col-span-1"
+        />
+      </div>
+
+      <div className="mt-5 grid grid-cols-[minmax(0,1fr)_22rem] items-start gap-3 max-[1200px]:grid-cols-1">
+        <section aria-labelledby="tasks-h" className="min-w-0">
+          <GroupHead icon={KanbanDuotone} title={<span id="tasks-h">Tasks</span>} delay={120} aside={all.length ? <span className="tab">{num(visible.length)} of {num(all.length)} shown</span> : null}>
+            <Segmented<View>
+              label="Show tasks as"
+              value={view}
+              onChange={setView}
+              className="bg-stone"
+              options={[
+                { value: 'board', label: 'Board' },
+                { value: 'table', label: 'Table' },
+              ]}
+            />
+          </GroupHead>
 
           {all.length ? (
             <>
-              <div className="mb-3 flex flex-wrap items-center gap-2 rounded-[var(--radius-control)]">
-                <MiniSelect aria-label="Filter by owner" value={filters.owner} onChange={(e) => setFilters((f) => ({ ...f, owner: e.target.value }))} className="h-8 text-[0.82rem]">
+              <div className="mb-3 flex flex-wrap items-center gap-2 px-1">
+                <MiniSelect aria-label="Filter by owner" value={filters.owner} onChange={(e) => setFilters((f) => ({ ...f, owner: e.target.value }))}>
                   <option value="">All owners</option>
                   {meta.team.map((m) => (
                     <option key={m.ownerId} value={m.ownerId}>
@@ -176,7 +237,7 @@ export default function ExecutePage() {
                   ))}
                   <option value={NONE}>Unassigned</option>
                 </MiniSelect>
-                <MiniSelect aria-label="Filter by campaign" value={filters.campaign} onChange={(e) => setFilters((f) => ({ ...f, campaign: e.target.value }))} className="h-8 text-[0.82rem]">
+                <MiniSelect aria-label="Filter by campaign" value={filters.campaign} onChange={(e) => setFilters((f) => ({ ...f, campaign: e.target.value }))}>
                   <option value="">All campaigns</option>
                   {meta.campaigns.map((c) => (
                     <option key={c.id} value={c.id}>
@@ -185,7 +246,7 @@ export default function ExecutePage() {
                   ))}
                   <option value={NONE}>No campaign</option>
                 </MiniSelect>
-                <MiniSelect aria-label="Filter by 2027 bet" value={filters.initiative} onChange={(e) => setFilters((f) => ({ ...f, initiative: e.target.value }))} className="h-8 max-w-[14rem] text-[0.82rem]">
+                <MiniSelect aria-label="Filter by 2027 bet" value={filters.initiative} onChange={(e) => setFilters((f) => ({ ...f, initiative: e.target.value }))} className="max-w-[14rem]">
                   <option value="">All 2027 bets</option>
                   {initiatives.map((i) => (
                     <option key={i.id} value={i.id}>
@@ -194,7 +255,7 @@ export default function ExecutePage() {
                   ))}
                   <option value={NONE}>No 2027 bet</option>
                 </MiniSelect>
-                <MiniSelect aria-label="Filter by source" value={filters.source} onChange={(e) => setFilters((f) => ({ ...f, source: e.target.value }))} className="h-8 text-[0.82rem]">
+                <MiniSelect aria-label="Filter by source" value={filters.source} onChange={(e) => setFilters((f) => ({ ...f, source: e.target.value }))}>
                   <option value="">All sources</option>
                   {SOURCES.map((s) => (
                     <option key={s.value} value={s.value}>
@@ -202,7 +263,7 @@ export default function ExecutePage() {
                     </option>
                   ))}
                 </MiniSelect>
-                <label className="ml-1 inline-flex h-8 cursor-pointer items-center gap-2 text-[0.82rem] text-ink-2">
+                <label className="ml-1 inline-flex h-8 cursor-pointer items-center gap-2 text-[12.5px] font-[600] text-ink-2">
                   <input type="checkbox" checked={showDone} onChange={(e) => setShowDone(e.target.checked)} className="size-4 accent-[var(--ink)]" />
                   Show done
                 </label>
@@ -211,9 +272,6 @@ export default function ExecutePage() {
                     Clear filters
                   </Button>
                 ) : null}
-                <span className="num ml-auto text-[0.8rem] text-ink-3">
-                  {num(visible.length)} of {num(all.length)} shown
-                </span>
               </div>
               {tasksQ.error ? (
                 <div className="mb-3">
@@ -239,7 +297,9 @@ export default function ExecutePage() {
               ) : view === 'board' ? (
                 <TaskBoard tasks={filtered} today={today} showDone={showDone} hiddenDone={hiddenDone} onShowDone={() => setShowDone(true)} onMove={move} onOpen={editTask} onDelete={setDeleting} />
               ) : visible.length ? (
-                <TaskTable tasks={visible} today={today} onMove={move} onOpen={editTask} onDelete={setDeleting} />
+                <Tile field="stone" className="anim-settle">
+                  <TaskTable tasks={visible} today={today} onMove={move} onOpen={editTask} onDelete={setDeleting} />
+                </Tile>
               ) : (
                 <EmptyState
                   title="Every matching task is done"
@@ -256,12 +316,8 @@ export default function ExecutePage() {
               title="No tasks yet"
               action={
                 <div className="mt-1 flex flex-wrap gap-2">
-                  <Button variant="primary" icon={<Plus size={15} aria-hidden />} onClick={newTask}>
-                    Create the first task
-                  </Button>
-                  <Button variant="secondary" icon={<Sparkles size={15} aria-hidden className="text-lac" />} onClick={askForTasks}>
-                    Ask the copilot to draft tasks
-                  </Button>
+                  {newTaskButton}
+                  {askButton}
                 </div>
               }
             >
@@ -270,29 +326,39 @@ export default function ExecutePage() {
           )}
         </section>
 
-        <Panel title="Activity" aside={changesQ.data ? `${num(changesQ.data.changes.length)} most recent changes` : null} className="min-w-0 self-start @[72rem]:sticky @[72rem]:top-24">
+        <Tile field="stone" delay={160} className="min-w-0 self-start min-[1200px]:sticky min-[1200px]:top-24" aria-label="Activity">
+          <TileHead icon={HistoryDuotone} aside={changesQ.data ? `${num(changesQ.data.changes.length)} recent changes` : null}>
+            Activity
+          </TileHead>
           {changesQ.error && !changesQ.data ? (
-            <ErrorNote onRetry={changesQ.refresh}>Could not load the change log: {changesQ.error}</ErrorNote>
+            <div className="mt-3">
+              <ErrorNote onRetry={changesQ.refresh}>Could not load the change log: {changesQ.error}</ErrorNote>
+            </div>
           ) : changesQ.data ? (
             <ActivityFeed changes={changesQ.data.changes} tasks={tasksQ.data.tasks} initiatives={initQ.data?.initiatives ?? []} compact={!all.length} />
           ) : (
-            <div className="space-y-3">
+            <div className="mt-3 space-y-3">
               {Array.from({ length: 5 }, (_, i) => (
                 <Skeleton key={i} className="h-10" />
               ))}
             </div>
           )}
-        </Panel>
+        </Tile>
       </div>
 
-      <Panel title="Campaigns" aside={`${num(meta.campaigns.length)} campaigns, ${num(meta.campaigns.filter((c) => c.origin === 'app').length)} added in app`}>
-        {campsQ.error ? (
-          <div className="mb-3">
-            <ErrorNote onRetry={campsQ.refresh}>Could not load campaign spend: {campsQ.error}</ErrorNote>
-          </div>
-        ) : null}
-        <CampaignManager campaigns={meta.campaigns} team={meta.team} asOf={asOf} spend={spend} changes={changesQ.data?.changes ?? null} historyStart={meta.event.historyStart ?? null} />
-      </Panel>
+      <div className="mt-3">
+        <CampaignManager
+          delay={200}
+          campaigns={meta.campaigns}
+          team={meta.team}
+          asOf={asOf}
+          spend={spend}
+          changes={changesQ.data?.changes ?? null}
+          historyStart={meta.event.historyStart ?? null}
+          spendError={campsQ.error}
+          onRetrySpend={campsQ.refresh}
+        />
+      </div>
 
       <TaskDialog open={!!draft} draft={draft} onClose={() => setDraft(null)} initiatives={initiatives} />
       <DeleteTaskDialog task={deleting} onClose={() => setDeleting(null)} onDeleted={(id) => setRemoved((r) => new Set([...r, id]))} />
@@ -302,15 +368,18 @@ export default function ExecutePage() {
 
 function ExecuteSkeleton() {
   return (
-    <div className="space-y-6">
-      <Skeleton className="h-12 w-96" />
-      <Skeleton className="h-28" />
-      <div className="grid gap-3 md:grid-cols-4">
+    <div className="space-y-3" aria-busy="true" aria-label="Loading tasks">
+      <Skeleton className="mb-2 h-12 w-96 max-w-full bg-stone" />
+      <div className="grid grid-cols-4 gap-3 max-[1200px]:grid-cols-2 max-[560px]:grid-cols-1">
+        <Skeleton className="h-[220px] rounded-tile-s bg-stone" />
+        <Skeleton className="h-[220px] rounded-tile-s bg-stone" />
+        <Skeleton className="col-span-2 h-[220px] rounded-tile-s bg-stone max-[560px]:col-span-1" />
+      </div>
+      <div className="grid grid-cols-4 gap-3 max-[1200px]:grid-cols-2 max-[560px]:grid-cols-1">
         {Array.from({ length: 4 }, (_, i) => (
-          <Skeleton key={i} className="h-72" />
+          <Skeleton key={i} className="h-72 rounded-tile-l bg-stone" />
         ))}
       </div>
-      <Skeleton className="h-64" />
     </div>
   );
 }

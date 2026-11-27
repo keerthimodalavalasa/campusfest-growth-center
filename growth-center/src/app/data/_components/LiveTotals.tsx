@@ -1,10 +1,13 @@
 'use client';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { ClipboardListDuotone, IndianRupeeDuotone, UserPlusDuotone, UsersDuotone } from 'runeicons-react';
 import type { Snapshot } from '@/server/engine/snapshot';
 import { useApi } from '@/lib/api';
 import { useApp, useAsOfUrl } from '@/lib/app-state';
-import { dateLabel, inr, num, pct, signed } from '@/lib/format';
-import { ErrorNote, Panel, Skeleton } from '@/components/ui';
+import { dateLabel, inr, inrShort, num, pct } from '@/lib/format';
+import { Delta, ErrorNote, Skeleton } from '@/components/ui';
+import { MetricTile } from '@/components/tiles';
+import { CountUp, Ring } from '@/components/viz';
 
 type Key = 'identified' | 'registrations' | 'confirmed' | 'cancelled' | 'visitors' | 'spend';
 
@@ -20,9 +23,11 @@ function pick(s: Snapshot): Record<Key, number> {
   };
 }
 
+const share = (x: number, goal: number | null | undefined) => (goal ? x / goal : NaN);
+
 /**
- * Headline numbers at the selected date, recomputed after every save.
- * After a write it shows the change from the numbers before that write, so the effect of an edit is visible here.
+ * Headline numbers at the selected date as the page's header row, recomputed after every save. After a write,
+ * each tile's footer shows what that write changed at this date, so the effect of an edit is visible here.
  */
 export function LiveTotals() {
   const { meta } = useApp();
@@ -44,57 +49,102 @@ export function LiveTotals() {
   }, [s]);
 
   if (ov.error) return <ErrorNote onRetry={ov.refresh}>Could not load the analytics for this date: {ov.error}</ErrorNote>;
-  if (!s) return <Skeleton className="h-[104px]" />;
+  if (!s) return <TotalsSkeleton />;
 
   const post = s.phase === 'event' || s.phase === 'post-event';
   const v = pick(s);
+  const tg = s.target;
   const changedCount = delta ? Object.keys(delta).length : 0;
   const showRate = s.totals.showRateAssumption;
   const perCampaign = Object.keys((meta?.settings.showRateByCampaign as Record<string, number> | undefined) ?? {}).length > 0;
 
-  const aside = delta ? (
-    changedCount ? (
-      <span className="text-sagar">Blue figures show what the latest data change did at this date.</span>
-    ) : (
-      <span>The latest data change moved none of these at {dateLabel(s.asOf)}. Its row may carry a later date.</span>
-    )
-  ) : (
-    <span>Recomputed after every save</span>
-  );
+  /** The tile footer: what the latest save did here, or the tile's standing note. */
+  const foot = (keys: Key[], format: (n: number) => string, note: ReactNode) => {
+    const hit = keys.find((k) => delta?.[k] != null);
+    if (!hit) return note;
+    return (
+      <span className="inline-flex flex-wrap items-center gap-x-1.5">
+        <Delta now={v[hit]} prev={v[hit] - delta![hit]!} format={format} label="from the latest change" />
+        <span>from the latest change</span>
+      </span>
+    );
+  };
+  const ringLabel = (f: number, what: string) => (Number.isFinite(f) ? `${pct(f, 0)} of ${what}` : `No ${what} set`);
 
   return (
-    <Panel tone="well" title={`Analytics as of ${dateLabel(s.asOf, true)}`} aside={aside} className="py-4">
-      <dl className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-4 xl:grid-cols-7">
-        <Stat label="Identified people" value={num(v.identified)} d={delta?.identified} />
-        <Stat label="Registered people" value={num(v.registrations)} d={delta?.registrations} />
-        <Stat label="Confirmed" value={num(v.confirmed)} d={delta?.confirmed} />
-        <Stat label="Cancelled" value={num(v.cancelled)} d={delta?.cancelled} />
-        <Stat
+    <>
+      <div className="grid grid-cols-4 gap-3 max-[1200px]:grid-cols-2 max-[560px]:grid-cols-1" aria-live="polite">
+        <MetricTile
+          field="lac"
+          icon={UsersDuotone}
+          ia="#fff"
+          ib="var(--lac-pale)"
+          title={post ? 'Verified visitors' : 'Expected visitors'}
           label={post ? 'Verified visitors' : 'Expected visitors'}
-          value={num(v.visitors)}
-          d={delta?.visitors}
-          note={post ? 'unique, external, admitted + verified' : perCampaign ? `confirmed × show-rate assumption (${pct(showRate)}, with campaign overrides)` : `confirmed × ${pct(showRate)} show-rate assumption`}
+          delay={0}
+          className="min-h-[180px]"
+          viz={<Ring value={share(v.visitors, tg?.visitorsGoal)} track="var(--lac-track)" arc="#fff" ink="#fff" label={ringLabel(share(v.visitors, tg?.visitorsGoal), 'goal')} />}
+          value={<CountUp value={v.visitors} format={num} />}
+          sub={tg ? `of ${num(tg.visitorsGoal)} goal` : 'no goal set'}
+          foot={foot(['visitors'], num, <span className="text-k2">{post ? 'Unique, external, admitted and verified' : perCampaign ? 'Confirmed × show rate, with overrides' : `Confirmed × ${pct(showRate, 0)} show rate, assumed`}</span>)}
         />
-        <Stat label="Net spend" value={inr(v.spend)} d={delta?.spend} money />
-        <Stat label="Targets in force" value={s.target?.version ?? 'None yet'} small />
-      </dl>
-    </Panel>
+        <MetricTile
+          icon={UserPlusDuotone}
+          ia="var(--pista-track)"
+          ib="var(--pista)"
+          title="Identified people"
+          label="Identified people"
+          delay={40}
+          className="min-h-[180px]"
+          viz={<Ring value={share(v.identified, tg?.identifiedGoal)} track="var(--stone-2)" arc="var(--pista-track)" ink="var(--ink)" label={ringLabel(share(v.identified, tg?.identifiedGoal), 'goal')} />}
+          value={<CountUp value={v.identified} format={num} />}
+          sub={tg ? `of ${num(tg.identifiedGoal)} goal` : 'no goal set'}
+          foot={foot(['identified'], num, <span className="text-ink-2">External people only</span>)}
+        />
+        <MetricTile
+          icon={ClipboardListDuotone}
+          ia="var(--nizami)"
+          ib="var(--nizami-2)"
+          title="Registered people"
+          label="Registered people"
+          delay={80}
+          className="min-h-[180px]"
+          viz={<Ring value={share(v.registrations, tg?.registrationGoal)} track="var(--stone-2)" arc="var(--nizami)" ink="var(--ink)" label={ringLabel(share(v.registrations, tg?.registrationGoal), 'goal')} />}
+          value={<CountUp value={v.registrations} format={num} />}
+          sub={tg ? `of ${num(tg.registrationGoal)} goal` : 'no goal set'}
+          foot={foot(
+            ['registrations', 'confirmed', 'cancelled'],
+            num,
+            <span className="tab text-ink-2">
+              {num(v.confirmed)} confirmed, {num(v.cancelled)} cancelled
+            </span>,
+          )}
+        />
+        <MetricTile
+          icon={IndianRupeeDuotone}
+          ia="var(--haldi-track)"
+          ib="var(--haldi)"
+          title="Net spend"
+          label="Net spend"
+          delay={120}
+          className="min-h-[180px]"
+          viz={<Ring value={share(v.spend, tg?.budget)} track="var(--stone-2)" arc="var(--haldi)" ink="var(--ink)" label={ringLabel(share(v.spend, tg?.budget), 'budget')} />}
+          value={<CountUp value={v.spend} format={inrShort} />}
+          sub={tg ? `of ${inrShort(tg.budget)} budget` : 'no budget set'}
+          foot={foot(['spend'], inr, <span className="truncate text-ink-2">Targets: {tg?.version ?? 'none yet'}</span>)}
+        />
+      </div>
+      {delta && changedCount === 0 ? <p className="mt-2 px-1 text-[12.5px] font-[550] text-ink-2">The latest data change moved none of these at {dateLabel(s.asOf)}. Its row may carry a later date.</p> : null}
+    </>
   );
 }
 
-function Stat({ label, value, d, note, money, small }: { label: string; value: ReactNode; d?: number; note?: string; money?: boolean; small?: boolean }) {
-  const changed = d != null;
+function TotalsSkeleton() {
   return (
-    <div className="min-w-0">
-      <dt className="text-[0.8rem] text-ink-3">{label}</dt>
-      <dd className={small ? 'mt-1 truncate text-[0.92rem] font-semibold text-ink' : 'num type-title mt-0.5 text-[1.3rem]'} style={changed ? { color: 'var(--sagar)' } : undefined} title={typeof value === 'string' ? value : undefined}>
-        {value}
-      </dd>
-      {changed ? (
-        <dd className="num text-[0.78rem] font-semibold text-sagar">{signed(d, money ? inr : num)} from latest change</dd>
-      ) : note ? (
-        <dd className="text-[0.75rem] leading-snug text-ink-3">{note}</dd>
-      ) : null}
+    <div className="grid grid-cols-4 gap-3 max-[1200px]:grid-cols-2 max-[560px]:grid-cols-1" aria-busy="true" aria-label="Loading the totals">
+      {[0, 1, 2, 3].map((k) => (
+        <Skeleton key={k} className="h-[180px] rounded-tile-s bg-stone" />
+      ))}
     </div>
   );
 }
