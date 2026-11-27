@@ -1,0 +1,15 @@
+import { chromium } from 'playwright-core';
+const b = await chromium.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: true });
+const p = await (await b.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
+const grab = async (url, fn) => { try { await p.goto(url, { waitUntil: 'domcontentloaded', timeout: 40000 }); await p.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => {}); await p.waitForTimeout(1500); return await p.evaluate(fn); } catch (e) { return 'ERR ' + e.message.slice(0, 120); } };
+const links = () => [...new Set([...document.querySelectorAll('a[href]')].map(a => a.href).filter(h => /github\.com|npmjs|license/i.test(h)))].slice(0, 12);
+const text = () => document.body.innerText.replace(/\s+/g, ' ');
+console.log('OPEN FOUNDRY fonts:', await grab('https://open-foundry.com', () => [...document.querySelectorAll('h2,h3')].map(h => h.textContent.trim()).join(' | ')));
+console.log('\nRUNE packages:', await grab('https://runeicons.com/packages', () => text().slice(0, 900)), '\nlinks:', await p.evaluate(links).catch(() => ''));
+console.log('\nSESAMA links:', await grab('https://sesamaui.zihni.design', links));
+console.log('\nRAREUI links:', await grab('https://rareui.com', links));
+console.log('\nBKLIT docs:', await grab('https://bklit.com/docs', () => document.body.innerText.replace(/\s+/g, ' ').slice(0, 900)), '\nlinks:', await p.evaluate(links).catch(() => ''));
+console.log('\nLIVELINE links:', await grab('https://benji.org/liveline', links));
+console.log('\nAIFORUI break-ui:', await grab('https://aiforui.dev/skills/break-ui', () => document.body.innerText.replace(/\s+/g, ' ').slice(0, 1500)));
+console.log('\nINTERFACE LINEAGE patterns:', await grab('https://interfacelineage.com/patterns', () => document.body.innerText.replace(/\s+/g, ' ').slice(0, 1200)));
+await b.close();

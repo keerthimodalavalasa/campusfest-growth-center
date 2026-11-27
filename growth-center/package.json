@@ -1,0 +1,57 @@
+{
+  "name": "campusfest-growth-center",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "test": "node --import tsx --test --test-reporter=spec tests/*.test.ts",
+    "seed": "tsx scripts/seed.mts",
+    "eval:chat": "tsx scripts/eval-chat.mts"
+  },
+  "dependencies": {
+    "@ai-sdk/google": "^4.0.128",
+    "@ai-sdk/provider": "^4.0.39",
+    "@ai-sdk/react": "^4.0.188",
+    "@neondatabase/serverless": "^1.2.1",
+    "ai": "^7.0.183",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.4.0",
+    "drizzle-orm": "^0.45.4",
+    "exceljs": "^4.4.0",
+    "lucide-react": "^1.81.0",
+    "mathjs": "^15.3.0",
+    "next": "16.4.6",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-markdown": "^10.1.0",
+    "recharts": "^3.11.1",
+    "remark-gfm": "^4.0.1",
+    "runeicons-react": "^0.1.1",
+    "server-only": "^0.0.1",
+    "sonner": "^2.0.8",
+    "tailwind-merge": "^3.7.1",
+    "ws": "^8.23.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.6.0",
+    "@tailwindcss/turbopack": "4.3.3",
+    "@types/node": "^24.19.4",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/ws": "^8.18.2",
+    "dotenv": "^18.0.10",
+    "drizzle-kit": "^0.31.11",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.6",
+    "tailwindcss": "4.3.3",
+    "tsx": "^4.23.15",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

@@ -1,0 +1,28 @@
+# RISA's assignment brief stays private
+RISA Labs Growth APM Assignment.pdf
+
+# secrets and local state
+.env*
+!.env.example
+**/.pglite/
+.vercel
+
+# dependencies and builds
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+__pycache__/
+*.pyc
+
+# local logs, screenshots and scratch
+*.log
+.shots/
+.vendor-review/
+tools/sp/
+deck/**/node_modules/
+
+# deck working files (not used by the final deck)
+deck/assets/icons3d/
+deck/assets/app/
+deck/directions/b-calm/app/

@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+/*
+  CampusFest Growth Center: design tokens
+  Palette: Laad Bazaar lac bangles on Deccan pearl.
+  Decision colours carry meaning: bangle green = scale, sagar blue = keep, zari gold = change, lac crimson = stop.
+*/
+:root {
+  --paper: #f2f3ef;        /* page background: cool pearl grey-green */
+  --paper-2: #e8eae4;      /* recessed wells, table stripes */
+  --surface: #ffffff;      /* panels */
+  --ink: #1b2430;          /* primary text, primary buttons */
+  --ink-2: #4a5563;        /* secondary text */
+  --ink-3: #6b7480;        /* tertiary text, axis labels (4.6:1 on white) */
+  --line: #d9ddd6;         /* borders */
+  --line-2: #c5cbc2;       /* stronger borders, focus wells */
+  --lac: #a8174a;          /* brand accent + STOP */
+  --lac-soft: #f6e3ea;
+  --bangle: #0f7b5f;       /* SCALE, positive */
+  --bangle-soft: #dff0ea;
+  --zari: #9a6412;         /* CHANGE, warning (text-safe gold) */
+  --zari-bright: #d9a03b;
+  --zari-soft: #f7ecd6;
+  --sagar: #2f5d8a;        /* KEEP, info, links */
+  --sagar-soft: #e2ebf4;
+  --focus: #2f5d8a;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-lac: var(--lac);
+  --color-lac-soft: var(--lac-soft);
+  --color-bangle: var(--bangle);
+  --color-bangle-soft: var(--bangle-soft);
+  --color-zari: var(--zari);
+  --color-zari-bright: var(--zari-bright);
+  --color-zari-soft: var(--zari-soft);
+  --color-sagar: var(--sagar);
+  --color-sagar-soft: var(--sagar-soft);
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --radius-panel: 14px;
+  --radius-control: 8px;
+}
+
+html {
+  background: var(--paper);
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  font-feature-settings: "kern" 1;
+}
+
+/* Width axis does the typographic work: expanded for display, condensed for dense data. */
+.type-display {
+  font-stretch: 118%;
+  font-weight: 760;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+}
+.type-title {
+  font-stretch: 112%;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+.type-condensed {
+  font-stretch: 82%;
+}
+.num {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--lac-soft);
+  color: var(--ink);
+}
+
+/* Rune duotone icons ship fixed greys: map them to the current text colour so they follow the theme */
+.rune-duo svg [stroke="#DDDDDD"], .rune-duo svg [stroke="#dddddd"] { stroke: currentColor; stroke-opacity: 0.38; }
+.rune-duo svg [stroke="#A4A5A6"], .rune-duo svg [stroke="#a4a5a6"] { stroke: currentColor; }
+.rune-duo svg [fill="#DDDDDD"], .rune-duo svg [fill="#dddddd"] { fill: currentColor; fill-opacity: 0.38; }
+.rune-duo svg [fill="#A4A5A6"], .rune-duo svg [fill="#a4a5a6"] { fill: currentColor; }
+
+/* "Design spell": an approved action ticket tears along its perforation and the stub slides toward the task board */
+@keyframes ticket-tear {
+  0% { transform: translateY(0) rotate(0); opacity: 1; clip-path: inset(0 0 0 0); }
+  45% { transform: translateY(2px) rotate(-1.2deg); opacity: 1; }
+  100% { transform: translate(-28px, 10px) rotate(-4deg); opacity: 0; }
+}
+.ticket-stub-tear { animation: ticket-tear 700ms cubic-bezier(.2,.7,.2,1) forwards; transform-origin: 0 0; }
+@keyframes ticket-settle { from { transform: translateY(-4px); opacity: 0; } to { transform: none; opacity: 1; } }
+.ticket-settle { animation: ticket-settle 380ms ease-out both; }
+@keyframes live-pulse { 0% { r: 4; opacity: .55; } 70% { r: 13; opacity: 0; } 100% { r: 13; opacity: 0; } }
+.live-pulse { animation: live-pulse 1.8s ease-out infinite; }
+
+/* Ticket-stub perforation used only on approval / action tickets */
+.perforated {
+  background-image: radial-gradient(circle at 0 50%, var(--paper) 6px, transparent 6.5px), radial-gradient(circle at 100% 50%, var(--paper) 6px, transparent 6.5px);
+  background-size: 51% 100%;
+  background-position: left center, right center;
+  background-repeat: no-repeat;
+}
+
+/* Markdown inside copilot answers */
+.prose-copilot p { margin: 0.35rem 0; }
+.prose-copilot ul, .prose-copilot ol { margin: 0.35rem 0 0.35rem 1.1rem; }
+.prose-copilot ul { list-style: disc; }
+.prose-copilot ol { list-style: decimal; }
+.prose-copilot li { margin: 0.15rem 0; }
+.prose-copilot strong { font-weight: 650; }
+.prose-copilot h1, .prose-copilot h2, .prose-copilot h3 { font-weight: 700; font-stretch: 108%; margin: 0.6rem 0 0.2rem; font-size: 0.98rem; }
+.prose-copilot table { border-collapse: collapse; margin: 0.5rem 0; font-size: 0.82rem; font-variant-numeric: tabular-nums; }
+.prose-copilot th, .prose-copilot td { border-bottom: 1px solid var(--line); padding: 0.25rem 0.5rem; text-align: left; }
+.prose-copilot th { font-weight: 650; color: var(--ink-2); }
+.prose-copilot code { background: var(--paper-2); border-radius: 4px; padding: 0 0.25rem; font-size: 0.85em; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

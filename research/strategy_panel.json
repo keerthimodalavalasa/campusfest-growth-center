@@ -1,0 +1,1060 @@
+{
+ "final": {
+  "strategist": "lead-synthesis (final). Spine: unit-economics draft (response curves with the 2025-measured paid beta, exact additive waterfall, projected-CPV gate). Grafts: show-up draft (sequential no-show order, leak-proof seat ops, commitment-ladder encouragement test, dated gates, person-week budget); community draft (club charters, Club Cup on verified check-ins, metro-corridor sequencing, 82% show-up ceiling); loops draft (k = share x invites x conversion, day-1 6 pm 'bring a friend tomorrow' link, GCC-interview ambassador rewards). Judge fixes applied: stall-fix double count removed from base; 10pp marginal-quality haircut; creator beta set to the measured paid beta; engine and leak fix sequenced so neither is counted twice; 10-12 h daytime hackathon; CPPMS permit for 5,000; identified-to-registered corrected to 80.0%; Shivaratri, Eid and first-year mid-term timing corrected. All numbers re-derived in a script; the waterfall reconciles exactly.",
+  "big_idea": "Yes, this is Challenge A (Attendee Growth). Buy verified check-ins, not reach. Cut paid social and creators from Rs 1,52,000 to Rs 55,000: in 2025 the last Rs 40.2K of paid bought registrations at Rs 200 each, against Rs 110 for the first Rs 52.8K. Move that money into a 40-college club-charter grid, a check-in-paid peer loop and a sponsor-gated competition track. Then protect every registration with a WhatsApp 'reserved-for-you' engine and airline-style seat operations, because 300 of 2025's 875 registrant no-shows never even held a live pass. Result on the same Rs 3,00,000: 2,717 verified visitors in the base case (Rs 110 each, against Rs 134 in 2025) and 3,470 in the stretch (Rs 86 each). Nearly half of the base growth comes from people who had already registered.",
+  "north_star": "Unique verified external visitors: distinct external people, deduplicated by stable ID (phone plus college-ID hash) across both days, whose QR check-in is both admitted and verified. These are the same rules that produced 2025's 2,050 [DS]. Input-metric tree [GRO-01]: (1) registrations by source, i.e. partner-code, squad-link, ambassador, competition and CTWA codes; (2) live-pass share at T-0 (2025: 89.3%; base 93.6%); (3) T-8 reconfirm rate by channel, the leading indicator that recalibrates the show-up forecast on Fri 5 Mar; (4) registrant show-up (2025: 68.8%; base 78.5%; ceiling 82% [SHOW-02]); (5) walk-ins, capped at 300 a day. Guardrails: projected cost per verified visitor of Rs 120 or less to scale (2025 blended: Rs 134); WhatsApp opt-out under 3%; forecast peak on site at no more than 90% of the 5,000 police permit. Registrations are an input, never the goal.",
+  "city_rationale": [
+   "Citation key: [DS] = CampusFest 2025 dataset (research/data_findings.md, analysis/out/deep_dive.json). Brief fact IDs repeat across sections, so they carry a section prefix: mkt = hyd-market, fest = fest-landscape, cal = venue-calendar. All other IDs (SHOW, MED, PAID, INF, WA, REF, CA, GRO, GEM, SDK) are unique.",
+   "Tier-1 by rule and cheaper than its peers. Hyderabad (UA) is an X-class city under the 7th CPC HRA order [mkt HYD-24]. Mercer 2024 ranks Hyderabad 202, against Bengaluru 195, Delhi 164 and Mumbai 136 [mkt HYD-27], so in-kind and sponsor budgets stretch further.",
+   "A dense, clustered student market. Hyderabad district has 465 colleges (4th in India) and Ranga Reddy 338 (9th) [mkt HYD-04]. Telangana's GER is 46.6, against 30.0 for India [mkt HYD-02]. 107 of 175 engineering colleges (61%) sit in Hyderabad, Medchal-Malkajgiri and Ranga Reddy [mkt HYD-11], which is ideal for a partner grid, college buses and squads.",
+   "A tech-heavy audience with a natural sponsor base. 83,622 of 1,16,877 engineering seats (72%) are in CSE or allied branches [mkt HYD-09], and about 515 GCCs operate in the city [mkt HYD-26]. That supports a sponsor-funded AI hackathon and GCC internship-interview rewards.",
+   "Cheap local media and messaging. Reels CPM is Rs 45-140 against Rs 150-350 for Feed [PAID-01]. India's Meta CPM bottomed in February 2026 [PAID-03]. Hyderabad nano creators charge Rs 3-8K per Reel [INF-03]. A WhatsApp utility message costs Rs 0.115 [WA-01], and a Click-to-WhatsApp chat opens a free 7-day window [WA-03].",
+   "The market is not the constraint. The stretch target of 3,470 is 0.67% of the 5.2-lakh priority pool, so the binding limits are conversion, cost per visitor, team bandwidth and four known operating limits: the Cyberabad CPPMS permit [cal HYD-26], the 10 pm outdoor sound cut-off [cal HYD-27], the 11 pm last metro [cal HYD-11], and HITEX's distance of 2.6 km from HITEC City station [cal HYD-15].",
+   "A clean date. Sat-Sun 13-14 Mar 2027 falls after the JNTUH II-IV mid-terms (1-6 Feb) [cal HYD-01], after GATE (Feb weekends) [cal HYD-07], after the I-year mid-terms (3-9 Mar) [cal HYD-02] and after Eid (10 Mar) [cal HYD-04]. It falls before Holi (22 Mar) [cal HYD-05] and the April mid-terms, and after the Elan, Felicity and Pearl window (Jan-Feb) [fest HYD-01, HYD-04, HYD-07]. 13 Mar is a second Saturday, often a college holiday (to be verified per partner)."
+  ],
+  "fest_dates_and_timeline": [
+   {
+    "phase": "Fest dates",
+    "dates": "Sat-Sun 13-14 Mar 2027 (fallback 20-21 Mar)",
+    "focus": "Cleanest weekend: after every mid-term, GATE, Shivaratri (Sat 6 Mar) and Eid (Wed 10 Mar), and before Holi (22 Mar) [cal HYD-01/02/04/05/07]. Intermediate exams (24 Feb-20 Mar) [cal HYD-08] rule out Class 12 students. If the IPL fixtures (expected by mid-Feb) put an SRH home match at Uppal on 13-14 Mar [cal HYD-09], switch to 20-21 Mar. The pro-nite ends at 9:45 pm for the 10 pm sound rule, the 11 pm last metro and women students' travel."
+   },
+   {
+    "phase": "0. Setup and sign",
+    "dates": "Thu 26 Nov - Sun 20 Dec 2026",
+    "focus": "Tracking stack: QR pass, partner, squad, ambassador and competition codes, UTMs, WhatsApp BSP, holdout randomiser. Growth Center wired to the 2027 tables by 15 Dec. Geocode the 107 metro engineering colleges and the large OU-area colleges into 6 corridor clusters, and shortlist 60 for matched-pair waves. Recruit 60 ambassadors (non-partner colleges only). Pitch competition sponsors. The venue (HITEX) and production sponsor are an out-of-scope dependency."
+   },
+   {
+    "phase": "1. Interest list and pilots",
+    "dates": "Mon 21 Dec 2026 - Sun 17 Jan 2027",
+    "focus": "WhatsApp interest list opens 21 Dec, so identified leads build up before registration (median identified-to-registered lag is 7 days [DS]). 25 MoUs by Sun 10 Jan. Templates approved and flows built by 10 Jan. January club workshops at pilot colleges double as reminder test beds. Competition sponsor go/no-go Fri 15 Jan. Pushes stay quiet over Sankranti (13-17 Jan) [fest HYD-21]. Check autonomous-college calendars, e.g. NRCM mid-terms 25-30 Jan [cal HYD-03]."
+   },
+   {
+    "phase": "2. Registration opens; test cells (Gate 1)",
+    "dates": "Mon 18 Jan - Sun 31 Jan 2027",
+    "focus": "Registration opens Mon 18 Jan, 54 days out. Wave A: 20 partner colleges in the Kukatpally-Miyapur and Gandipet-Gachibowli corridors go live. CTWA pilot (Rs 12K) with a 3-lit / 2-dark cluster geo-lift test. Squad-first vs solo A/B. 15% reminder holdout randomised. Gate 1 on Sun 31 Jan: pacing target 20% of base registrations (660), plus squad k, Wave A activation and pilot CPR."
+   },
+   {
+    "phase": "3. Exam pause (Gate 2)",
+    "dates": "Mon 1 - Sun 7 Feb 2027",
+    "focus": "JNTUH mid-terms (1-6 Feb) and GATE (6-7 Feb). No campus pushes and no paid flights; only the WhatsApp engine runs. Gate 2 on Sun 7 Feb: pacing 30% (991). It decides the paid scale flight, the squad-first rollout, and where the Rs 30K reserve goes (released Mon 8 Feb only to the idea with the lowest measured projected CPV, and only if that is Rs 200 or less)."
+   },
+   {
+    "phase": "4. Scale sprint (Gate 3)",
+    "dates": "Mon 8 Feb - Sat 27 Feb 2027",
+    "focus": "Wave B: 20 more partners go live. Paid scale flight (Rs 28K) only if the pilot passed. Weekday competition prelims 15-26 Feb; no activations on the GATE weekends of 13-14 and 20-21 Feb. During Ramadan (from about 9 Feb) there are no lunch food giveaways and off-campus community events run after iftar. File CPPMS by Fri 12 Feb (29 days ahead, under the 14-day ticketed route). T-30 check-in for early registrants on 11 Feb. IPL fixture check. Gate 3 on Mon 22 Feb: pacing 65% (2,147), set zone overbooking ratios, recheck the forecast against the permit. Acquisition peaks by Sat 27 Feb."
+   },
+   {
+    "phase": "5. Show-up sprint (Gate 4)",
+    "dates": "Sun 28 Feb - Fri 12 Mar 2027",
+    "focus": "Bus go/no-go Wed 3 Mar (T-10; at least 40 seats booked). Reconfirm-or-release Fri 5 Mar (T-8; Sat 6 Mar is Shivaratri) is Gate 4: pacing 92% (3,038), and reconfirm rates by channel replace the 2025 show priors. Waitlist batches 5, 9 and 12 Mar. Bus manifests close Mon 8 Mar. First-years are messaged only after their mid-terms end on 9 Mar. No sends on Eid (Wed 10 Mar). T-2 Thu 11 Mar; T-1 Fri 12 Mar with route and last-train time."
+   },
+   {
+    "phase": "6. Festival",
+    "dates": "Sat 13 - Sun 14 Mar 2027",
+    "focus": "Morning-of gate and route message. Four QR lanes plus a manual exception desk. Live occupancy counter against the 5,000 permit, closing the walk-in lane at 4,500. College buses run on existing city routes to HITEX. Day 1 at 6 pm: verified attendees get a 'bring one friend tomorrow' pass link. Pro-nite 7:30-9:45 pm in Hall-4. Shuttle loop to HITEC City station 9:45-10:45 pm, with women-priority seats."
+   },
+   {
+    "phase": "7. Measure, pay, learn",
+    "dates": "Mon 15 - Wed 31 Mar 2027",
+    "focus": "Read the holdout, geo-lift, Wave A/B, cancel-flow and encouragement tests. Reconcile cost per verified visitor by idea. Pay ambassador, squad and Club Cup rewards on verified check-ins only. Write the priors file for 2028."
+   }
+  ],
+  "segments": [
+   {
+    "name": "P1: Metro engineering students (Hyderabad, Medchal-Malkajgiri, Ranga Reddy)",
+    "size_estimate": "~2.22 lakh (2,22,370)",
+    "size_basis": "Assumption built from sourced inputs: 1,07,218 annual intake [mkt HYD-08] x 85% fill (79% in 2026, 91% in 2024 [mkt HYD-10]) x 4 years x 61% metro share (107/175 colleges [mkt HYD-11]). It assumes metro colleges are average-sized.",
+    "priority": "P1 core: ~65% of registrations; 30 of the 40 grid partners",
+    "why": "Dense corridor clusters suit club charters and college buses. 72% are in CSE or allied branches [mkt HYD-09], so hackathon and AI hooks land. 2025's best-converting channels were campus-based: partnerships showed at 85.6% with 90.0% identified-to-registered, referrals at 78.6% [DS]. 132 IEEE student branches give a ready distribution unit [MED-18]."
+   },
+   {
+    "name": "P2: OU-area degree students, including large women's colleges",
+    "size_estimate": "~2.98 lakh (2,97,726)",
+    "size_basis": "99,242 OU-area degree seats filled in 2025-26 [mkt HYD-12] x 3-year programmes. OU self-reports 3.2 lakh enrolment [mkt HYD-13].",
+    "priority": "P2: ~25%; 10 of the 40 grid partners plus ambassadors and community groups",
+    "why": "The largest pool, but spread over ~720 colleges (average ~444 students), so yield per partner is lower. Cultural and pro-nite content fits. Women's colleges and female-led creators offset Instagram's ~70% male ad audience [MED-01]. OU Arts College bans non-academic events [cal HYD-24], so activations happen off that campus."
+   },
+   {
+    "name": "P3: PG and professional students (MBA/MCA, pharmacy, medical)",
+    "size_estimate": "~61K MBA/MCA (30,371 allotted a year x 2)",
+    "size_basis": "TG ICET 2025 allotments [mkt HYD-14]; 10,250 MBBS seats [mkt HYD-15]",
+    "priority": "P3 opportunistic: ~5%; no dedicated spend",
+    "why": "Reached at near-zero cost through E-cells, the competition track and community groups. High propensity for hackathons and case competitions."
+   },
+   {
+    "name": "P4: Flagship residential campuses (IIT-H, BITS-H, UoH, IIIT-H, ISB)",
+    "size_estimate": "~19,400",
+    "size_basis": "5,790 + 6,200 + 5,342 + 1,652 + 424 [mkt HYD-17 to HYD-21]",
+    "priority": "Credibility partners, not volume (~3%)",
+    "why": "They are peripheral, run their own big fests (Elan, Pearl, Felicity) and recycle the same acts [fest HYD-09]. They are used as hackathon judges and mentors, which lifts the competition track's credibility."
+   },
+   {
+    "name": "Deprioritised: young IT/GCC professionals",
+    "size_estimate": "9.39 lakh IT workers; ~515 GCCs",
+    "size_basis": "[mkt HYD-25, HYD-26]",
+    "priority": "Not targeted; used as sponsors only",
+    "why": "There is no 2025 conversion data to price them. They would need a separate ticketed evening product, and they dilute the student-first North Star. GCCs fund prizes and interview fast-tracks instead."
+   },
+   {
+    "name": "Excluded: Intermediate (Class 11-12) students",
+    "size_estimate": "n/a for these dates",
+    "size_basis": "Theory exams 24 Feb-20 Mar 2027 [cal HYD-08]",
+    "priority": "Excluded",
+    "why": "They are mid-exams on the fest weekend."
+   }
+  ],
+  "base_case": {
+   "funnel": [
+    {
+     "stage": "Priority addressable pool (P1 + P2)",
+     "count": 520096,
+     "rate_from_prev": "n/a",
+     "basis": "2,22,370 metro engineering + 2,97,726 OU-area degree students (see segments) [mkt HYD-08, HYD-10, HYD-11, HYD-12]"
+    },
+    {
+     "stage": "Unique students reached (derived requirement, not a driver)",
+     "count": 193232,
+     "rate_from_prev": "37.2% of pool",
+     "basis": "Impressions needed = 27,768 sessions / (3.117% CTR x 76.85% click-to-session) = 11,59,393; divided by an assumed frequency of 6. CTR and click-to-session are 2025 totals: 32,070 / 10,29,015 and 24,645 / 32,070 [DS]."
+    },
+    {
+     "stage": "Landing-page / WhatsApp-entry sessions",
+     "count": 27768,
+     "rate_from_prev": "14.4% of reached",
+     "basis": "Identified / 14.20%, the 2025 session-to-identified rate (3,500 identified, excluding walk-ins / 24,645 sessions) [DS]"
+    },
+    {
+     "stage": "Identified leads (name + phone)",
+     "count": 3944,
+     "rate_from_prev": "14.2% of sessions",
+     "basis": "Each source's registrations / its 2025 identified-to-registered rate: grid 857.1/0.900, referrals 455.5/0.854, ambassadors 503.8/0.867, community 192.4/0.800, organic 218.5/0.862, CTWA 467.5/0.708, creators 173.7/0.714, competitions 253.2/0.95 (assumption), reserve 180.7/0.85 (assumption). Total 3,943.5. 2025 channel-level rate: 2,800/3,500 = 80.0%."
+    },
+    {
+     "stage": "Registered",
+     "count": 3302,
+     "rate_from_prev": "83.7% of identified",
+     "basis": "2,868.5 from channel response curves (grid 857.1, referrals 455.5, ambassadors 503.8, community 192.4, organic 218.5, CTWA 467.5, creators 173.7) + 253.2 competitions (net of the 40% haircut) + 180.7 implied by the reserve = 3,302.4. 2025: 2,800."
+    },
+    {
+     "stage": "Confirmed: live pass at T-0",
+     "count": 3091,
+     "rate_from_prev": "93.6% of registered",
+     "basis": "2025: 89.3%. Auto-confirm, waitlist backfill and the switch/transfer/release flow recover 31.4% of passes that would otherwise leak (80% of 'interested', 60% of waitlisted, 10% of cancellations, weighted by 2025's 29/88/183). 2,921.5 non-reserve + reserve registrants at the same share = 3,090.6."
+    },
+    {
+     "stage": "Verified visitors from registrants",
+     "count": 2592,
+     "rate_from_prev": "83.9% of confirmed (78.5% of registered; 2025: 77.0% / 68.8%)",
+     "basis": "2,270.1 from the channel mix at 2025 show rates (with a 10pp haircut on volume above each channel's 2025 level) + 73.6 from leak-proof seat ops + 98.2 from reminders and plan-making + 150 from the reserve = 2,591.9"
+    },
+    {
+     "stage": "Walk-ins verified at the gate",
+     "count": 125,
+     "rate_from_prev": "flat vs 2025",
+     "basis": "2025 = 125 [DS]; held flat on purpose (the ratio falls from 6.5% to 4.8%); capped at 300 a day"
+    },
+    {
+     "stage": "Unique verified external visitors (North Star)",
+     "count": 2717,
+     "rate_from_prev": "2,592 + 125",
+     "basis": "Deduplicated by stable ID and counted once across both days. +33% vs 2,050; +24% vs the missed 2,200 target."
+    }
+   ],
+   "unique_verified_visitors": 2717,
+   "marketing_budget_inr": 300000,
+   "cost_per_visitor_inr": 110,
+   "arithmetic": "MODEL (Method A). R1 = R0 x (S1/S0)^beta x m. Each increment above the 2025 level is cut by a cannibalisation haircut (20%; 40% for competitions). Registrants above a channel's 2025 volume show at s0 - 10pp. Shrinks are valued at s0. Betas: grid 0.75, referrals 0.70, ambassadors 0.65, community 0.60, organic 0.40; paid 0.62, measured from 2025 weekly data (the first Rs 52.8K bought 479 registrations at Rs 110 each, the last Rs 40.2K bought 201 at Rs 200 each, ln(680/479)/ln(93/52.8) = 0.62); creators 0.62, borrowed from paid. CHANNELS (2025 spend -> 2027 spend; gross -> net registrations; visitors). Grid Rs 31K -> 85K: 450 x 2.742^0.75 = 958.9, with no stall multiplier in the base; net 450 + 508.9 x 0.8 = 857.1; 385 + 407.1 x 75.6% = 692.6. Referrals Rs 19K -> 30K: 350 x 1.579^0.70 = 481.9; net 455.5; 275 + 105.5 x 68.6% = 347.3. Ambassadors Rs 42K -> 40K: 520 x 0.952^0.65 = 503.8; x 75% = 377.8. Community Rs 16K -> 15K: 192.4 x 82.5% = 158.7. Organic Rs 14K -> 10K: 218.5 x 78% = 170.4. CTWA Rs 93K -> 40K: plain 680 x 0.430^0.62 = 403.0; x1.20 structural = 483.6; net 403.0 + 80.6 x 0.8 = 467.5; x 50% = 233.8. Creators Rs 59K -> 15K: plain 350 x 0.254^0.62 = 149.7; x1.20 = 179.7; net 173.7; x 50% = 86.8. Competitions: 50x3 + 32x4 + 24x6 = 422 x 0.6 = 253.2 x 80% = 202.6. Non-reserve: 3,121.7 registrations, 2,270.1 visitors (72.7%). CONVERSION LAYER, applied in sequence so no one is counted twice. Pre-engine no-shows 851.6. (1) Leak-proof: leakers = 34.29% (2025: 300/875) x 851.6 = 292.0; 31.4% recovered = 91.8 x 80.22% confirmed show = +73.6. (2) Reminders and plan-making on the confirmed residual: (2,921.5 confirmed - 2,343.7 visitors) = 577.8 x 20% cut x 85% treated = +98.2 (the holdout costs 17.3). Engine = +171.8, which is 20.2% of pre-engine no-shows. Reserve: Rs 30,000 / Rs 200 = 150 visitors (180.7 registrations at an assumed 83% show). Registered visitors = 2,270.1 + 171.8 + 150 = 2,591.9; + 125 walk-ins = 2,716.9, so 2,717. WATERFALL (integers; exact values in brackets): 2,050 - 269 (shrink: CTWA -138.5, creators -100.1, organic -24.6, community -6.3 = -269.4) + 308 (#1 grid, 307.6) + 172 (#2 engine, 171.8) + 60 (#3 peer, 60.2) + 44 (#4 paid gain, 44.2) + 202 (#5 compete, 202.6) + 150 (reserve) + 0 (walk-ins) = 2,717. SHOW-UP: 68.75% -> 72.7% from channel mix -> +2.4pp leak-proof -> +3.1pp reminders = 78.2% non-reserve, 78.5% overall. GROWTH +667 = 345 from more registrations ((3,302.4 - 2,800) x 68.75%) + 322 (48%) from better show-up (3,302.4 x (78.49% - 68.75%)). CPV = Rs 3,00,000 / 2,717 = Rs 110 (2025: Rs 2,74,000 / 2,050 = Rs 134). CROSS-CHECK (Method B, step-CPR as in the show-up draft): 2025 CPR up to 2025 spend and 1.25x above it, paid at its measured first-tranche Rs 110, creators linear at Rs 169, no structural efficiency gains, same haircuts and conversion layer: 2,654 (-2.3%). FLOOR: all CPRs 15% worse + no sponsor (Rs 15K moves to grid) + reserve unspent = 2,141. Add the engine at half strength and it is 2,069. Both are still above 2,050."
+  },
+  "stretch_case": {
+   "funnel": [
+    {
+     "stage": "Priority addressable pool (P1 + P2)",
+     "count": 520096,
+     "rate_from_prev": "n/a",
+     "basis": "Same pool as base"
+    },
+    {
+     "stage": "Unique students reached (derived requirement)",
+     "count": 234991,
+     "rate_from_prev": "45.2% of pool",
+     "basis": "33,768 sessions / (3.117% x 76.85%) = 14,09,945 impressions, divided by frequency 6 (assumption)"
+    },
+    {
+     "stage": "Landing-page / WhatsApp-entry sessions",
+     "count": 33768,
+     "rate_from_prev": "14.4% of reached",
+     "basis": "Identified / 14.20% (2025 rate) [DS]"
+    },
+    {
+     "stage": "Identified leads",
+     "count": 4796,
+     "rate_from_prev": "14.2% of sessions",
+     "basis": "Registrations / 2025 identified-to-registered rate by source (same rates as base)"
+    },
+    {
+     "stage": "Registered",
+     "count": 4020,
+     "rate_from_prev": "83.8% of identified",
+     "basis": "3,385.6 channels (grid 972.2, squad referrals 661.2, ambassadors 567.5, community 192.4, organic 218.5, CTWA 564.2, creators 209.6) + 356.4 competitions + 278.0 reserve-implied = 4,020.0"
+    },
+    {
+     "stage": "Confirmed: live pass at T-0",
+     "count": 3838,
+     "rate_from_prev": "95.5% of registered",
+     "basis": "Leak recovery 52.9% (100% of 'interested', 85% of waitlisted, 30% of cancellations saved by switch/transfer)"
+    },
+    {
+     "stage": "Verified visitors from registrants",
+     "count": 3259,
+     "rate_from_prev": "84.9% of confirmed (81.1% of registered)",
+     "basis": "2,690.0 channel mix (71.9%) + 151.8 leak-proof + 186.2 reminders (30% cut on the confirmed residual, 85% treated) + 230.8 reserve = 3,258.7. 81.1% stays under the 82% PheedLoop median for large paid events [SHOW-02], a deliberate ceiling."
+    },
+    {
+     "stage": "Walk-ins and day-2 friend passes verified at the gate",
+     "count": 211,
+     "rate_from_prev": "6.5% of registered visitors",
+     "basis": "2025 ratio 125/1,925 = 6.5% [DS] x 3,258.7 = 211.6. The mechanism is #3's day-1 6 pm 'bring a friend tomorrow' link plus gate registration, within the 300/day cap."
+    },
+    {
+     "stage": "Unique verified external visitors (North Star)",
+     "count": 3470,
+     "rate_from_prev": "3,259 + 211",
+     "basis": "3,258.7 + 211.6 = 3,470.3. +69% vs 2,050."
+    }
+   ],
+   "unique_verified_visitors": 3470,
+   "marketing_budget_inr": 300000,
+   "cost_per_visitor_inr": 86,
+   "what_must_be_true": [
+    "The grid runs 40 partners with no dark week, at 4.6 or more partner-code registrations per active partner-week (gross 1,102.7 over 240 partner-weeks). That is a x1.15 multiplier: the always-on cadence recovers the 10.9% stall measured in 2025 (x1.10), plus club charters and bus squads (x1.045). The 2025 stall cost 49 registrations in weeks 8-10 against the weeks 6-7 run-rate [DS].",
+    "The squad-first registration flow lifts observed k (referred registrations per seed registration) to at least 0.22, against 0.143 in 2025 and 0.169 in base. This must be proven by the squad-first vs solo A/B at Gate 2 (about 480 per arm). After the 20% incrementality haircut, net-new k is 0.197.",
+    "The ambassador league paid on verified check-ins lifts ambassador output x1.15 (at least 579 coded registrations from 60 ambassadors).",
+    "CTWA Reels and nano creators deliver x1.5 registrations per rupee (CPR Rs 71 or less for CTWA, Rs 72 or less for creators) with a positive geo-lift.",
+    "The leak-proof flow recovers 52.9% of leaking passes (cancel-flow save rate of 30% or more; 2025 win-back was 16.4%), and reminders plus plan-making cut confirmed no-shows by 30%. That matches the RCT effect (RR 0.75 [SHOW-09]) plus plan-making [SHOW-14], and must show as a treated-vs-holdout T-8 reconfirm gap of 10pp or more.",
+    "A competition sponsor signs by Fri 15 Jan and slots fill to 70 hackathon teams, 48 esports squads and 32 cultural crews.",
+    "The Gate 2 readout finds a home for the Rs 30K reserve at a measured projected CPV of Rs 130 or less (231 visitors).",
+    "The day-1 6 pm link and gate registration hold walk-ins at the 2025 ratio of 6.5% (211.6), inside the 300/day cap.",
+    "Registrant show-up stays at or below 81.1%, under the 82% ceiling. No headliner uplift, no budget increase and no calendar shock (no SRH home match on 13-14 Mar, no exam reschedule)."
+   ],
+   "arithmetic": "Same model and the same Rs 3,00,000 split. Grid: 958.9 x 1.15 = 1,102.7; net 450 + 652.7 x 0.8 = 972.2; visitors 385 + 522.2 x 75.6% = 779.5. Squad referrals: k 0.22 x 3,358.8 seed registrations (all non-referral registrations including reserve-funded ones) = 738.9 gross; net 350 + 388.9 x 0.8 = 661.2; visitors 275 + 311.2 x 68.6% = 488.4. Ambassadors: 503.8 x 1.15 = 579.3; net 567.5; visitors 390 + 47.5 x 65% = 420.9. Community 158.7 and organic 170.4 are unchanged. CTWA: 403.0 x 1.5 = 604.5; net 564.2 x 50% = 282.1. Creators: 149.7 x 1.5 = 224.6; net 209.6 x 50% = 104.8. Competitions: 70x3 + 48x4 + 32x6 = 594 x 0.6 = 356.4 x 80% = 285.1. Non-reserve: 3,741.9 registrations, 2,690.0 visitors (71.9%). Conversion: no-shows 1,052.0; leakers 360.7; recovered 52.9% = 190.8 x 79.55% = +151.8; confirmed residual 730.3 x 30% x 85% = +186.2 (holdout costs 32.9). Engine +338.0. Reserve Rs 30,000 / Rs 130 = 230.8 (278 registrations). Registered visitors = 3,258.7. Walk-ins 6.5% = 211.6. Total 3,470.3. WATERFALL: 2,050 - 269 (same shrink line) + 394 (#1, 394.5) + 338 (#2, 338.0) + 331 (#3 = referrals +213.4, ambassadors +30.9, day-1 link and walk-ins +86.6) + 110 (#4, 110.6) + 285 (#5, 285.1) + 231 (reserve) = 3,470. GROWTH +1,420 = 839 from registrations + 495 from show-up + 87 from walk-ins. CPV = Rs 3,00,000 / 3,470 = Rs 86. The stretch comes from mechanisms proven at gates, not from extra cash, so no 'marginal Rs per stretch visitor' figure is claimed. Volume beyond 3,470 is an unfunded option at the model's marginal CPV of Rs 151-182, i.e. about 55-66 visitors per extra Rs 10K, released only if Gate 2 measures that rate."
+  },
+  "capacity": "VENUE (assumption, sponsor-funded and outside the Rs 3L marketing budget): HITEX, Kothaguda/Madhapur, under Cyberabad police. Hall-4 seats 8,000 theatre-style and holds the indoor pro-nite; Halls 1-3 (2,500 each) hold competitions and workshops; the Lawn holds 2,800 [cal HYD-16]. Fallback venue: HICC Halls 1-6 (4,850-5,800 theatre) [cal HYD-17].\n\nPEAK LOAD (2025 pattern [DS]): day-1 uniques were 69.8% of the total (1,430/2,050), and the peak entry hour carried 17.6% of day-1 uniques (251/1,430). Assumptions: 65% of day-1 externals are on site at the evening peak, plus about 1,200 people not counted (host students, crew, artists, vendors, volunteers).\n- Base: 2,717 x 69.8% = 1,895 day-1 uniques. Peak on site = 1,232 + 1,200 = about 2,432. Peak entry = 333 per hour.\n- Stretch: 2,421 day-1 uniques. Peak on site = about 2,774. Peak entry = 425 per hour.\nFour QR lanes at about 300 scans an hour each give 1,200 per hour, 2.8x headroom at stretch. The target is under 3% manual admissions (2025: 9.4%, with 50 denials and 30 pending [DS]).\n\nPERMIT: apply on Cyberabad CPPMS for 5,000 peak concurrent, not 7,000. That is 1.8x the stretch peak; 7,000 is the figure that failed at Malla Reddy. File by Fri 12 Feb, 29 days ahead. We file under the 14-day ticketed/Commissioner route [cal HYD-26] because the Rs 99 refundable priority-pass test cell could make the event count as ticketed, so the approver cannot change late.\n\nHARD CAPS: passes capped at 4,500 (stretch needs 4,020), then waitlist only. Walk-ins capped at 300 a day. A live occupancy counter from entry and exit scans closes the walk-in lane at 4,500 (90% of the permit). Zone overbooking is sized as capacity / forecast show [SHOW-21] and never pushes the forecast peak above 90% of the permit. Worst plausible case: every pass issued, 90% show (above any benchmark), 75% on day 1, 80% on site at once = 4,500 x 0.9 x 0.75 x 0.8 = 2,430, plus 300 walk-ins and 1,200 others = 3,930, which is 79% of the permit. This is the lesson of Malla Reddy (about 7,000 permitted, about 20,000 arrived, injuries and police cases [fest HYD-13]) and Mood Indigo 2025 (pre-registrations cancelled after a gate crush [fest NAT-01]).\n\nNIGHT AND TRAVEL: the pro-nite runs 7:30-9:45 pm, inside the 10 pm outdoor sound rule [cal HYD-27]. A shuttle loop runs to HITEC City station (2.6 km [cal HYD-15]) from 9:45 to 10:45 pm, before the 11 pm last train [cal HYD-11], with women-priority seats. We will ask HMRL for late trains, citing the NYE (1 am) and IPL (12:30 am) precedents [cal HYD-12]. College buses run along partners' existing city routes. March afternoons average 35.2 C [cal HYD-10], so crowd-heavy programming starts at 4 pm.\n\nCONCLUSION: base and stretch both fit the same venue and permit with 44-51% headroom. Budget, team bandwidth (75 person-weeks) and registration pacing are the binding constraints, not capacity.",
+  "budget_allocation": [
+   {
+    "line": "#1 College club-charter grid + college-bus squads",
+    "amount_inr": 85000,
+    "rationale": "The largest line follows 2025's best channel (Rs 81 CPV, 85.6% show, 90.0% identified-to-registered [DS]), up to the team's bandwidth cap of 40 partners. Split: Rs 40K for partner kits and club co-hosted events (40 x Rs 1,000); Rs 35K for bus top-ups (10 bus-days x Rs 3,500, partner-owned buses, run only with 40 or more seats booked); Rs 5K for partner-code QR standees; Rs 5K for Club Cup trophies and certificates. Modelled average CPV is Rs 123 (Rs 114 including the engine) and marginal CPV about Rs 182."
+   },
+   {
+    "line": "#2 'Reserved-for-you' show-up engine (WhatsApp + plan-making + leak-proof seat ops)",
+    "amount_inr": 20000,
+    "rationale": "Rs 116 per incremental visitor and the cheapest insurance on every rupee in the other lines. Split: BSP platform Rs 8,000 (Rs 2,000 a month x 4 [WA-04]); about 21,500 utility messages (3,302 x 6.5) at about Rs 0.24 all-in = Rs 5,200 [WA-01]; about 2,000 marketing-category waitlist and win-back messages at about Rs 1.1 = Rs 2,200; SMS fallback Rs 2,000 [SMS-02]; ladder and Rs 99 deposit test cell (gateway fees, seat-hold cards) Rs 2,600. Registration and QR check-in run on Luma's free plan for free events [SHOW-24]."
+   },
+   {
+    "line": "#3 Verified-check-in peer loop",
+    "amount_inr": 70000,
+    "rationale": "Keeps 2025's two proven peer channels near their spend (Rs 61K -> 70K; referrals Rs 69 CPV, ambassadors Rs 108 [DS]) but pays only on verified check-ins. Split: Rs 40K ambassador league rewards (T-shirts, guest passes, top-10 stipends; certificates, letters and GCC interviews are in kind); Rs 25K squad-completion rewards (about 250 complete squads x Rs 100); Rs 5K squad-link build and leaderboard screens. Average CPV Rs 97."
+   },
+   {
+    "line": "#4 Paid rebuilt: CTWA Reels Rs 40K + Telugu nano creators Rs 15K",
+    "amount_inr": 55000,
+    "rationale": "Down from Rs 1,52,000. This line has the highest modelled marginal CPV (about Rs 310), so it is capped and gated. Only the Rs 12K pilot is committed. The Rs 28K scale flight runs only if the pilot's projected CPV is Rs 200 or less; otherwise the money goes to the reserve. It is kept because it is the only line that reaches students outside our networks and it seeds the squad loop."
+   },
+   {
+    "line": "#5 Compete-to-attend (operations only)",
+    "amount_inr": 15000,
+    "rationale": "Unstop promotion Rs 6K, prelim logistics at 6 partner campuses Rs 6K, trophies and certificates Rs 3K. The Rs 2-3L prize pool must be sponsor-funded by 15 Jan or the hackathon is cut. Cash CPV is Rs 74; fully loaded with prizes it is about Rs 1,308, which is why it is a sponsor-gated option."
+   },
+   {
+    "line": "Maintain: community groups (IEEE section, Student Tribe, moderator-approved r/hyderabad AMA)",
+    "amount_inr": 15000,
+    "rationale": "Rs 97 CPV and 82.5% show in 2025 [DS]. Held flat: at beta 0.6 extra money buys little, and r/hyderabad needs moderator approval [MED-09]."
+   },
+   {
+    "line": "Maintain: organic / SEO / listings",
+    "amount_inr": 10000,
+    "rationale": "Mostly captures demand the other lines create (beta 0.4), and first-touch credit overstates it. Trimmed by Rs 4K at a cost of about 25 visitors."
+   },
+   {
+    "line": "Performance reserve (released Mon 8 Feb at Gate 2)",
+    "amount_inr": 30000,
+    "rationale": "Goes only to the idea with the lowest measured projected CPV, and only if that is Rs 200 or less. The base values it at that floor (150 visitors); the stretch at Rs 130 (231 visitors). If nothing qualifies it stays unspent and the base falls by 150. It also backstops the metro shuttle if no sponsor funds it."
+   },
+   {
+    "line": "Measurement stack: Growth Center dashboard, AI copilot, QR check-in",
+    "amount_inr": 0,
+    "rationale": "Free tiers: Neon Free [NEON-01], Vercel Hobby [VER-02], gemini-3.8-flash free tier with aggregated, non-PII data only [GEM-04, GEM-06], Luma free QR check-in [SHOW-24]."
+   },
+   {
+    "line": "Out of scope (stated assumption): venue, production, headliner, security, shuttle loop, prize pool",
+    "amount_inr": 0,
+    "rationale": "Sponsor-funded and outside marketing cash. For scale, the only published tariff (Shilpakala Vedika) is Rs 2.43L per weekend day [cal HYD-21]. TOTAL MARKETING CASH = Rs 3,00,000, the 2025 revised budget, for both base and stretch."
+   }
+  ],
+  "framework": {
+   "name": "ICE (Impact, Confidence, Ease; Sean Ellis [GRO-03]) on anchored scales, plus a universal projected-CPV gate and a reserve money hurdle",
+   "how_scored": "Each idea is scored 1-10 on three anchored scales and ICE = (I+C+E)/3.\n- Impact = BASE incremental verified visitors / 35, capped at 10 (10 = about 350, roughly a whole 2025 channel; the largest was 390). It is anchored on the base, the number we commit to, not on a base-stretch midpoint.\n- Confidence = evidence tier: 9 = RCT plus own data on the same mechanism; 8 = own 2025 channel data, or RCTs from other domains plus measured 2025 leak counts; 6 = own data plus vendor benchmarks; 4 = external analogues only.\n- Ease = cash, owner-time and external dependencies: 9 = Rs 20K or less, one owner, configuration only; 7 = internal build plus volunteers; 5 = many external sign-offs; 4 = needs a sponsor plus multi-team operations.\n\nScores:\n- #1 Grid: I 9 (308/35 = 8.8), C 8, E 5 = 7.33\n- #2 Engine: I 5 (172/35 = 4.9), C 8, E 9 = 7.33. Tied with #1; the tie is broken by absolute base impact (308 vs 172), so the grid leads and the engine is the cheapest insurance on it.\n- #3 Peer loop: I 2, C 7, E 7 = 5.33\n- #4 Paid rebuild: I 1, C 6, E 8 = 5.00. Scored only on its structural gain; the shrink is a separate negative line.\n- #5 Compete: I 6, C 4, E 4 = 4.67\n\nUNIVERSAL GATE on each idea's rolling 2-week projected CPV = spend in the window / (registrations in the window x the channel's show prior), with priors replaced by T-8 reconfirm rates after 5 Mar:\n- Rs 120 or less = scale\n- Rs 120-200 = hold (consistent with the model)\n- Rs 200-250 = change\n- Above Rs 250 for 2 consecutive weeks = stop (2025 paid was Rs 274)\n\nMONEY HURDLE: reserve cash goes only to the lowest measured projected CPV, and only at Rs 200 or less, the reserve's base valuation.\n\nALLOCATION RULE: fill partner and peer lines to their operational caps (40 partners, 60 ambassadors, about 250 squads), where the model's marginal CPV is Rs 136-182. Paid gets a capped, gated remainder because its modelled marginal CPV (about Rs 310) is the highest. Budget therefore follows marginal CPV and caps, not rank order: the engine is #2 but needs only Rs 20K.\n\nTEAM CAPACITY: about 75 person-weeks (5 owners x 15 weeks), allocated as grid 22, engine 9, peer loop 10, compete 8, paid 5, community and organic 3, dashboard and experiments 8, permits, venue and gate ops 10.\n\nDECISIONS: double down on #1 and #2; restructure #3 (base) and let it earn the stretch; shrink and fix #4; run #5 only behind the 15 Jan sponsor gate."
+  },
+  "ideas": [
+   {
+    "rank": 1,
+    "name": "College club-charter grid + college-bus squads (double down)",
+    "concept": "Scale 2025's best channel from Rs 31K to Rs 85K and run it as an always-on grid of 40 partner colleges: 30 metro engineering colleges plus 10 large OU-area degree and women's colleges. They are sequenced along metro corridors. Wave A goes live Mon 18 Jan in Kukatpally-Bachupally-Miyapur (Red Line) and Gandipet-Narsingi-Gachibowli (nearest HITEX). Wave B goes live Mon 8 Feb in Ghatkesar-Uppal, LB Nagar-Ibrahimpatnam, Maisammaguda-Dundigal and the OU-Tarnaka belt.\n\nEach MoU charters 2-3 clubs (IEEE branch, E-cell, NSS, dance or music club). Each chartered club gets a batch code, a co-hosted weekday pre-event, a showcase or stage slot, certificates, and a place in a public Club Cup ranked on VERIFIED check-ins, not sign-ups. Clubs are paid in kind, not cash.\n\nCollege-bus squads: partners lend their own buses on Sat 13 Mar along their existing city pickup routes ending at HITEX. We pay a diesel and driver top-up, only with 40 or more seats booked. Women get priority seats. Each MoU carries a parental-consent and liability clause, given the post-Malla Reddy scrutiny.\n\nA 7-day 'no dark partner' SLA prevents a repeat of the 2025 stall.",
+    "why_it_works": "Own data [DS]: partnerships had the best funnel of any channel (90.0% identified-to-registered, 85.6% registered-to-visited, 91.7% confirmed-to-visited, 4.0% cancellations, Rs 81 CPV) on just 11.3% of spend. Volume was limited by execution, not demand: weekly registrations ran 21, 8, 0 in weeks 8-10 while spend postings skipped 4-28 Feb, then 64-97 a week once restarted. In Hyderabad, 61% of engineering colleges sit in 3 districts [mkt HYD-11] and there are 132 IEEE branches [MED-18], so a club is a ready-made batch. 70% of Indian Gen Z attend in groups [MED-25]. Buses attack distance, which costs 2-12pp of turnout per mile [SHOW-17]. Visible group attendance adds 8.1pp [SHOW-15], which the Club Cup exploits.",
+    "incremental_visitors_base": 308,
+    "incremental_visitors_stretch": 394,
+    "contribution_math": "Response curve: 450 x (Rs 85K / Rs 31K)^0.75 = 958.9 gross partner-code registrations. No stall multiplier in the base: 2025's stall coincided with zero spend postings, so scaling spend already recovers part of it (judge fix, -62). A 20% cannibalisation haircut on the increment gives 450 + 508.9 x 0.8 = 857.1 net. The increment is valued at 85.6% - 10pp = 75.6%: 407.1 x 0.756 = +307.6, about +308.\n\nStretch: x1.15 (always-on cadence recovers the measured 10.9% stall, x1.10, plus charters and bus squads, x1.045) = 1,102.7 gross, 972.2 net, 522.2 x 0.756 = +394.5, booked as 394.\n\nUnit economics: average CPV Rs 123 before the engine (85,000 / 692.6). New cash +Rs 54K / 308 = Rs 175 per incremental visitor. Marginal about Rs 182 including the engine, i.e. 55 visitors per extra Rs 10K.\n\nOperating target: 958.9 gross / 240 partner-weeks (Wave A 20 x 7 + Wave B 20 x 5) = 4.0 coded registrations per active partner-week (stretch 4.6).",
+    "budget_inr": 85000,
+    "resources": "Owner: Partnerships lead (about 15 person-weeks), plus Ops lead for buses and consent (about 5) and the growth lead for the MoU tracker (about 2), so 22 of the 75 person-weeks. 8 volunteers (one per 5 colleges). 40 faculty coordinators and 80-100 club leads in kind. Cash: Rs 40K kits and events, Rs 35K bus top-ups, Rs 5K standees, Rs 5K Club Cup.",
+    "timeline": "MoUs 1 Dec-31 Jan: 25 by Sun 10 Jan, 40 by Sun 31 Jan, mostly signed before the winter and Sankranti breaks. Wave A live Mon 18 Jan; Wave B live Mon 8 Feb, after mid-terms. Club pre-events 18-31 Jan and 8-27 Feb on weekdays only: none during 1-7 Feb or on the GATE weekends, and no lunch food giveaways during Ramadan. Bus booking 15 Feb-3 Mar, go/no-go Wed 3 Mar (T-10), manifests close Mon 8 Mar, buses run Sat 13 Mar. Day-2 buses only if Day-1 fill is 90% or more.",
+    "test_design": "(1) Matched-pair staggered rollout: the 40 partners are paired on size and district and one of each pair is randomised into Wave A. Until 8 Feb, registrations per 1,000 students in live Wave A colleges vs not-yet-live Wave B colleges give the causal lift from partnering, net of paid and organic spill-over (2025 attribution is first-touch only). (2) Club Cup leaderboard vs stage-slot-only, randomised 10 vs 10 within Wave A, read on coded registrations and later on verified show. (3) Bus vs no-bus: 10 bus partners vs 10 size-matched partners on registered-to-visited (expect 5pp or more). This also measures the Hyderabad distance penalty that the 2025 data cannot.",
+    "kpis": [
+     "Active partners per week (at least 1 activation): 40",
+     "Partner-code registrations per active partner-week: 4.0 or more (stretch 4.6)",
+     "Days since a partner's last registration: alert at 7",
+     "Rolling 2-week projected CPV: Rs 120 or less to scale",
+     "Partner registrants' T-8 reconfirm: 80% or more",
+     "Bus seats booked / offered: 70% or more by Wed 3 Mar",
+     "Partner-code registered-to-visited: 85% or more"
+    ],
+    "framework_scores": "ICE: Impact 9 (base +308 / 35 = 8.8), Confidence 8 (own 2025 data on the channel; stall measured; beta 0.75 assumed), Ease 5 (40 external sign-offs, bus consent and logistics). Score 7.33; tied with #2 and ranked first on absolute base impact. Decision: double down.",
+    "dependencies_risks_overlap": "Dependencies: principal and HOD sign-offs before the breaks; partner buses free on a Saturday (assumption, verified per MoU); 6 campuses reused as #5 prelim hosts; #2's pass for batch reconfirm. Risks: partners going dark (the 2025 stall); autonomous colleges with their own mid-terms (e.g. NRCM 25-30 Jan [cal HYD-03]), so each partner's calendar is checked; I-year mid-terms 3-9 Mar [cal HYD-02]; managements asking for parental consent and liability cover after Aug 2026; bus cost at Rs 7,000 instead of Rs 3,500 would halve the bus count (about -15 visitors in stretch). Overlap: ambassadors (#3) are barred from partner colleges. A partner code outranks squad, ambassador, paid and organic codes (only competition codes rank higher). The 20% haircut covers students who would have come anyway.",
+    "critical_variables": "Active partners per week; coded registrations per active partner-week (model: 4.0); rolling projected CPV; Wave A vs Wave B lift; bus seat fill; partner registrants' T-8 reconfirm.",
+    "early_success_signal": "25 or more MoUs by Sun 10 Jan. At least 18 of Wave A's 20 partners active in the week of 18 Jan. At Gate 2 (7 Feb), Wave A colleges show at least 2x the registrations per 1,000 students of not-yet-live Wave B, and at least 4.0 coded registrations per partner-week. 70% or more of bus seats booked by 3 Mar.",
+    "early_failure_signal": "Fewer than 15 MoUs by 10 Jan. Any partner with zero registrations for 7 days (the 2025 week-8 signature). Under 2 registrations per partner-week in the first two selling weeks. Wave A no better than Wave B at Gate 2.",
+    "scale_threshold": "Projected CPV of Rs 120 or less and 4.6 or more registrations per partner-week at Gate 2: draw Rs 15-30K from the reserve to add up to 8 Wave-C partners in the best corridor and 4 bus-days (the team bandwidth cap is 48 partners).",
+    "change_threshold": "Projected CPV of Rs 200-250, or 2-4 registrations per partner-week: swap the activation format (club co-hosted mini-event instead of posters; switch the IEEE charter to a dance or music club), move volunteer hours to top-quartile partners, and convert batch targets into squad targets.",
+    "stop_threshold": "A partner with under 1 registration a week for 2 consecutive weeks is dropped and its campus handed to ambassadors. A bus with fewer than 25 seats booked at T-10 is cancelled at no cost and its riders get a metro-route plan. Grid projected CPV above Rs 250 for 2 weeks freezes new MoUs and the remaining kit money moves to the reserve.",
+    "action_on_change": "Monday review re-ranks partners by coded registrations per partner-week. A dark partner gets a call within 24 hours and a cluster-volunteer visit within 48 hours. Bus-days move from weak to strong corridors. Reserve draws happen only at gates, so no one chases sunk costs mid-week.",
+    "dashboard_ai_support": "Growth Center: the Campaigns page shows a partner and corridor leaderboard (gross and net coded registrations, reconfirms, bus fill, projected visitors = registrations x the 85.6% prior until T-8, then reconfirm-calibrated). The Diagnose page's momentum-drop alert fires at 7 days of zero registrations; it would have flagged the 2025 stall in week 8. The Decide (scale/change/stop) board shows the grid's rolling projected CPV against the Rs 120/200/250 rules and which rule fired. The budget simulator (simulate_budget_shift) shows what an extra Rs 10K buys at beta 0.75 (about 55 visitors) and states that the curve is an assumption. The Wave A vs Wave B panel shows the causal lift.\n\nAI copilot, using grounded tool calls on live data: query_data / get_trend answer 'which partners went quiet this week and what did they deliver before?'; compare_campaigns ranks partners; calculate shows the bus-allocation arithmetic (projected show lift per Rs 3,500). It drafts each partner's weekly nudge from that partner's own numbers. create_task (captain visit, owner and due date) and update_campaign (pause a partner) are written only after a human approves the card in chat (toolApproval [SDK-05]). Only aggregated, non-PII data reaches the free-tier model [GEM-06]."
+   },
+   {
+    "rank": 2,
+    "name": "'Reserved-for-you' show-up engine: WhatsApp reminders + plan-making + airline-style seat ops (double down)",
+    "concept": "One WhatsApp-first system that turns each registration into a held seat. Modules:\n(a) A QR pass worded 'your spot is reserved' [SHOW-13], plus a 3-tap plan-making step: which day, which route (metro station, college bus, own vehicle), and with whom [SHOW-14].\n(b) Leak-proof seat ops: instant auto-confirm with no 'interested' limbo (2025 median wait 2.1 days); waitlist backfill in batches of 100 with a 24-hour claim window on 5, 9 and 12 Mar; a 'Can't make it?' flow offering switch day, transfer to a friend or release, instead of a plain cancel; a T-3 win-back for cancellers; zone overbooking = capacity / forecast show [SHOW-21], capped at 90% of the permit.\n(c) A utility-template cadence: confirmation; T-30 check for early registrants (11 Feb); reconfirm-or-release Fri 5 Mar (T-8; Shivaratri is Sat 6 Mar); T-2 Thu 11 Mar (after Eid); T-1 Fri 12 Mar with route and the 11 pm last train; morning-of gate message. First-years are messaged only after their mid-terms end on 9 Mar.\n(d) A 15% no-reminder holdout.\n(e) Two test cells with zero credit in base and stretch: a commitment ladder (session picks plus a speaker question, randomised encouragement) and an opt-in Rs 99 refundable priority pass returned as food credit.",
+    "why_it_works": "Own data [DS]: confirmed registrants showed at 77%; cancelled, waitlisted and 'interested' registrants showed at 0%. 300 of 875 registrant no-shows (34.3%) never held a live pass (29 interested, 88 waitlisted, 183 cancelled). Win-back worked (36 of 219 cancellations reconfirmed). The only nurture, one email, had zero lift (69.0% vs 68.7%) and a 12.7% opt-out. 2025's 31.25% no-show was worse than the ~24% median for large free events [SHOW-02].\n\nExternal evidence: text reminders cut no-shows 25% (RR 0.75) [SHOW-09]; 3-day plus 1-day reminders beat either alone [SHOW-10]; ownership wording performed best [SHOW-13]; plan-making adds 4.1pp, and 9.1pp for people deciding alone [SHOW-14]; loss and travel-time framing cut misses 23-34% [SHOW-11, SHOW-12]; 'accept = capacity / expected show' is standard airline practice [SHOW-21, SHOW-22]. A utility message costs Rs 0.115 [WA-01].",
+    "incremental_visitors_base": 172,
+    "incremental_visitors_stretch": 338,
+    "contribution_math": "Applied once, in sequence, to all 3,121.7 non-reserve registrations generated by the other ideas, so it never claims registrations.\n- Pre-engine visitors from the mix: 2,270.1 (72.7%); no-shows 851.6.\n- Step 1, leak-proof: leakers = 34.29% x 851.6 = 292.0. Recover 31.4% (80% of 'interested', 60% of waitlisted, 10% of cancellations, weighted by 2025's 29/88/183) = 91.8 people x 80.22% confirmed show = +73.6.\n- Step 2, reminders and plan-making on the remaining confirmed no-shows: 577.8 x 20% x 85% treated = +98.2.\n- Total +171.8, about +172 (20.2% of pre-engine no-shows, the same overall size as an RCT-discounted RR 0.80).\n- Applying 20% to all no-shows on top of the leak fix would have claimed 218, so the sequencing removes 46.5 double-counted visitors.\n- Holdout cost: 17.3 visitors, the price of proof.\n\nStretch: recover 52.9% (100/85/30%) = +151.8; reminders at 30% (RR 0.75 plus plan-making) on 730.3 = +186.2; total +338.0.\n\nRs 20,000 / 172 = Rs 116 per incremental visitor (Rs 59 in stretch).",
+    "budget_inr": 20000,
+    "resources": "Owner: growth and analytics lead (the candidate), about 6 person-weeks, for flows, randomisation and the forecast. Ops lead about 3 person-weeks for waitlist batches, zone ratios and the gate exception desk. 1 volunteer runs the Telugu/English WhatsApp inbox. Cash: BSP Rs 8,000; utility messages Rs 5,200; waitlist and win-back messages Rs 2,200; SMS fallback Rs 2,000; ladder and deposit cell Rs 2,600.",
+    "timeline": "BSP onboarding, Meta template approval and the holdout randomiser by Sun 10 Jan. January club workshops at pilot colleges run a reminder vs no-reminder split (directional), read at Gate 1. Live with registration Mon 18 Jan. Ladder encouragement test 18 Jan-7 Feb, decided at Gate 2. T-30 check 11 Feb. Zone overbooking ratios set at Gate 3 (22 Feb). Reconfirm-or-release Fri 5 Mar (Gate 4). Waitlist batches 5, 9 and 12 Mar. T-2 Thu 11 Mar. T-1 Fri 12 Mar. Morning-of 13-14 Mar. Day-2 batch sized from the Day-1 gate count. Holdout readout by 20 Mar.",
+    "test_design": "(1) A 15% no-reminder holdout (pass plus one T-1 logistics message), randomised by phone hash and stratified by source. Squads are randomised as a unit to avoid spill-over (design effect about 1.12). With about 468 held out vs 2,653 treated, the one-sided 80%-power MDE on check-in is 5.7pp, against a modelled reminder gap of 3.7pp. So the final check-in read is pre-registered as directional (about 50% power). The decision-grade read is the T-8 reconfirm gap (expected 8pp or more). A 25% holdout would still not reach 80% power at 3.7pp and would cost about 29 visitors, so 15% it is.\n(2) Cancel-flow A/B, 50/50: switch/transfer/release vs plain cancel, on passes saved per cancel request.\n(3) 2x2 factorial inside the treated group: ownership vs loss-plus-travel-time wording x plan-making on/off. About 1,330 per main-effect arm, MDE about 3.9pp, read on T-8 YES-reply.\n(4) Randomised encouragement (intent-to-treat) for session picks on half of registrants until Gate 2. It tests whether the 2025 brochure (74.7% vs 61.9%) and question (79.4% vs 68.0%) correlations are causal.",
+    "kpis": [
+     "WhatsApp opt-in at registration: 90% or more; delivery 95% or more",
+     "Opt-out/block under 3% (2025 email: 12.7%)",
+     "Live pass within 48 h: 95% or more",
+     "Plan-making completion: 55% or more",
+     "T-8 reconfirm: treated 75% or more, and 8pp or more above holdout",
+     "Waitlisted at T-1: 20 or fewer (2025: 88 never admitted)",
+     "Cancel-request save rate: 25% or more (2025 win-back 16.4%)",
+     "Registrant show-up: 78% or more, ceiling 82%"
+    ],
+    "framework_scores": "ICE: Impact 5 (base +172 / 35 = 4.9), Confidence 8 (RCTs from health and voting plus exact 2025 leak counts; transfer to a free fest is the uncertainty), Ease 9 (Rs 20K, configuration plus one owner, only Meta template approval needed). Score 7.33; tied with #1 and ranked second on absolute impact. Decision: double down.",
+    "dependencies_risks_overlap": "Dependencies: opt-in captured at registration; Meta template approval; messages classed as utility (a marketing message costs Rs 0.8631, about 7.5x more [WA-01]); the permit figure for overbooking. Risks: fatigue and blocks lowering the Meta quality rating; Shivaratri and Eid timing (both handled by date); overbooking past the permit (guarded by the 90% forecast cap and a hard gate cap); the Rs 99 cell being read as ticketing (we file under the 14-day route anyway). Overlap: credited only with the show-rate uplift on registrations other ideas generate, in a fixed order (leak-proof first, then reminders on the confirmed residual), with 46.5 double-counted visitors removed. No separate 'lead-time' lift: 2025's weak 31-60-day cohort (72.1%) coincides with the paid-social peak. Squad visibility is not credited separately. The ladder and deposit cells get zero credit.",
+    "critical_variables": "Opt-in; delivery; plan completion; T-8 reconfirm gap between treated and holdout; opt-out and Meta quality rating; save rate; waitlist count; zone forecast error.",
+    "early_success_signal": "Gate 1 (31 Jan): the reminded workshop arm checks in 5pp or more above control (directional); 95% or more hold a live pass within 48 hours; opt-out 3% or less. Gate 2: cancel-flow save rate 25% or more. Gate 4 (Fri 5 Mar): treated reconfirm 75% or more and 8pp or more above holdout.",
+    "early_failure_signal": "Opt-out above 5% on any send, or the Meta quality rating drops to 'low'. Plan completion under 30%. Reconfirm gap under 3pp. More than 100 people still waitlisted at T-8. Zone forecast error above 10%.",
+    "scale_threshold": "Reconfirm gap of 8pp or more and opt-out of 3% or less: add day-1 'your squad is here' and day-2 nudges to day-1 no-shows; raise a zone's acceptance from capacity/0.80 to capacity/0.75 where the T-8 forecast is at 85% of capacity or less. If the ladder's intent-to-treat gap is 3pp or more at Gate 2, show the prompt to every new registrant (the control arm stays untouched).",
+    "change_threshold": "Gap of 3-8pp, or opt-out of 3-5%: switch to the winning factorial arm, drop T-30, make the plan prompt one tap, add SMS fallback for people without WhatsApp opt-in. Save rate under 15%: make 'transfer to your squad' the default option.",
+    "stop_threshold": "Opt-out above 8%, or a 'low' quality rating for 3 days: keep only the pass, T-1 and morning-of (two reminders still beat one [SHOW-10]). Forecast peak at 90% of the permit: stop overbooking, close that zone, waitlist only. Deposit cuts registration completion by more than 5pp: drop the deposit.",
+    "action_on_change": "The same day a channel's T-8 YES rate falls under 60%: its non-responders' seats go to the waitlist in the next batch, its squad leads are nudged (#3), and its show prior is lowered in both the visitor forecast and the projected-CPV gate, which can move that idea from 'hold' to 'change' automatically.",
+    "dashboard_ai_support": "Growth Center: the Diagnose funnel ribbon shows registered -> live pass -> reconfirmed -> checked in, by channel and by arm, with the biggest drop highlighted. A show-up panel shows the holdout gap with a confidence interval and 'n too small' flags, a waitlist burn-down, a zone forecast vs the 5,000 permit, and an opt-out alarm. The Decide board recalibrates every idea's projected CPV with reconfirm rates after 5 Mar.\n\nAI copilot: calculate answers 'how many waitlist seats can we release for the Day-1 pro-nite?' as (zone capacity - forecast check-ins) x 0.9, with the arithmetic shown. diagnose flags channels with reconfirm under 60%. It drafts template variants within Meta's rules. create_task (release batch, template swap) is saved only after human approval. Until the holdout reads out it says 'holdout n = 468; lift not yet measurable' instead of claiming a lift. Registrant PII never goes to the free-tier model [GEM-06]."
+   },
+   {
+    "rank": 3,
+    "name": "Verified-check-in peer loop: Squad Pass + ambassador league + day-1 'bring a friend tomorrow' link",
+    "concept": "One loop, paid only on verified check-ins.\n(a) Squad Pass: registration step 2 asks 'Who's coming with you?' and creates a squad link for 3-6 people. Each member gets their own QR, so the unique count stays clean. If the whole squad's check-in is verified, it unlocks fast-lane entry, front-zone pro-nite access and a Rs 100 food combo. An inter-college Squad Cup runs on screens and WhatsApp.\n(b) Ambassador league: 60 ambassadors, in non-partner colleges only (including women's and OU degree colleges), ranked weekly by their recruits' verified check-ins. Tiers: 10 = certificate; 25 = T-shirt plus a guest pass; 50 = pro-nite pit plus a recommendation letter; top 10 = GCC-sponsor internship-interview fast-track and stage recognition [CA-01, fest NAT-05, mkt HYD-26].\n(c) At 6 pm on Day 1, verified attendees get a 'bring one friend tomorrow' WhatsApp pass link, aimed at the 620 day-2-only visitors of 2025.\nk is diagnosed weekly as share rate x invites x invite conversion.",
+    "why_it_works": "Own data [DS]: referrals were the cheapest channel (Rs 69 CPV, 78.6% show) and ambassadors the largest single source (390 visitors, Rs 108). Attendance is a group decision: 70% of Indian Gen Z attend with friends [MED-25]; 59% would skip an event where they know no one [SHOW-16]; visible group attendance adds 8.1pp [SHOW-15]. Paying on check-ins instead of sign-ups removes the incentive for fake or low-intent registrations. Festival referral programmes add 20-30% to sales [REF-02].",
+    "incremental_visitors_base": 60,
+    "incremental_visitors_stretch": 331,
+    "contribution_math": "Base (it deliberately does not rely on a squad uplift):\n- Referrals (squad rewards and tooling) Rs 19K -> 30K: 350 x (30/19)^0.70 = 481.9 gross; net 350 + 131.9 x 0.8 = 455.5; increment 105.5 x (78.6% - 10pp) = +72.3.\n- Ambassadors Rs 42K -> 40K: 520 x (40/42)^0.65 = 503.8; -16.2 x 75% = -12.2.\n- Base total +60.2, about +60.\n- Loop check: observed k = 481.9 / 2,846.9 seed registrations = 0.169 (net-new 0.160), against 0.143 in 2025 (350/2,450).\n\nStretch:\n- Squad-first flow at observed k 0.22 x 3,358.8 seeds = 738.9 gross; net 661.2; +213.4.\n- Ambassador ladder x1.15 = 579.3 gross; net 567.5; +30.9.\n- Day-1 link plus gate registration holds walk-ins at 2025's 6.5% of registered visitors: 211.6 - 125 = +86.6.\n- Stretch total +330.9, booked as +331.\n\nCash +Rs 9K vs 2025 / 60 = Rs 150 per incremental visitor in base. Average CPV Rs 97 (70,000 / 725.2). The stretch uplift comes from mechanism, proven at a gate, not from money, so no marginal-cost claim is made.",
+    "budget_inr": 70000,
+    "resources": "Owner: Community lead (about 8 person-weeks); the growth lead builds the squad data model shared with #2 (about 2). That is 10 person-weeks. 60 ambassadors recruited 1-20 Dec. 2 booth volunteers on event days. Cash: Rs 40K league rewards, Rs 25K squad-completion rewards, Rs 5K link build and screens.",
+    "timeline": "Recruit ambassadors 1-20 Dec; onboarding and codes 4-10 Jan. Squad flow live Mon 18 Jan. Squad A/B runs 18 Jan-7 Feb and is read at Gate 2. Weekly leaderboard, paused over Sankranti and 1-7 Feb. Day-1 link sent Sat 13 Mar at 6 pm. Rewards paid 15-25 Mar after check-in reconciliation.",
+    "test_design": "(1) Squad-first vs solo-first (2025-style referral link) A/B at registration, 50/50. Primary metric: k within 7 days. Guardrail: registration completion drops by no more than 2pp. About 480 per arm detects a share-rate move from 15% to 22% at 80% power (two-sided alpha 0.05).\n(2) Ambassadors: pay-on-verified vs pay-on-registration in two matched corridor clusters for 3 weeks, compared on recruits' T-8 reconfirm and check-in.\n(3) Day-1 link: randomise the 6 pm message to half of Day-1 verified attendees and measure new Day-2 verified visitors per 100 messaged.",
+    "kpis": [
+     "Squad-link share rate within 48 h: 25% or more",
+     "Observed k (referred registrations per seed registration): 0.17 or more in base; 0.22 or more for the stretch",
+     "Squads fully confirmed at T-8: 60% or more; complete-squad arrival 50% or more",
+     "Ambassador activation (5 or more registrations in 14 days): 60% or more",
+     "Duplicate or fake recruits per ambassador: 5% or less",
+     "Projected peer CPV: Rs 120 or less",
+     "Day-2 new verified visitors per 100 day-1 messages"
+    ],
+    "framework_scores": "ICE: Impact 2 (base +60 / 35 = 1.7), Confidence 7 (own 2025 data for both channels; the squad uplift is gated, not assumed), Ease 7 (one owner plus 60 ambassadors; needs clean dedupe). Score 5.33, rank 3. Decision: restructure in the base; it must earn the stretch (+331) at Gate 2.",
+    "dependencies_risks_overlap": "Depends on #2's WhatsApp pass (the share moment) and on person-level dedupe. Seeds come from #1, #4 and #5, so a miss there shrinks this idea proportionally. k is the most sensitive stretch input: at observed k 0.17 the stretch loses about 130 visitors. Risks: fraud to climb the leaderboard (handled by verified-only rewards, OTP and college-ID checks), inactive ambassadors, a squad lead dropping out and pulling friends with them, and gate surges (handled by a dedicated squad lane). Overlap: ambassadors are barred from partner colleges. Precedence is competition > partner > squad link > ambassador > paid/creator > organic. There is a 20% haircut on increments. Squad-visibility conversion is not credited separately.",
+    "critical_variables": "Share rate; invites per sharer; invite conversion (together, k); ambassador activation; referred registrants' reconfirm rate; duplicate rate.",
+    "early_success_signal": "Gate 1 (31 Jan): share rate 25% or more; squad-first k 0.20 or more vs about 0.14 for solo; completion drop of 2pp or less; 60% or more of ambassadors active.",
+    "early_failure_signal": "Share rate under 10%. Squad-first k under 0.12 (worse than 2025). More than 10% of any ambassador's recruits failing OTP or dedupe. Activation under 40% at day 14.",
+    "scale_threshold": "Squad-first k of 0.22 or more at Gate 2 and projected peer CPV of Rs 120 or less: make squad-first the default for everyone, fund a 6+ squad tier from the reserve (up to Rs 10K), and add ambassadors in the colleges with the highest k.",
+    "change_threshold": "k of 0.12-0.20: move the share prompt into the plan-making 'who with' step, cut the minimum squad from 4 to 3, and switch the reward to zero-cash front-zone access.",
+    "stop_threshold": "k under 0.12 after one change cycle (by Gate 3, 22 Feb): revert to a plain referral link and move about Rs 15K of unspent squad rewards to grid buses. An ambassador with more than 10% duplicates is disqualified; one inactive at day 14 is replaced. Projected peer CPV above Rs 250 for 2 weeks freezes merch and keeps only zero-cash perks.",
+    "action_on_change": "k is reviewed twice a week. A drop is decomposed into share x invites x conversion to find the lever that moved, and one change ships within 48 hours. The Monday leaderboard reset sends the bottom-quartile ambassadors a 1:1 call or replaces them.",
+    "dashboard_ai_support": "Growth Center: a loop panel showing k = share x invites x conversion by seed source, college and week; a squad funnel (formed -> partial -> fully confirmed -> arrived); the ambassador league (confirmed before the event, verified after); fraud flags for same device, sequential phone numbers and burst sign-ups. The Decide board shows the peer projected CPV against the gate. The budget simulator compares squad rewards with grid buses.\n\nAI copilot: get_trend tracks k; query_data answers 'which Ghatkesar squads are missing members?'. It drafts squad-lead nudges ('2 of your 4 haven't confirmed') and ambassador gap-to-next-tier messages. create_task and update_task (including any disqualification) require human approval in chat. It explains flagged anomalies but never acts on them alone."
+   },
+   {
+    "rank": 4,
+    "name": "Paid rebuilt: geo-fenced Click-to-WhatsApp Reels + Telugu nano creators behind a CPV kill switch (shrink and fix)",
+    "concept": "Cut paid social plus creators from Rs 1,52,000 to Rs 55,000 and rebuild what remains.\n(a) Rs 40K for Meta Reels/Stories Click-to-WhatsApp ads, geo-fenced to the 6 college corridors and retargeting people who engaged with partner and ambassador content. Pilot 18-31 Jan (Rs 12K) with a geo-lift holdout. Scale flight 8-27 Feb (Rs 28K) only if the pilot's projected CPV is Rs 200 or less; otherwise the money goes to the reserve. Creative rotates every 10-14 days.\n(b) Rs 15K for 3-4 Hyderabad Telugu nano creators (Rs 3-8K per Reel [INF-03]), half of them female-led, screened for 3% or higher engagement and audience authenticity. Their content is reused as CTWA creative. Barter (passes, stage time) offered to ChaiBisket and Wirally [MED-10, MED-11] is unmodelled upside.\nEvery CTWA lead lands in #2's flow inside Meta's free 7-day window [WA-03] and becomes a squad seed for #3.",
+    "why_it_works": "Own data [DS]: paid took 33.9% of spend for 16.6% of visitors (Rs 274 CPV, 50% show, 12.2% opt-out), and its diminishing returns are measured. The first Rs 52.8K bought registrations at Rs 110 each, the last Rs 40.2K at Rs 200 each (beta 0.62), and weekly registrations fell from 105 to 35 at a flat Rs 14,400 in week 10. Shrinking back to the efficient end of the curve keeps most of the volume. Reels CPM is about one third of Feed [PAID-01]. CTWA skips the landing page, where only 21.7% of 2025 paid sessions started a registration. February was the cheapest CPM month in 2026 [PAID-03]. Regional micro-creators get 2-3x the engagement at about one tenth of the cost [INF-04]. This is the only line that reaches students outside our partner and ambassador networks.",
+    "incremental_visitors_base": 44,
+    "incremental_visitors_stretch": 110,
+    "contribution_math": "The plain shrink is booked in the separate -269 line:\n- CTWA 680 x (40/93)^0.62 = 403.0\n- Creators 350 x (15/59)^0.62 = 149.7 (beta borrowed from paid; creators' 2025 weekly response was flat and lagged, so it is untested)\n- Loss = (403.0 - 680) x 50% + (149.7 - 350) x 50% = -238.6\n\nThis idea is credited only with its structural gain. x1.20 registrations per rupee gives 483.6 and 179.7 gross, and 467.5 and 173.7 net after the 20% haircut: (64.5 + 24.0) x 50% = +44.2, about +44. Stretch at x1.5: 564.2 and 209.6 net = +110.6, booked as 110.\n\nNet vs 2025: -238.6 + 44.2 = -194.4 visitors, while freeing Rs 97,000. That is Rs 499 saved per visitor given up. Base CPR is Rs 86 for both CTWA and creators (2025: Rs 137 and Rs 169). The modelled marginal CPV of about Rs 310 is the highest of any line, which is why it is capped and gated.",
+    "budget_inr": 55000,
+    "resources": "Owner: growth and analytics lead (about 3 person-weeks: ads, geo-lift, CTWA tracking). Content volunteers (about 2 person-weeks) write creator briefs and shoot Reels on phones. That is 5 person-weeks. Meta Ads Manager with CTWA; one unique code per creator.",
+    "timeline": "Creator screening 4-15 Jan. Pilot flight 18-31 Jan (Rs 12K plus 2 creators). No paid 1-7 Feb (mid-terms, GATE). Gate decision Sun 7 Feb. Scale flight 8-27 Feb (Rs 28K plus 2 creators) only if the pilot passed. After 27 Feb, only retargeting of registrants who have not reconfirmed (up to Rs 2K).",
+    "test_design": "(1) Geo-lift holdout in the pilot: CTWA runs in 3 corridor clusters and 2 stay dark for 2 weeks. A difference-in-differences on registrations per 1,000 engineering seats from non-partner colleges measures true incrementality, which first-touch attribution overstates.\n(2) CTWA vs landing-page split with the same creative (about Rs 6K per arm), on cost per confirmed registration rather than cost per click.\n(3) Creative A/B: Telugu vs English, Reels vs Stories.\n(4) Each creator is ranked on cost per confirmed registration via a unique code.",
+    "kpis": [
+     "Reels CPM: Rs 140 or less; cost per CTWA chat",
+     "CTWA chat-to-registration: 25% or more (2025 paid landing-to-start: 21.7%)",
+     "CPR: Rs 86 or less for CTWA and creators (stretch Rs 71-72)",
+     "Paid registrants' T-8 reconfirm: 65% or more (2025 paid show: 50%)",
+     "Weekly CTR decay under 30%; frequency 3 or less",
+     "Lit clusters 15% or more above dark clusters (geo-lift)",
+     "Rolling projected CPV: Rs 200 or less"
+    ],
+    "framework_scores": "ICE: Impact 1 (structural gain +44 / 35 = 1.3; its real value is the Rs 97K it releases), Confidence 6 (beta 0.62 measured on own data plus vendor CPM benchmarks), Ease 8 (self-serve, one owner). Score 5.00, rank 4. Decision: shrink and fix; never scale beyond Rs 55K without a positive geo-lift.",
+    "dependencies_risks_overlap": "Depends on #2's flow and templates, and on #1 and #3 content for retargeting pools. Risks: creative fatigue (the 2025 week-10 collapse); low-intent leads (2025: 50% show, 12.2% opt-out); fake creator audiences (about 1 in 4 fail [INF-04]); an ad audience that is about 70% male [MED-01], hence female-led creators. Overlap: people first touched by peers stay credited to peers under first-touch precedence. The 20% haircut applies to the gain, and the geo-lift measures what is truly incremental.",
+    "critical_variables": "Reels CPM; CTR decay; cost per CTWA chat; CPR; paid registrants' reconfirm rate; geo-lift; creator cost per confirmed registration.",
+    "early_success_signal": "Pilot (18-31 Jan): CPR of Rs 86 or less; paid registrants' plan completion or reconfirm of 65% or more; lit clusters 15% or more above dark ones; creators at Rs 125 or less per registration.",
+    "early_failure_signal": "Pilot CPR above Rs 130; opt-out above 8%; geo-lift indistinguishable from zero; registrations per Rs 1,000 down more than 40% week on week at flat spend (the 2025 week-10 signature).",
+    "scale_threshold": "Projected CPV of Rs 120 or less with a positive geo-lift at Gate 2: run the full Rs 28K flight plus up to Rs 15K from the reserve.",
+    "change_threshold": "Projected CPV of Rs 200-250, or CTR down more than 30% week on week: rotate creative within 72 hours, shift from the cold geo-fence to retargeting engagers, and swap out the weakest creator.",
+    "stop_threshold": "Projected CPV above Rs 250 for 2 consecutive weeks (2025 actual: Rs 274), or no geo-lift: pause and return the remainder to the reserve. A creator above Rs 200 per registration gets no second post.",
+    "action_on_change": "Budget moves within 48 hours of a threshold being crossed. Every rupee pulled goes to the reserve, which only the idea with the lowest measured projected CPV can draw on.",
+    "dashboard_ai_support": "Growth Center: daily CPR and projected CPV (CPR / reconfirm-calibrated show) by ad set and creator on the Campaigns page. The Diagnose momentum-drop and CTR-decay alerts catch the 2025 week-10 pattern. A geo-lift chart sits beside them. The Decide board shows scale/keep/change/stop with the rule that fired.\n\nAI copilot: get_decisions returns the verdict and reason. simulate_budget_shift answers 'move Rs 10K from CTWA to the grid' (about 32 visitors given up vs about 55 gained, stating the response-curve assumption). update_campaign (pause or cut budget) and create_task require human approval before anything changes."
+   },
+   {
+    "rank": 5,
+    "name": "Compete-to-attend: sponsor-gated team competitions (option bet)",
+    "concept": "Give people a reason to come as a team. Three sponsor-funded tracks in which registering a team issues a fest pass to every member:\n- a 10-12 hour DAYTIME AI hackathon with GCC sponsors (base 50 teams x 3). It is not a 24-hour event, which avoids overnight venue hire, overnight police permission and security.\n- a BGMI/esports cup (32 squads x 4)\n- cultural crew battles (24 crews x 6), with weekday prelims on 6 partner campuses\nTracks are listed on Unstop [SHOW-28]. Finalists get GCC interview fast-tracks, and IIT-H, IIIT-H and BITS-H provide judges and mentors. The Rs 2-3L prize pool must be sponsor-funded. Only external participants who check in count.",
+    "why_it_works": "72% of Telangana engineering seats are in CSE or allied branches [mkt HYD-09], and about 515 GCCs give a natural sponsor base [mkt HYD-26]. Prize pools reliably pull teams in Hyderabad: Elan Rs 16L [fest HYD-02], Infinium Rs 12.2L [fest HYD-06]. BGMI lobbies drew crowds at Comic Con at HITEX [fest HYD-17]. Teams are pre-formed squads with peer accountability. In 2025, engaged registrants (those who submitted a question) showed at 79.4% vs 68.0% [DS].",
+    "incremental_visitors_base": 202,
+    "incremental_visitors_stretch": 285,
+    "contribution_math": "Base: 50x3 + 32x4 + 24x6 = 422 participant registrations. A 40% overlap haircut (many come from partner colleges and ambassador networks) leaves 253.2 net. At an 80% show rate (assumption; engaged 2025 registrants showed at 79.4%) that is +202.6, booked as 202 in the integer waterfall. The engine's uplift on these registrants is credited to #2 only.\n\nStretch: 70x3 + 48x4 + 32x6 = 594, 356.4 net, x 80% = +285.1.\n\nCash Rs 15K / 202.6 = Rs 74 per visitor. Fully loaded with Rs 2.5L of sponsor prizes it is about Rs 1,308 per visitor, so the idea exists only if sponsors pay. If it is dropped, base falls by 213, partly recovered (about +82) by moving the Rs 15K to the grid at its Rs 182 marginal CPV.",
+    "budget_inr": 15000,
+    "resources": "Owner: Competitions and sponsors lead (about 8 person-weeks), who also runs the venue, production and shuttle sponsor pipeline. 6 partner campuses host prelims (from #1). Judges and mentors in kind. Cash: Rs 6K Unstop promotion, Rs 6K prelim logistics, Rs 3K trophies and certificates. Finals in HITEX Halls 1-3.",
+    "timeline": "Sponsor pitch 1 Dec-15 Jan; go/no-go Fri 15 Jan. Unstop listings Mon 18 Jan. Weekday prelims 15-26 Feb (GATE takes the weekends). Registrations close Sat 27 Feb. Finals 13-14 Mar.",
+    "test_design": "Pre-registered slot-fill gates on 15 Jan and 14 Feb, so sunk costs cannot keep a failing track alive. Incrementality check: the share of competitors who are first-time registrants from non-partner colleges, plus a one-question 'would you have come without the competition?' survey, sanity-check the 40% haircut. In half the tracks, A/B a 'team + 2 supporter passes' bundle vs team-only; supporters are attributed to #3.",
+    "kpis": [
+     "Sponsor signed by 15 Jan (prize pool of Rs 1.5L or more)",
+     "Slot fill vs plan: 50 / 32 / 24 teams",
+     "Team completion (every member holds a pass): 90% or more",
+     "Prelim turnout: 70% or more",
+     "Share of teams from non-partner colleges: 40% or more",
+     "Participant check-in: 80% or more; cash CPV Rs 74 or less"
+    ],
+    "framework_scores": "ICE: Impact 6 (base +202 / 35 = 5.8), Confidence 4 (no 2025 data; external analogues measure participation, not verified show), Ease 4 (needs a sponsor, judges and multi-team ops). Score 4.67, rank 5. Decision: an option bet gated by the sponsor.",
+    "dependencies_risks_overlap": "Depends on sponsor cash by 15 Jan, #1's partner campuses for prelims, and venue halls (production). Risks: no sponsor; flagship-campus teams prioritising their own fests; esports title and conduct approvals; GATE weekends squeezing prelims. Overlap is the highest of any idea, hence the 40% haircut. Competition codes take top attribution precedence, so a participant is never also credited to the grid or the peer loop.",
+    "critical_variables": "Sponsor signing date; slot fill by track; non-partner share of teams; team completion; prelim turnout; participant check-in rate.",
+    "early_success_signal": "Sponsor signed by 15 Jan. 60% or more of base slots filled by 14 Feb (30 / 19 / 14). Prelim turnout 70% or more. Non-partner share of teams 40% or more.",
+    "early_failure_signal": "No sponsor, or a pool under Rs 1L, by 15 Jan. Under 30% of slots filled by 14 Feb. More than 60% of teams already partner-coded (no net-new people).",
+    "scale_threshold": "90% or more of slots filled by 14 Feb: open 20% more slots and add supporter passes, within the 4,500 pass cap.",
+    "change_threshold": "One track under 30% while others fill: move promotion to the faster-filling tracks, push through IEEE and E-cell circulars, and add a college-vs-college bracket.",
+    "stop_threshold": "No sponsor by 15 Jan: drop the hackathon and keep esports and cultural tracks with in-kind prizes (trophies plus GCC interviews). All tracks under 30% on 14 Feb: stop and move the Rs 15K to the grid (about 82 visitors at Rs 182 marginal).",
+    "action_on_change": "The track owner reallocates promotion and hall slots weekly. The shortfall split (partner vs non-partner colleges) decides whether partnership volunteers (#1) or ambassadors (#3) push the circulars.",
+    "dashboard_ai_support": "Growth Center: a slot-fill tracker per track against the 15 Jan and 14 Feb gates, an incomplete-team list, a sponsor pipeline as tasks on the Execute (task manager) page, and list_initiatives status against the gates.\n\nAI copilot: get_overview supplies live aggregated counts for a sponsor ROI one-pager it drafts. query_data answers 'which tracks are behind, and is the gap in partner or non-partner colleges?'. Nudges to captains of incomplete teams are drafted as create_task cards, written only after human approval."
+   }
+  ],
+  "overlap_adjustment": "Five guards keep the five contributions from double counting, and the result reconciles exactly.\n\n(1) ONE PERSON, ONE COUNT. The North Star counts unique stable IDs (phone plus college-ID hash) once across both days, so the total itself cannot double count.\n\n(2) ONE SOURCE PER REGISTRANT, by precedence: competition team code, then partner/club batch code, then squad link, then ambassador code, then CTWA/creator code or UTM, then organic. Ambassadors may operate only in non-partner colleges.\n\n(3) EXACT DECOMPOSITION.\n- Acquisition ideas are credited only with net-new registrations above 2025, valued at the channel's 2025 show rate minus 10pp: (R_net - R0) x (s0 - 0.10).\n- Shrinking paid, creators, organic and community is booked as one explicit negative line (-269.4), valued at s0.\n- The paid rebuild is credited only with its gain above that plain shrink.\n- The engine is credited only with show-up uplift on all 2027 registrants, applied sequentially: leak-proof first (people without a live pass), then reminders on the confirmed residual, net of the 15% holdout.\n- The reserve is a separate line valued at its Rs 200 floor.\n\n(4) HAIRCUTS. 20% of every positive acquisition increment (grid, referrals, ambassadors, paid and creator gain) and 40% for competitions are removed as people who would have come anyway. That removes 241 visitors in the base (grid 76.9, referrals 18.1, CTWA 8.1, creators 3.0, competitions 135.0) and 377 in the stretch. The engine sequencing removes a further 46.5 in the base: a 20% cut applied to all no-shows on top of the leak fix would have claimed 218 vs 172. In the stretch it removes 82. The 10pp marginal-quality haircut takes another 51 off the base. No separate lead-time lift is added. The ladder and deposit cells get zero credit.\n\n(5) CEILINGS. Registrant show-up stays at or below 82% (base 78.5%, stretch 81.1%) [SHOW-02]. Walk-ins are held flat in the base.\n\nBASE: 2,050 - 269 (shrink) + 308 (#1 grid) + 172 (#2 engine) + 60 (#3 peer loop) + 44 (#4 paid gain) + 202 (#5 compete) + 150 (reserve) + 0 (walk-ins) = 2,717. Exact: 2,050 - 269.4 + 307.6 + 171.8 + 60.2 + 44.2 + 202.6 + 150 = 2,716.9.\n\nSTRETCH: 2,050 - 269 + 394 + 338 + 331 (including +86.6 day-1 link and walk-ins) + 110 + 285 + 231 (reserve at Rs 130) = 3,470. Exact: 3,470.4.\n\nInteger bookings follow standard rounding except #5 base (202.6 booked as 202) and #1 and #4 stretch (394.5 and 110.6 booked as 394 and 110), so that each integer waterfall sums exactly to its rounded total.\n\nSensitivity: haircuts at 30% and 50% lower the base by 57. Removing the quality haircut raises it by 42.",
+  "deprioritized": [
+   {
+    "idea": "Paid social and creators at 2025 scale (Rs 1,52,000)",
+    "reason": "They took 55.4% of spend for 25.1% of visitors at Rs 274 and Rs 337 CPV, with 50% show and 12.2% / 8.8% opt-out [DS]. Cut 64% to Rs 55K and rebuilt as #4. The trade-off is explicit: give up 194 low-show visitors to free Rs 97,000 (Rs 499 saved per visitor given up). Even rebuilt, paid has the highest modelled marginal CPV (about Rs 310), so it is gated."
+   },
+   {
+    "idea": "Macro influencers and paid posts on national youth media",
+    "reason": "One macro Reel costs Rs 2-12 lakh [INF-01], close to the whole budget, and 2025 creators were the worst channel (Rs 337) [DS]. Barter only with ChaiBisket and Wirally."
+   },
+   {
+    "idea": "Generic nurture email",
+    "reason": "Measured zero lift (69.0% vs 68.7% show) with a 12.7% opt-out [DS]. Indian media-and-entertainment broadcast email gets about 17% opens and a 2.2% click-to-open rate [EMAIL-01]. Replaced by triggered WhatsApp (#2); email is kept only as a fallback."
+   },
+   {
+    "idea": "Ranking leak-proof seat ops and the commitment ladder as separate bets",
+    "reason": "They share #2's WhatsApp rail. Spending three of five slots on one show-up system would fail the 'distinct mechanisms' test. Leak-proof is a module inside #2, sequenced so it is not counted twice, and the ladder and Rs 99 deposit are zero-credit test cells."
+   },
+   {
+    "idea": "Raising the budget to fund the stretch",
+    "reason": "The stretch (3,470) runs on the same Rs 3,00,000 and comes from gate-proven mechanisms (k, grid cadence, engine effect, sponsor), not cash. No 'marginal Rs 18-19 per stretch visitor' is claimed. Volume above about 3,500 would cost Rs 151-182 per visitor and is shown only as an unfunded option."
+   },
+   {
+    "idea": "Paid general entry or a mandatory deposit for everyone",
+    "reason": "Free entry is the Hyderabad norm [fest HYD-03]. Within the same event, payers show only 2-4pp more often [SHOW-04], and the deposit evidence is a single US anecdote [SHOW-08]. Kept only as an opt-in Rs 99 refundable priority-pass test cell, with CPPMS filed under the ticketed route regardless."
+   },
+   {
+    "idea": "A 24-hour overnight hackathon",
+    "reason": "It needs overnight venue hire, overnight police permission and security. Replaced by a 10-12 hour daytime hackathon."
+   },
+   {
+    "idea": "Hired shuttles from every cluster",
+    "reason": "At about Rs 9,000 per hired bus-day (assumption; 3 quotes to be taken), the cost per extra visitor is about Rs 600-1,400, against Rs 116 for the engine. Replaced by partner-owned college buses at a Rs 3,500 top-up, run only with 40 or more seats booked, plus last-train messages."
+   },
+   {
+    "idea": "Paid stalls or sponsorships at other colleges' fests",
+    "reason": "Rs 15K-2L each [PART-01] for reach with no verified-attendance path. Partnerships run in kind through #1."
+   },
+   {
+    "idea": "Young IT/GCC professionals as an audience; Intermediate students",
+    "reason": "Professionals have no 2025 conversion data, need a ticketed evening product and dilute the student-first North Star, so GCCs are used as sponsors. Intermediate students are in board exams 24 Feb-20 Mar [cal HYD-08]."
+   },
+   {
+    "idea": "Flagship residential campuses as volume; a headliner as the growth lever",
+    "reason": "Flagships have about 19,400 students, sit on the periphery and run their own fests, so they are credibility partners only. A headliner is a production cost, acts recycle within weeks [fest HYD-09], and star demand drove the Malla Reddy overcrowding [fest HYD-13]. No headliner uplift is modelled, even in the stretch."
+   },
+   {
+    "idea": "Mall flashmobs and Numaish activations as acquisition; scaling SEO",
+    "reason": "They create reach with no verified registration path (Felicity's flashmob drew 750 onlookers [fest HYD-05]), so they are used only as content. Organic mostly captures demand other channels create (beta 0.4), so it is held at Rs 10K."
+   }
+  ],
+  "assumptions": [
+   {
+    "assumption": "A1. 2025 channel rates transfer to Hyderabad 2027",
+    "value": "Identified-to-registered, CPR and registered-to-visited by channel as in [DS]; identified-to-registered is 80.0% overall (2,800 / 3,500, excluding walk-ins)",
+    "basis": "Own data is the only channel-level evidence, and the 2025 city is unspecified. The 5.2-lakh priority pool is about 190x the base target, so market depth is not the limit. Priors are replaced by Hyderabad actuals at the gates.",
+    "sensitivity": "All CPRs 15% worse: base -282 (2,435). Floor with no sponsor and an unspent reserve: 2,141; with the engine also at half strength: 2,069. Both above 2,050."
+   },
+   {
+    "assumption": "A2. Response elasticities (beta)",
+    "value": "Grid 0.75, referrals 0.70, ambassadors 0.65, community 0.60, organic 0.40, paid 0.62, creators 0.62",
+    "basis": "Paid's 0.62 is measured from 2025 weekly data: ln(680/479) / ln(93/52.8) = 0.62. Creators borrow paid's beta because their 2025 weekly response was flat and lagged (untested). The others are assumptions: peer channels scale with headcount, and organic is captured demand.",
+    "sensitivity": "Grid beta 0.5: base -138."
+   },
+   {
+    "assumption": "A3. No grid stall multiplier in the base",
+    "value": "x1.00 base; x1.15 stretch (cadence x1.10 plus charters and buses x1.045)",
+    "basis": "2025 weeks 8-10 delivered 29 registrations against 78 at the weeks 6-7 run-rate (49 lost, 10.9% of 450) [DS]. The stall coincided with zero spend postings, so a scaled budget already recovers part of it. Credited only in the stretch, behind the no-dark-week KPI.",
+    "sensitivity": "Adding x1.10 to the base: +62."
+   },
+   {
+    "assumption": "A4. Cannibalisation haircut",
+    "value": "20% of positive increments (grid, referrals, ambassadors, paid and creator gain); 40% for competitions",
+    "basis": "2025 attribution is first-touch only, not incremental [DS]. Peer, partner and paid channels touch the same students. Tested by the Wave A/B rollout and the CTWA geo-lift.",
+    "sensitivity": "30% and 50%: base -57."
+   },
+   {
+    "assumption": "A5. Marginal-quality haircut",
+    "value": "Registrants above a channel's 2025 volume show 10pp below its 2025 rate",
+    "basis": "Newly added colleges and friends have less affinity. Distance costs 2-12pp per mile [SHOW-17].",
+    "sensitivity": "Removed: +42. At 20pp: about -42."
+   },
+   {
+    "assumption": "A6. Leak share and recovery",
+    "value": "34.29% of pre-engine no-shows never hold a live pass; 31.4% recovered in the base (80/60/10% of interested/waitlisted/cancelled), 52.9% in the stretch (100/85/30%)",
+    "basis": "Exact 2025 counts: 29 / 88 / 183 = 300 of 875; measured win-back 36/219 = 16.4% [DS]",
+    "sensitivity": "No recovery: base -77."
+   },
+   {
+    "assumption": "A7. Reminder and plan-making effect",
+    "value": "Cuts confirmed residual no-shows by 20% in the base (30% in the stretch) among the 85% treated",
+    "basis": "RR 0.75 [SHOW-09], discounted for transfer to a free student fest; 3-day plus 1-day timing [SHOW-10]; ownership wording [SHOW-13]; plan-making +4.1pp [SHOW-14]. The combined engine is 20.2% of pre-engine no-shows.",
+    "sensitivity": "10%: -49; 30%: +49; zero: -98."
+   },
+   {
+    "assumption": "A8. Holdout design",
+    "value": "15% randomised by phone hash; squads as clusters (design effect about 1.12)",
+    "basis": "n about 468 vs 2,653 gives a one-sided MDE of 5.7pp at 80% power, against a modelled 3.7pp gap. Check-in is a directional read; the T-8 reconfirm gap is the decision read [GRO-04 method].",
+    "sensitivity": "Costs 17 visitors in the base and 33 in the stretch."
+   },
+   {
+    "assumption": "A9. Paid and creator structural gain",
+    "value": "x1.20 registrations per rupee in the base, x1.50 in the stretch",
+    "basis": "Reels CPM about one third of Feed [PAID-01]; CTWA skips the landing page (2025 paid landing-to-start was 21.7%) and gets the free 7-day window [WA-03]; February is the low-CPM month [PAID-03]; regional micro-creators get 2-3x engagement [INF-04].",
+    "sensitivity": "No gain: base -53."
+   },
+   {
+    "assumption": "A10. Competitions",
+    "value": "422 participant registrations in the base (594 stretch); 40% overlap; 80% show; sponsor funds the prizes",
+    "basis": "Hyderabad prize-pool fests [fest HYD-02, HYD-06]; Unstop reach [SHOW-28]; engaged 2025 registrants showed at 79.4% [DS]",
+    "sensitivity": "Dropped: base -213, partly recovered (about +82) by moving the Rs 15K to the grid."
+   },
+   {
+    "assumption": "A11. Performance reserve",
+    "value": "Rs 30K released 8 Feb; valued at Rs 200 per visitor in the base (150) and Rs 130 in the stretch (231); 83% show for implied registrations",
+    "basis": "Rs 200 is the worst projected CPV the gate accepts and close to the grid's modelled marginal (Rs 182)",
+    "sensitivity": "Unspent: base -150."
+   },
+   {
+    "assumption": "A12. Squad loop k",
+    "value": "Observed k (referred registrations per seed registration) 0.169 in the base (net-new 0.160) vs 0.143 in 2025; 0.22 in the stretch (net-new 0.197)",
+    "basis": "The base comes from the referral response curve and does not rely on a squad uplift. The stretch needs the squad-first A/B to show 0.22 or more at Gate 2. Extole's median advocacy is 19% [REF-01]; 70% of Gen Z attend in groups [MED-25].",
+    "sensitivity": "Stretch at observed k 0.17: about -130."
+   },
+   {
+    "assumption": "A13. Walk-ins",
+    "value": "125 in the base (flat); 6.5% of registered visitors in the stretch (211.6)",
+    "basis": "2025: 125 / 1,925 = 6.5% [DS]. The stretch mechanism is the day-1 6 pm link plus gate registration, capped at 300 a day.",
+    "sensitivity": "Base at the 6.5% ratio: +44."
+   },
+   {
+    "assumption": "A14. Reach inputs (not load-bearing)",
+    "value": "Frequency 6; CTR 3.117%; click-to-session 76.85%; session-to-identified 14.20%",
+    "basis": "2025 totals: 10,29,015 impressions, 32,070 clicks, 24,645 sessions, 3,500 identified [DS]. reported_reach is daily and cannot be summed.",
+    "sensitivity": "At frequency 4 the requirement is about 2.9 lakh reached (56% of the pool). Visitors do not depend on it."
+   },
+   {
+    "assumption": "A15. Costs outside marketing cash",
+    "value": "HITEX venue, production, headliner, security, the HITEC City shuttle loop and competition prizes are sponsor-funded",
+    "basis": "Task rule. The only published tariff is Shilpakala Vedika at Rs 2.43L per weekend day [cal HYD-21].",
+    "sensitivity": "An unsponsored shuttle comes from the reserve: base up to -150."
+   },
+   {
+    "assumption": "A16. On-site load model",
+    "value": "Day-1 share 69.8%; 65% of day-1 externals on site at the peak; about 1,200 non-counted people; about 300 scans per lane per hour",
+    "basis": "2025 day split and peak entry hour [DS]. Dwell time and crowd composition are assumptions.",
+    "sensitivity": "Worst case with all 4,500 passes at 90% show is 3,930, still under the 5,000 permit."
+   },
+   {
+    "assumption": "A17. College-bus top-up",
+    "value": "Rs 3,500 per bus-day on partner-owned buses; 40 or more seats booked to run",
+    "basis": "Unsourced. Many private engineering colleges run their own fleets; to be verified in each MoU with 3 quotes.",
+    "sensitivity": "At Rs 7,000, 5 bus-days fit the budget: stretch bus effect roughly halves (about -15)."
+   },
+   {
+    "assumption": "A18. Registration pacing",
+    "value": "20% by 31 Jan (660), 30% by 7 Feb (991), 65% by 22 Feb (2,147), 92% by 5 Mar (3,038)",
+    "basis": "The 2025 cumulative curve shifted for an 18 Jan opening, the exam pause and the 7-day identified-to-registered lag. 8-22 Feb needs about 540 a week, 1.5x 2025's peak week (354), which is why the interest list opens 21 Dec.",
+    "sensitivity": "Falling below 85% of pace at any gate triggers reallocation at that gate."
+   },
+   {
+    "assumption": "A19. Team capacity",
+    "value": "5 owners x 15 weeks = 75 person-weeks, plus 8 grid volunteers, 60 ambassadors and about 30 event-day volunteers",
+    "basis": "Brief constraint. Allocation: grid 22, engine 9, peer 10, compete 8, paid 5, community and organic 3, analytics 8, ops and permits 10.",
+    "sensitivity": "With 4 owners, merge paid into growth and compete into partnerships, and cap the grid at 32 partners (about -60)."
+   },
+   {
+    "assumption": "A20. Priority pool sizes",
+    "value": "P1 2.22 lakh = 1,07,218 x 85% x 4 x 61%; P2 2.98 lakh = 99,242 x 3",
+    "basis": "[mkt HYD-08, HYD-10, HYD-11, HYD-12]. The metro share of students is assumed equal to the metro share of colleges.",
+    "sensitivity": "Even at half these sizes the stretch is under 1.4% of the pool."
+   }
+  ],
+  "headline_numbers": [
+   "Yes, Challenge A (Attendee Growth): we maximise unique verified external visitors in Hyderabad on Sat-Sun 13-14 Mar 2027, not registrations.",
+   "Base: 2,717 verified visitors (+33% vs 2,050; +24% vs the missed 2,200 target) on the same Rs 3,00,000. That is Rs 110 per visitor, against Rs 134 in 2025.",
+   "Stretch: 3,470 (+69%) on the same Rs 3,00,000 at Rs 86 per visitor. It is unlocked by gate-proven mechanisms, not extra cash. Floor: 2,141, and 2,069 even if the engine also works at half strength.",
+   "Two methods agree within 2.3%: response curves (Method A) give 2,717; step-CPR with no efficiency gains (Method B) gives 2,654.",
+   "Four measured 2025 facts drive the plan: (1) paid's first Rs 52.8K bought registrations at Rs 110 each and its last Rs 40.2K at Rs 200 each (beta 0.62); (2) partnerships sat idle in weeks 8-10, losing about 49 registrations; (3) 300 of 875 registrant no-shows never held a live pass; (4) the nurture email had zero lift (69.0% vs 68.7%) and a 12.7% opt-out.",
+   "Show-up rises from 68.8% to 78.5% in the base: 72.7% from channel mix, +2.4pp from leak-proof seat ops, +3.1pp from reminders and plan-making. Stretch: 81.1%, under the 82% ceiling. 48% of base growth (+322 of +667) comes from people who had already registered.",
+   "Base waterfall: 2,050 - 269 (paid shrink) + 308 (grid) + 172 (engine) + 60 (peer) + 44 (paid gain) + 202 (compete) + 150 (reserve) = 2,717. Overlap haircuts removed 288 double-counted visitors.",
+   "Deliberate trade-off: paid and creators cut from Rs 1,52,000 to Rs 55,000. We give up 194 low-show visitors to free Rs 97,000 (Rs 499 per visitor given up). #2, the engine, costs Rs 20K and adds +172 visitors, Rs 116 each.",
+   "Gates: Sun 31 Jan, Sun 7 Feb (reserve release), Mon 22 Feb and Fri 5 Mar (T-8 reconfirm), at 20/30/65/92% pacing. Thresholds on rolling projected CPV: Rs 120 or less scale; Rs 120-200 hold; Rs 200-250 change; above Rs 250 for 2 weeks stop.",
+   "Capacity is not the constraint: stretch peak about 2,774 on site against a 5,000 CPPMS permit filed by 12 Feb. Passes are capped at 4,500 and walk-ins at 300 a day, so the worst case is 3,930."
+  ]
+ },
+ "checks": [
+  {
+   "verdict": "This is Challenge A (Attendee Growth). The model's arithmetic is sound, but one critical modelling error and several major ones need fixing before the slides go out.\n\nWhat checks out:\n- Base 2,716.9 and stretch 3,470.35 rebuild exactly from the stated inputs.\n- Every channel line, the 3,121.7 registrations from the channels, the engine (+171.8 / +338.0), the waterfalls, the 241/377 haircut totals and the 46.5/82 sequencing savings all match.\n- The budget sums to Rs 3,00,000 and every idea's sub-split adds up.\n- The 2025 facts match data_findings.md and deep_dive.json: paid tranches 479 @ Rs 110 and 201 @ Rs 200, beta 0.619; stall 29 vs 78; leaks 29/88/183; reach chain 24,645 sessions, 32,070 clicks, 10,29,015 impressions.\n- Capacity, ICE scores, the holdout MDE (5.7pp) and the squad n (482 per arm) are correct.\n- Every calendar weekday is correct.\n- All of the roughly 70 cited fact IDs exist in brief.md and broadly support their claims.\n\nWhat fails:\n- **Critical:** the grid's Rs 85K response curve treats the Rs 35K bus top-ups as registration-buying spend. Counting only the Rs 50K actually used for acquisition, #1 falls from +308 to about +117. Base falls to about 2,514 (Rs 119 per visitor) and stretch to about 3,170. The stretch also credits buses a second time through its x1.045 multiplier.\n- **Major:** the borrowed creator beta is contradicted by the 2025 data (-42 base). The paid marginal cost of about Rs 310 is mis-based (actually Rs 232-277). The stretch reserve is priced below every channel's marginal cost (-40 to -82). The floor is not reproducible, and on one reading it falls below 2,050. The \"82% ceiling\" is really the paid-event median. The headline growth split misattributes the gains. There are also flaws in the experiment design and the team-capacity plan.\n\nCorrected base, depending on how the fixes are applied: about 2,47x-2,64x verified visitors at Rs 114-121 each.",
+   "issues": [
+    {
+     "severity": "critical",
+     "where": "#1 grid contribution_math / base arithmetic 'Grid Rs 31K -> 85K: 450 x 2.742^0.75' and budget split (Rs 35K bus top-ups); stretch x1.045 'charters and bus squads'",
+     "problem": "The response curve treats all Rs 85K as spend that buys registrations. But Rs 35K is bus top-ups: a show-up lever, spent on 13 Mar and only if 40 or more seats are booked. Only Rs 50K (kits/events 40K, standees 5K, Club Cup 5K) is acquisition spend. At Rs 50K the curve gives 450 x (50/31)^0.75 = 644.0 gross and 605.2 net. That makes #1 = +117.3 (not +308), base = 2,514.1 (-202.9), CPV Rs 119 and stretch about 3,170 (-300). The stretch then adds a separate bus effect through x1.045 (+29.0 visitors), so buses are credited twice. By the plan's own numbers buses are the least efficient line. The 'hired shuttles' entry (Rs 600-1,400 per extra visitor at Rs 9,000/bus) implies Rs 233-544 per visitor at Rs 3,500/bus. The stretch x1.045 share (29 visitors for Rs 35K) is Rs 1,208 per visitor. Both are above the Rs 200 'change' gate.",
+     "fix": "Run the grid curve on acquisition spend only and book buses as their own show-up test line with their own projected CPV and zero base credit until the bus vs no-bus test reads out. Option A: keep Rs 85K as is and accept base 2,514. Option B: cut buses to a 4-bus-day test cell (Rs 14K) and move Rs 21K into kits and events, so grid acquisition is Rs 71K. That gives #1 +234.4, base 2,638.9 and CPV Rs 114. Then recompute the waterfall, the 288 haircut total, ICE Impact for #1 (3 at Rs 50K, 7 at Rs 71K; the engine becomes #1 by ICE in option A), the floor, pacing and every headline that quotes 2,717, Rs 110 or +308."
+    },
+    {
+     "severity": "major",
+     "where": "Assumption A2 / #4 contribution_math: 'creators 0.62, borrowed from paid'",
+     "problem": "The tranche method used to 'measure' paid's beta gives creators a beta of 1.28. In 2025 the first Rs 24.4K (ISO weeks 7-9) bought 113 registrations at Rs 216 each; the last Rs 34.6K bought 237 at Rs 146 [DS deep_dive weekly]. Beta 0.62 implies a CPR of Rs 100 at Rs 15K (149.7 registrations), about 2x the measured early-tranche cost. The own data contradicts the borrowed beta.",
+     "fix": "Model creators as linear at the 2025 CPR of Rs 169 (beta 1.0): 88.8 registrations at Rs 15K. That gives base -42.0 (2,674.9) and stretch -71.8. Alternatively, treat creators as a zero-credit test cell. Update the shrink line (creators -130.6 instead of -100.1), the #4 gain and the 'Rs 499 saved per visitor given up' figure."
+    },
+    {
+     "severity": "major",
+     "where": "#4 contribution_math, framework ALLOCATION RULE, budget rationale, deprioritized: 'modelled marginal CPV about Rs 310'; #4 dashboard: 'move Rs 10K from CTWA to the grid (about 32 visitors given up vs about 55 gained)'",
+     "problem": "The two sides use different bases. The 32 lost comes from the plain curve, with no x1.2 structural gain and no engine: 680 x [(40/93)^0.62 - (30/93)^0.62] x 50% = 32.9. The 55 gained for the grid includes the engine. On one consistent basis the model gives a CTWA marginal of Rs 232 including the engine (Rs 277 without) and a creators marginal of Rs 236 (Rs 282). Moving Rs 10K from CTWA to the grid loses 45.6 and gains 53.8, a net of +8, not +23.",
+     "fix": "Replace 'about Rs 310' with 'about Rs 230-280' everywhere, and change the simulator example to 'about 46 given up vs about 54 gained'. The conclusion still holds (paid has the highest marginal CPV vs grid Rs 184 and peer Rs 149-153), but the gap is smaller."
+    },
+    {
+     "severity": "major",
+     "where": "Stretch: reserve 'Rs 30,000 / Rs 130 = 230.8'; what_must_be_true #7; A11",
+     "problem": "Reserve money is marginal spend, but the gate compares average projected CPV. Under the model, marginal is roughly average / beta. Rs 130 is below every line's modelled marginal CPV (organic Rs 143, referrals Rs 149, ambassadors/community Rs 153, grid Rs 184), and the stretch text itself says extra volume costs 'Rs 151-182'. Valuing the reserve at Rs 151-182 gives 165-199 visitors, so the stretch is 3,388-3,430 (-40 to -82 including the walk-in knock-on).",
+     "fix": "Value the stretch reserve at Rs 151-182 (say 182 visitors at Rs 165, giving a stretch of about 3,420), or gate the reserve on marginal projected CPV (average / beta of the receiving line). State the base reserve value (Rs 200) the same way."
+    },
+    {
+     "severity": "major",
+     "where": "Base arithmetic FLOOR '2,141 ... engine at half strength 2,069. Both are still above 2,050'; A1 'All CPRs 15% worse: base -282 (2,435)'; headline",
+     "problem": "The floor cannot be reproduced. Applying 'CPR 15% worse' as R / 1.15 on all channel curves (with Rs 15K moved to the grid, no competitions, reserve unspent) gives 2,157.5, and 2,085.6 with the engine at half strength. Applying it as R x 0.85 gives 2,116.1 and 2,045.9, which is below 2,050, so 'still above 2,050' depends on the reading. A1's -282 matches only R / 1.15 with the reserve also 15% worse (2,431.5, -285.5); for the channels only it is -265.9 (2,451.0).",
+     "fix": "Define the stress exactly: channel registrations / 1.15, reserve at Rs 230. Show the arithmetic and restate the floor as 2,158 / 2,086 (engine at half). Drop 'both above 2,050' unless the R / 1.15 reading is stated. Under R x 0.85 the half-engine floor is 2,046."
+    },
+    {
+     "severity": "major",
+     "where": "North star 'ceiling 82% [SHOW-02]'; stretch '81.1% stays under the 82% PheedLoop median for large paid events'; overlap (5) CEILINGS",
+     "problem": "82% is the median show rate for large PAID events (18% no-show). For large FREE events the median is 76% (24% no-show), and PheedLoop advises planning for 70% at free events [SHOW-02]. The base (78.5%) is already above the free-event median, so 82% is not a conservative ceiling.",
+     "fix": "Relabel it: 'base 78.5% sits above the 76% median for large free events; 82% (the paid-event median) is used as a hard cap'. Add a sensitivity: base at a 76% registrant show = 3,302.4 x 0.76 + 125 = 2,635 (-82)."
+    },
+    {
+     "severity": "major",
+     "where": "big_idea 'Nearly half of the base growth comes from people who had already registered'; headline '48% of base growth (+322 of +667)'",
+     "problem": "The +322 is not mostly the engine. It splits into the engine (+171.8), the channel-mix shift away from 50%-show paid registrants (2,270.1 - 3,121.7 x 68.75% = +123.9) and the reserve at 83% show (+25.8). Only 26% of growth (172/667) comes from protecting registrations.",
+     "fix": "Say: '+322 from higher show-up: +172 from the engine, +124 from shifting the mix to high-show channels, +26 from the reserve'. Drop or qualify 'people who had already registered'."
+    },
+    {
+     "severity": "major",
+     "where": "#2 test_design (1) and thresholds: 'decision-grade read is the T-8 reconfirm gap (expected 8pp or more)'; what_must_be_true 'treated-vs-holdout T-8 reconfirm gap of 10pp or more'",
+     "problem": "The holdout receives only the pass and a T-1 logistics message. They never get the T-8 reconfirm-or-release prompt, so they have no reconfirm rate and the 'gap' is mechanically about equal to the treated reconfirm rate. The decision metric is undefined. The 8pp and 10pp thresholds also have no derivation; the modelled check-in gap is 3.7pp.",
+     "fix": "Send the holdout a neutral T-8 'are you still coming? Y/N' poll with no reminder content and no seat release, and compute the gap on that. Otherwise, pre-register the check-in gap (MDE 5.7pp, about 50% power) as the only read. Derive the reconfirm threshold from the 3.7pp modelled effect."
+    },
+    {
+     "severity": "major",
+     "where": "#1 concept/timeline vs test_design (1); #4 test_design (1); Phase 2",
+     "problem": "Wave A is defined by corridor (Kukatpally-Miyapur, Gandipet-Gachibowli), but the test design says one partner from each size and district matched pair is randomised into Wave A. Both cannot be true, and a corridor-defined wave gives no causal lift. The CTWA geo-lift (3 lit / 2 dark clusters out of the '6 corridors') runs in the same weeks as Wave A, so the two are confounded. With n=5 clusters the test has essentially no power.",
+     "fix": "Randomise within corridor: put matched pairs inside each of the 6 corridors, with one of each going live 18 Jan and the other 8 Feb. Assign CTWA lit/dark clusters orthogonally to the waves, use all 6 clusters (3 lit, 3 dark), and label the geo-lift as directional."
+    },
+    {
+     "severity": "major",
+     "where": "framework TEAM CAPACITY / A19 / per-idea resources",
+     "problem": "The 75 person-weeks sum correctly (22+9+10+8+5+3+8+10), but by owner they do not fit 15 weeks each. The growth lead carries #1 2 + #2 6 + #3 2 + #4 3 + dashboard and experiments 8 = about 21 person-weeks. The ops lead carries #1 5 + #2 3 + permits, venue and gate 10 = about 18. The partnerships lead has 15, community about 11 and competitions 8. #4 also counts 2 volunteer weeks inside the owner pool. A19's '4 owners, grid capped at 32 partners: about -60' does not reproduce: the grid pro-rata at Rs 68K gives -95.",
+     "fix": "Publish a per-owner table that is at most 15 weeks each. For example, move 4 pw of dashboard and experiments to the community lead and 3 pw of venue and sponsor pipeline to the competitions lead. Take volunteer time out of the 75. Restate the 4-owner sensitivity as about -95 (or show its basis)."
+    },
+    {
+     "severity": "minor",
+     "where": "#3 test_design (1) / what_must_be_true 'about 480 per arm' at Gate 2",
+     "problem": "At the 30% pacing target (991 registrations by 7 Feb) there are only about 848 seed registrations (991/1.169), about 424 per arm, which gives about 75% power. k needs a 7-day window, so later registrations are not mature by 7 Feb. The power calculation is on share rate (15% to 22%) but the decision metric is k.",
+     "fix": "Move the squad decision to Gate 3 (22 Feb) or state 75% power. Make share rate the pre-registered primary metric, or power the test on k."
+    },
+    {
+     "severity": "minor",
+     "where": "overlap 'Sensitivity: haircuts at 30% and 50% lower the base by 57'; A4",
+     "problem": "-57 reproduces only when the general haircut goes to 30% and competitions stay at 40% (-57.4). With competitions at 50% it is -93.0; with everything at 50% it is -207.9.",
+     "fix": "Restate: '-57 (general haircut 30%, competitions unchanged); -93 if competitions also go to 50%; -208 at 50% for all'."
+    },
+    {
+     "severity": "minor",
+     "where": "A12 'Stretch at observed k 0.17: about -130'; #3 dependencies",
+     "problem": "A recompute at k = 0.17 with the 3,358.8 seeds gives -112.4 (3,357.9). The figure includes the engine and the walk-in knock-on.",
+     "fix": "Change -130 to about -112 in A12 and in #3's dependencies text."
+    },
+    {
+     "severity": "minor",
+     "where": "#1 rationale 'Rs 114 including the engine'; ALLOCATION RULE 'marginal CPV is Rs 136-182'; #1 'Rs 175'; A13 '+44'",
+     "problem": "Several small figures do not recompute:\n- Grid CPV including the engine is Rs 115 with the engine allocated pro rata, or Rs 117 counting only the grid's own no-shows.\n- Modelled marginal CPVs are organic Rs 143, referrals Rs 149, ambassadors and community Rs 153, grid Rs 184; nothing gives Rs 136.\n- 54,000/307.6 = Rs 176, not Rs 175.\n- Walk-ins at 6.5% add +43.3, not +44.",
+     "fix": "Use Rs 115 (state the allocation rule), 'Rs 149-184' for the peer and partner lines, Rs 176 and +43."
+    },
+    {
+     "severity": "minor",
+     "where": "overlap (4) 'quality haircut takes another 51 off' vs A5/overlap 'Removing the quality haircut raises it by 42'; '288 double-counted'",
+     "problem": "Both numbers are right, but one is gross and one is net of the engine: 51.3 before the engine, +41.8 after the engine interaction. Showing them side by side without saying so looks inconsistent. The 288 is also gross of the engine interaction.",
+     "fix": "Label them '51 gross / 42 net of engine' and say that 288 is the pre-engine figure."
+    },
+    {
+     "severity": "minor",
+     "where": "A11 / reserve 'assumed 83% show' for the implied registrations",
+     "problem": "83% is above the 82% cap the plan sets [SHOW-02], so the reserve-implied registrations (180.7 base, 278.0 stretch) break the plan's own ceiling.",
+     "fix": "Use 80-82%: 183-188 base registrations and 282-288 stretch. Visitors do not change; only the registration and pacing figures shift slightly."
+    },
+    {
+     "severity": "minor",
+     "where": "big_idea '300 of 2025's 875 registrant no-shows never even held a live pass'; #2 why_it_works",
+     "problem": "183 of the 300 were cancellations whose status path was interested > confirmed > cancelled [DS status_paths]. They did hold a live pass; they just did not hold one at T-0. data_findings itself counts only 117 (88 + 29) as never admitted.",
+     "fix": "Reword to: '300 of 875 no-shows did not hold a live pass at event time (29 never confirmed, 88 stuck on the waitlist, 183 cancelled)'."
+    },
+    {
+     "severity": "minor",
+     "where": "headline_numbers 'Base waterfall: 2,050 - 269 (paid shrink)'",
+     "problem": "-269.4 includes organic (-24.6) and community (-6.3). Paid plus creators alone is -238.6.",
+     "fix": "Relabel it 'paid, creator, organic and community shrink', or split it into -239 (paid and creators) and -31 (organic and community)."
+    },
+    {
+     "severity": "minor",
+     "where": "headline 'Two methods agree within 2.3%'; base arithmetic CROSS-CHECK",
+     "problem": "The methods share competitions (202.6), the reserve (150), walk-ins (125) and the same conversion layer (engine about 157-172). Roughly 630 of about 2,650 visitors are common inputs. They differ only on visitors from the channel mix: 2,270.1 (A) vs 2,222.2 (B), a 2.1% gap.",
+     "fix": "Say: 'Method B cross-checks only the channel response curves (2,270 vs 2,222, 2.1%); both share the engine, competition, reserve and walk-in assumptions.'"
+    },
+    {
+     "severity": "minor",
+     "where": "budget_allocation #1/#2/#3/#4 vs plan text",
+     "problem": "Some costs are unfunded or ambiguous:\n- Day-2 buses have no budget line.\n- The Rs 2K post-27 Feb retargeting sits outside the 12K + 28K split.\n- Stretch WhatsApp volume (4,020 x 6.5 x Rs 0.24 = Rs 6,270) exceeds the Rs 5,200 line.\n- The squad 'Rs 100 food combo' costs Rs 75-150K if it is per member (3-6 per squad), against Rs 25K budgeted as Rs 100 per squad.",
+     "fix": "Specify Rs 100 per squad. Fund retargeting from inside the Rs 28K. Make day-2 buses a reserve draw under the gate rule. Note a stretch messaging overrun of about Rs 1.1K covered by the SMS fallback line."
+    },
+    {
+     "severity": "minor",
+     "where": "A18 pacing; Phase 3 'Gate 2 pacing 30% (991)'",
+     "problem": "Going from 20% to 30% means +331 registrations during the exam-pause week (1-7 Feb), when there are no campus pushes and no paid flights. That is about 94% of 2025's peak week (354). The text flags 8-22 Feb (about 539/week, 1.5x the 2025 peak) but not 22 Feb-5 Mar (about 567/week, 1.6x). Stretch pacing needs 657-691/week (1.85-1.95x) and is not shown.",
+     "fix": "Set about 25% by 7 Feb, rebalancing into 8-22 Feb. State the 1.6x late window and give a separate stretch pacing curve."
+    },
+    {
+     "severity": "minor",
+     "where": "Phase 1 / #5 timeline 'Competition sponsor go/no-go Fri 15 Jan'",
+     "problem": "Fri 15 Jan 2027 is Sankranti, a Telangana public holiday [cal HYD-06], and falls inside the plan's own 13-17 Jan quiet period.",
+     "fix": "Move the go/no-go to Tue 12 Jan or Mon 18 Jan. Check that the 25-MoU target (Sun 10 Jan) and the Unstop listing date still follow."
+    },
+    {
+     "severity": "minor",
+     "where": "capacity 'Worst plausible case ... 3,930, which is 79% of the permit'",
+     "problem": "The worst case assumes 80% of people are on site at the same moment. If the CPPMS permission caps total daily attendance, as at Malla Reddy where 'permission for 7,000 attendees' was granted [fest HYD-13], the worst case is 4,500 x 0.9 x 0.75 + 300 + 1,200 = 4,538. That is 91% of 5,000, above the plan's 90% guardrail.",
+     "fix": "Confirm whether the permit counts daily total or peak concurrent attendance. If it is the daily total, cap passes at about 4,400 or apply for 5,500."
+    },
+    {
+     "severity": "minor",
+     "where": "#4 early_success_signal / early_failure_signal",
+     "problem": "The pilot thresholds do not test the model:\n- The creators success signal (Rs 125 or less per registration) and the CTWA failure trigger (above Rs 130) are both far looser than the modelled CPR of Rs 86.\n- Rs 86-130 is undefined, so a pilot can 'pass' while running 45% worse than the base model.",
+     "fix": "Success: CPR of Rs 86 or less. Change band: Rs 86-130. Fail: above Rs 130. Read the creators pilot against Rs 169 if the linear fix is adopted."
+    },
+    {
+     "severity": "minor",
+     "where": "Assumption A2 / big_idea / headline: 'paid 0.62, measured from 2025 weekly data'",
+     "problem": "The cumulative-tranche ratio is confounded with time and lag. Week-10 registrations collapsed at a flat Rs 14,400, which the plan itself attributes to creative fatigue. Weeks 7 and 11 had zero paid spend but 124 and 45 registrations. This is an estimate, not a spend-response measurement.",
+     "fix": "Call it 'estimated from 2025 cumulative spend tranches (confounded with creative fatigue and lag)'. Name the CTWA geo-lift as the measurement that replaces it."
+    },
+    {
+     "severity": "minor",
+     "where": "#2 test_design (3) factorial 'MDE about 3.9pp'",
+     "problem": "The factorial uses p = 0.80, one-sided and no design effect. The holdout MDE uses p = 0.75 with design effect 1.12. On the holdout's basis the factorial MDE is about 4.4pp one-sided, or 5.0pp two-sided.",
+     "fix": "State the MDE as about 4.4pp (one-sided, p = 0.75, design effect 1.12), or give the assumptions behind 3.9pp."
+    },
+    {
+     "severity": "minor",
+     "where": "segments P1/P2 size_basis and priority shares",
+     "problem": "The pool inputs mix bases:\n- P1 applies a convener-seat occupancy (79%/91% of 94,251 seats [mkt HYD-10]) to the total intake of 1,07,218 [mkt HYD-08].\n- P2 assumes the whole OU area is metro and that 3 cohorts are steady.\n- '~444 per college' uses OU's 3.2 lakh, while the pool uses 2.98 lakh (413).\n- The segment registration shares (65/25/5/3%) are not derived from the channel model.",
+     "fix": "Label these as assumptions and use 413 per college. Derive segment shares from the 30/10 partner split and the ambassador college mix, or label them as targets."
+    },
+    {
+     "severity": "minor",
+     "where": "citations (various)",
+     "problem": "Every cited ID exists in brief.md, but some citations need sharpening:\n- Rs 0.24 all-in per utility message needs [WA-01] plus [WA-04]: (0.115 + 0.0846 BSP fee) x 1.18 GST = Rs 0.236.\n- HITEX being under Cyberabad police is uncited; [cal HYD-28] supports it.\n- The source range for distance is 1.55-12pp per mile, not 2-12 [SHOW-17].\n- For college Sankranti dates, cite [cal HYD-06] rather than the Intermediate board calendar [fest HYD-21].\n- The rival-fest windows [fest HYD-01/04/07] are 2026 dates; Elan moved from February to January between years.",
+     "fix": "Add [WA-04] and [cal HYD-28], write '1.55-12pp', cite [cal HYD-06], and label the competitor windows '2026 pattern; verify 2027 dates'."
+    }
+   ]
+  },
+  {
+   "verdict": "Yes, this is Challenge A (Attendee Growth). The plan's arithmetic holds up: the base waterfall reconciles exactly to 2,716.9 (stretch 3,470.4), every date in the timeline falls on the weekday stated (13 Mar 2027 is a Saturday, 5 Mar a Friday, 22 Feb a Monday, and so on), and the capacity numbers recompute. Feasibility and logic do not hold up yet. Three critical flaws break Slide 3 and the base:\n(1) The 15% holdout never receives the T-8 message, so the \"decision-grade\" T-8 reconfirm gap the engine is gated on cannot be measured.\n(2) \"Reconfirm-or-release\" would cancel live passes for people who don't reply, including first-years muted 3-9 Mar, even though capacity never binds (4,500 pass cap against a 5,000 permit; stretch peak about 2,774).\n(3) Pacing needs 539-567 registrations a week in the base (1.5-1.6x 2025's peak week of 354) and 657-691 in the stretch (1.85-1.95x). That falls in a registration window about 4 weeks shorter than 2025's, with GATE weekends, Ramadan and first-year mid-terms inside it.\n\nThere are 17 major issues. The main ones:\n- The growth lead carries 21 person-weeks in 15 weeks (140%) and the ops lead 18 (120%).\n- The projected-cost-per-visitor gate can't be measured before the event for #2 and #3, and it uses no show-quality signal before 5 Mar.\n- The reserve rule would send cash to #5 (Rs 74 on cash alone) or #3 (about Rs 0 before rewards are paid), and neither can absorb it.\n- The sponsor-gated #5 (+202) is counted in the \"realistic\" base.\n- The paid and creator curve is extrapolated below observed spend (+58 visitors that the evidence doesn't support).\n- The rule to switch dates when IPL fixtures come out (mid-Feb) can't be executed after registration, permits and bus bookings are tied to 13-14 Mar.\n- The Eid holidays (Wed-Thu) plus a second Saturday make a 5-day bridge break around the fest.\n- There is no date for locking the venue.\n- Buses cost Rs 583-875 per extra visitor, the same economics used to reject hired shuttles.\n- The Wave A/B test, the paid geo-lift and the squad A/B can't be run as designed.\n- Assuming the free Luma plan covers the integrations is unverified, and the copilot needs person-level data while claiming to send only non-personal data.\n- The content cannot fit 3 slides.\n\nAfter the fixes, a base that doesn't depend on a sponsor is about 2,550-2,620 (sponsor-gated work removed or probability-weighted, paid capped at measured cost per registration, waitlist leak fully recovered). Present 3,470 as a target unlocked at the gates, not a projection.",
+   "issues": [
+    {
+     "severity": "critical",
+     "where": "#2 test_design (1), KPI 'T-8 reconfirm: treated >=75% and >=8pp above holdout', Gate 4 early_success_signal, A8",
+     "problem": "The holdout gets only the pass and one T-1 logistics message, so it never receives the Fri 5 Mar reconfirm-or-release prompt. A holdout reconfirm rate therefore cannot exist, and the 'decision-grade' T-8 gap and the Gate 4 test cannot be measured. The only read left is check-in, which the plan admits is about 50% power (MDE about 5.5-5.7pp against a modelled 3.7pp).",
+     "fix": "Send the T-8 prompt to 100% of registrants as a measurement tool; the holdout is never released. Redefine the holdout as 'no ownership wording, no plan-making, no T-30', so the treatment is everything before T-8 and the T-8 YES gap (about 468 vs 2,653) measures it. Test T-2, T-1 and morning-of with a second randomisation at T-8 (for example, 15% get the morning-of message only), read on check-in as directional. Rewrite the KPI, Gate 4 and A8 to match."
+    },
+    {
+     "severity": "critical",
+     "where": "#2 concept (b)/(c) 'reconfirm-or-release', waitlist batches 5/9/12 Mar, zone overbooking; action_on_change 'non-responders' seats go to the waitlist'; capacity HARD CAPS",
+     "problem": "General entry never binds: passes are capped at 4,500 against a 5,000 permit, and the stretch peak is about 2,774. Releasing the passes of non-responders, or of whole channels whose YES rate is under 60%, cancels people who would have come (2025 confirmed show was 77%, and WhatsApp reply rates are far below 100%). That subtracts directly from the North Star. First-years are muted until 9 Mar, so all of them would be non-responders on 5 Mar. The waitlist and overbooking modules add ops load with no capacity reason.",
+     "fix": "For general entry, make T-8 'reconfirm', not 'reconfirm-or-release': a missing reply never voids a QR. Release only in named capacity-limited sub-zones (pro-nite front zone, workshop halls, hackathon seats), and only after an explicit 'No' or two unanswered prompts. Remove the general waitlist (auto-confirm everyone under 4,500) and set waitlist-leak recovery to 100% (about +27 base visitors). Drop zone overbooking outside the named sub-zones and give the freed ops time (about 2 person-weeks) to gate operations."
+    },
+    {
+     "severity": "critical",
+     "where": "A18 pacing; timeline phases 1-5; Gate 1-4 pacing thresholds; Phase 1 'interest list opens 21 Dec'",
+     "problem": "Registration opens 18 Jan (54 days out), against about 12 weeks of registration in 2025. Recomputed weekly needs:\n- Base: 539 a week (8-22 Feb) and 567 a week (22 Feb-5 Mar), 1.52-1.60x 2025's peak week of 354.\n- Stretch: 657-691 a week (1.85-1.95x).\nThose weeks include two GATE weekends, Ramadan and first-year mid-terms. Gate 2 also expects 330 registrations in the 1-7 Feb exam week, when there are no pushes at all. The interest list holds leads for 4 weeks, but 2025's identified-to-registered lag was at most 14 days (median 7), so the data does not support converting stale leads at 80%. There is no interest-list target, and the spend-based response curves have no time dimension.",
+     "fix": "Open registration on Mon 4 Jan to the interest list and organic traffic; campus waves stay on 18 Jan and 8 Feb. Early-registrant drift is covered by [SHOW-03] (within one event, early and late registrants differ by 0.6pp) and by the T-30 check. Add Gate 0 on Sun 17 Jan: at least 1,000 interest-list opt-ins and at least 400 registrations. Re-derive pacing week by week from 2025's weekly shape, with 1-7 Feb capped at about 150. If any week still needs more than 1.3x 2025's peak (about 460), lower the base or move the stretch work earlier."
+    },
+    {
+     "severity": "major",
+     "where": "framework TEAM CAPACITY; A19; resources of every idea; all test_design fields",
+     "problem": "Summing the resources lines gives:\n- Growth/analytics lead: 2 (MoU tracker) + 6 (engine) + 2 (squad model) + 3 (paid) + 8 (dashboard and experiments) = 21 person-weeks in 15 weeks (140%).\n- Ops lead: 5 + 3 + 10 = 18 (120%).\n- Competitions and sponsors lead: 8 (53%), while also carrying the venue, production, shuttle and prize sponsor pipeline, which no line accounts for.\nThe owners are students, and no hours-per-week basis is stated. About 16 experiments run at once, some with n = 2 clusters (ambassador pay-on-verified vs pay-on-registration) or 10 vs 10 colleges.",
+     "fix": "Define an owner-week as about 25 hours. Rebalance so no owner exceeds 15 person-weeks:\n- Paid (3) moves to the Community lead.\n- The MoU tracker (2) moves to partnership volunteers.\n- Sponsor pipeline and CPPMS paperwork (3) move from Ops to the Competitions and sponsors lead.\nCut to 5 pre-registered tests tied to decisions: the matched-pair Wave A/B, the squad A/B, the redesigned holdout, the cancel-flow A/B, and a college-level CTWA geo test. Move the ladder, the Rs 99 deposit, the 2x2 wording factorial, Club Cup vs stage-slot, the ambassador pay model, CTWA vs landing page and the day-1 link randomisation to an 'only if bandwidth allows at Gate 2' list."
+    },
+    {
+     "severity": "major",
+     "where": "framework UNIVERSAL GATE and every idea's scale/change/stop thresholds; north_star input (3)",
+     "problem": "Projected CPV = spend / (registrations x 2025 show prior), and the priors are replaced only by T-8 reconfirm rates on 5 Mar. That is after Gate 2 (reserve release), Gate 3 and the 27 Feb acquisition peak, so every gate before T-8 is really a cost-per-registration gate. It also can't be measured before the event for most ideas:\n- #2 produces no registrations.\n- #3 pays rewards 15-25 Mar, so its pre-event cash is about Rs 0 and it always reads 'scale'.\n- #1's cash is lumpy (Rs 40K of kits up front, Rs 35K of buses on 13 Mar), so its rolling cash CPV swings between 'stop' and 'scale'.\nThe dashboard's 85.6% grid prior also conflicts with the model's 75.6% marginal value, which biases the gate toward 'scale'.",
+     "fix": "(a) Compute CPV on accrual: spread kit costs over each partner's live weeks, accrue #3's reward liability as projected check-ins x reward rate, and book bus top-ups when a bus is confirmed.\n(b) Replace the constant prior with an engagement-adjusted show score per registrant, available within 72 hours and calibrated on 2025 data: brochure download 74.7% vs 61.9%, question submitted 79.4% vs 68.0%, plus WhatsApp opt-in and plan-making completion (labelled assumptions). Report it by channel from Gate 1.\n(c) Use the 11 Feb T-30 reply rate as the Gate 3 show signal.\n(d) Gate #2 on its own instruments (opt-in, plan completion, save rate, redesigned T-8 gap), not CPV.\n(e) Set the dashboard prior to the model's blended channel show (grid 692.6 / 857.1 = 80.8%)."
+    },
+    {
+     "severity": "major",
+     "where": "framework MONEY HURDLE; budget 'Performance reserve'; scale_threshold of #1, #3 and #4; A11; A15",
+     "problem": "The rule gives the Rs 30K to the idea with the lowest measured average projected CPV. On cash, #5 reads Rs 74 (prizes excluded) and #3 reads about Rs 0, and neither can absorb money: competition slots are fixed by halls and the sponsor, and squads and ambassadors are capped. An average CPV also understates the marginal cost of the next rupee (grid average Rs 123 vs marginal about Rs 196). The same Rs 30K is promised to Wave C partners (Rs 15-30K), a 6+ squad tier (Rs 10K), the paid scale flight (Rs 15K) and the shuttle backstop, while being valued at 150 visitors in the base and 231 in the stretch. Wave C partners would go live on 8 Feb with no signed MoUs. The partner cap is stated as both 40 and 48.",
+     "fix": "Rewrite the rule: 'At Gate 2 the reserve funds the HITEC City shuttle first if no sponsor has signed by Fri 5 Feb (it is part of the CPPMS traffic plan due 12 Feb). The rest goes to the eligible idea with the lowest measured MARGINAL projected CPV (change in accrued spend / change in projected visitors between Gate 1 and Gate 2) that has named room to absorb it: grid Wave C (8 standby MoUs pre-signed by 31 Jan) or the paid scale flight. #3 and #5 are ineligible.' Use one partner cap (48, including standbys). Value the reserve in the base only if the shuttle is sponsored."
+    },
+    {
+     "severity": "major",
+     "where": "#1 concept (Wave A = two named corridors) vs #1 test_design (1); timeline '25 MoUs by 10 Jan, 40 by 31 Jan'; #4 geo-lift in the same corridors",
+     "problem": "Wave A is defined both by geography (Kukatpally-Miyapur and Gandipet-Gachibowli) and as 'one of each matched pair randomised', which is contradictory. Pairing all 40 partners needs all 40 signed before 18 Jan, but only 25 are due by then. The clean comparison window is 18-31 Jan only, because 1-7 Feb has no campus pushes. The CTWA lit and dark clusters run in the same corridors in the same weeks, which confounds the read.",
+     "fix": "Randomise within each corridor. Pair the partners signed by 10 Jan (about 24, i.e. 12 pairs); one of each pair goes live 18 Jan and the other 8 Feb. Late signers go live 8 Feb outside the experiment. Read registrations per 1,000 students from all sources at Gates 1 and 2. Balance CTWA lit and dark areas across Wave A and B partners, or exclude partner campuses from CTWA targeting until 8 Feb. Then drop the claim that Wave A is sequenced by corridor; alternatively keep the corridor sequencing and claim only a before/after difference-in-differences, not causal lift."
+    },
+    {
+     "severity": "major",
+     "where": "#4 test_design (1); KPI 'Lit clusters >=15% above dark'; #4 scale/stop thresholds ('no geo-lift' = stop)",
+     "problem": "3 lit vs 2 dark clusters over 2 weeks, on a Rs 12K pilot (about 140 registrations at Rs 86 each), cannot detect a 15% lift. With 5 units, both 'positive geo-lift' (scale) and 'no geo-lift' (stop) are noise, so the thresholds aren't measurable leading indicators.",
+     "fix": "Randomise at college level: geo-fence 2 km radii around about 40 non-partner metro engineering colleges, 20 lit and 20 dark, stratified by corridor and size, and read registrations per 1,000 seats. Pre-register that Gate 2 decides on cost per registration plus the engagement-adjusted show score. Treat the geo-lift as directional unless its 90% confidence interval excludes zero, and remove 'no geo-lift' as an automatic stop trigger."
+    },
+    {
+     "severity": "major",
+     "where": "#3 test_design (1); scale_threshold 'squad-first k >=0.22 at Gate 2'; stretch what_must_be_true (k 0.22)",
+     "problem": "The 480-per-arm sample size is computed for share rate (15% to 22%), but the gate uses k 'within 7 days'. Registrations with a full 7-day window by Gate 2 are the 660 due by 31 Jan, about 330 per arm, and only if pacing hits plan. Splitting the first 30% of registrations 50/50 also caps season k at about 0.208, so the stretch's 0.22 can't be reached even if squad-first works.",
+     "fix": "Make 48-hour share rate the Gate 2 decision metric, with k as directional. Pre-commit: roll squad-first out to 100% if the share-rate gap is at least 5pp at p < 0.1 by Gate 2, otherwise extend the test to Gate 3. Restate the stretch requirement as post-rollout k of at least 0.23 (season about 0.22), or cut about 40 registrations from the stretch referral line."
+    },
+    {
+     "severity": "major",
+     "where": "timeline 'Fest dates' (switch to 20-21 Mar if SRH plays at home); Phase 4 'IPL fixture check'",
+     "problem": "Fixtures arrive in mid-February, after registration (18 Jan), the MoUs, bus bookings and the CPPMS filing (12 Feb) are all tied to 13-14 Mar, so a switch then can't be executed. Uppal is under the Malkajgiri commissionerate [cal HYD-28], not Cyberabad, which weakens the police-bandwidth argument. The fallback weekend was not checked: Sun 21 Mar is Holika Dahan [cal HYD-05] and Inter exams run to 20 Mar.",
+     "fix": "Lock 13-14 Mar by 15 Dec and delete the switch rule. If SRH has a home match, mitigate instead: end the pro-nite by 9:30 pm, run the shuttle until 10:30 pm so the fest crowd clears the Blue Line before the match crowd, and ask HMRL to extend service, citing the IPL precedent [cal HYD-12]. If a fallback is still named, state its costs: day 2 must end by 6 pm for Holika Dahan, and it is hotter."
+    },
+    {
+     "severity": "major",
+     "where": "city_rationale 'A clean date'; show-up model (A7; base 78.5%); T-2 on Thu 11 Mar",
+     "problem": "Eid falls on Wed 10 Mar, Thu 11 Mar is the 'Following Day of Ramazan' holiday [cal HYD-04], and Sat 13 Mar is a second Saturday. Taking Fri 12 off gives a 5-day break, so hostel and PG students from other districts may go home over the fest weekend; the model doesn't account for this. If 30% of registrants are hostellers and their show-up drops 10pp, that is about -100 visitors. Eid also depends on moon sighting, so it could land on Thu 11, the T-2 send day.",
+     "fix": "Add 'Will you be in Hyderabad on 13-14 Mar?' to plan-making and the T-8 prompt, and forecast show separately by answer. Weight targeting toward colleges with mostly day scholars. Ask each partner whether Fri 12 Mar is a working day. Add a sensitivity line (about -100 visitors). If Eid moves to Thu 11, merge T-2 into the Fri 12 T-1 message."
+    },
+    {
+     "severity": "major",
+     "where": "Phase 5 and #2 timeline 'first-years messaged only after their mid-terms end on 9 Mar'; bus go/no-go Wed 3 Mar; reconfirm Fri 5 Mar; manifests close Mon 8 Mar",
+     "problem": "First-years (about 25% of P1) are muted from 3 to 9 Mar, which covers the bus go/no-go, the T-8 reconfirm and the manifest close. They can't book buses or reconfirm, and under release rules they would lose their passes. The registration form doesn't capture year of study, so the mute can't even be applied.",
+     "fix": "Add a 'year of study' field to registration. Send first-years their bus booking and reconfirm message on Tue 2 Mar, before their mid-terms. Exempt them from any release, hold a first-year bus-seat block open until Thu 11 Mar, and leave them out of the Gate 4 channel recalibration (or weight them separately)."
+    },
+    {
+     "severity": "major",
+     "where": "Phase 0 'The venue (HITEX) and production sponsor are an out-of-scope dependency'; capacity (fallback HICC); CPPMS filing by 12 Feb",
+     "problem": "There is no date for locking the venue. Yet registration opens 18 Jan with a location, buses run routes ending at HITEX, and the CPPMS filing on 12 Feb needs the venue and its NOCs. HITEX's mid-March availability is unchecked. The fallback, HICC, is in the same complex, so its availability is correlated with HITEX's. Hall-4 plus Halls 1-3 for 2 days will cost several times the cited Shilpakala Rs 2.43L per day, and that sponsor ask has no date.",
+     "fix": "Add a venue-and-date lock gate on Fri 18 Dec (sponsor-paid deposit, or the plan pivots). Name a fallback with a different owner, for example G.M.C. Balayogi Indoor Stadium [cal HYD-20], whose 3,500-5,000 capacity would bind the stretch, or a large partner campus. Put dated sponsor milestones on the timeline: venue 18 Dec, prize pool 12 Jan, shuttle 5 Feb."
+    },
+    {
+     "severity": "major",
+     "where": "city_rationale 'after the Elan, Felicity and Pearl window (Jan-Feb)'; Phase 0",
+     "problem": "The 'clean date' claim uses 2026 fest dates, but these fests move between years:\n- Elan went from 21-23 Feb 2025 to 9-11 Jan 2026 [fest HYD-03, HYD-01].\n- CBIT Shruthi ran 4-8 Mar 2025 and then moved to Feb [fest HYD-11].\n- A BITS-H public show ran on 29 Mar [fest HYD-08].\nThe 40 partners' own 2027 fest dates aren't checked, and a partner holding its own fest near 13-14 Mar will neither promote ours nor send students.",
+     "fix": "By 15 Dec, collect 2027 fest dates for the 60 shortlisted colleges and the flagship campuses. Make 'no own fest within 7 days either side of 13-14 Mar' an MoU screening criterion. Show any known 2027 clashes on the slides."
+    },
+    {
+     "severity": "major",
+     "where": "#1 budget (Rs 35K bus top-ups, 10 bus-days); deprioritised 'Hired shuttles'; stretch grid x1.045 ('charters and bus squads')",
+     "problem": "The base averages about 24 gross partner-code registrations per partner (958.9/40), so a single college rarely reaches the 40-seats-booked threshold. At 40 riders and a 10-15pp show lift, a Rs 3,500 bus-day costs Rs 583-875 per extra visitor. That is the same economics used to reject hired shuttles (Rs 600-1,400) and 5-7x the engine's Rs 116. Buses act on show rate, yet the stretch books them as a registration multiplier. Day-2 buses have no budget.",
+     "fix": "Allow buses shared by 2-3 neighbouring partners in a corridor so they reach 40 seats. Cut the line to a Rs 14K pilot (4 bus-days in the two densest corridors). Move Rs 5K to organic and community (see the marginal-CPV issue) and Rs 16K to the reserve. Justify the pilot on women's night-time access, not CPV. Model buses as a show-rate uplift for riders in the conversion layer, not as x1.045 on registrations."
+    },
+    {
+     "severity": "major",
+     "where": "base_case waterfall (+202 from #5, +150 reserve); headline 'Base: 2,717'",
+     "problem": "The 'realistic' base counts #5 at full value (+202.6, or about 213 including engine uplift), although it exists only if an unsigned Rs 2-3L prize sponsor commits by 15 Jan (Confidence 4). The +150 reserve may instead go to the shuttle. Reviewers penalise unsecured upside booked as base.",
+     "fix": "Lead with a base that doesn't depend on a sponsor: 2,717 - 213 + 82 (Rs 15K moved to the grid) = about 2,586. Show +131 as a 'sponsor-unlocked' band between base and stretch. Alternatively, probability-weight #5 (for example, 50% gives about 2,650) and state the weight. Say explicitly that the reserve's +150 assumes the shuttle is sponsored."
+    },
+    {
+     "severity": "major",
+     "where": "#4 contribution_math; base arithmetic for CTWA and creators; #4 why_it_works 'keeps most of the volume'",
+     "problem": "The power curve is extrapolated below the observed spend range:\n- Plain-shrink CTWA comes out at Rs 99 per registration before the x1.2 gain. That beats paid's best measured tranche (Rs 110) and its best week (Rs 131 in week 6).\n- Creators borrow paid's beta even though their weekly response was flat and lagged, which gives Rs 100 per registration against a measured Rs 169.\nTogether this inflates the base by about 58 visitors (CTWA -23, creators -35).",
+     "fix": "Cap the shrink at measured costs: paid at Rs 110 per registration, creators linear at Rs 169 (Method B already does this). The shrink line becomes about -320, the #4 gain about +36, and the base about 2,655 (Method B gives 2,654). Replace 'keeps most of the volume' with 'keeps about 364 of 680 paid registrations'."
+    },
+    {
+     "severity": "major",
+     "where": "budget 'Measurement stack' and #2 'Registration and QR check-in run on Luma's free plan'; capacity 'occupancy counter from entry and exit scans'; #2 budget 'SMS fallback Rs 2,000'",
+     "problem": "[SHOW-24] confirms that Luma's free plan offers free events, QR check-in and automatic email/SMS/WhatsApp reminders. Nothing confirms free-plan API or webhook access, which the Growth Center, the holdout randomiser and the BSP flows need. Luma's built-in reminders go to every guest, which would contaminate the 15% holdout. There's no evidence of exit scans, custom attribution precedence or college-ID hashing. Luma Plus is $59 a month billed annually, about Rs 59K or a fifth of the budget. DLT SMS needs a Rs 5,900 entity registration plus Rs 5,900 per sender header [SMS-01], which Rs 2,000 can't cover.",
+     "fix": "Build the pass, QR and check-in (entry scans plus an occupancy count) into the Growth Center on Neon and Vercel, adding 2-3 person-weeks to analytics (offset by the experiment cuts). Use Luma only as a fallback, with all its automatic reminders off. Count occupancy from entry scans plus hourly clicker exit counts, using offline-capable scanning on local Wi-Fi. Drop the SMS fallback, or fund DLT (about Rs 11.8K) from the cut deposit and ladder cells."
+    },
+    {
+     "severity": "major",
+     "where": "dashboard_ai_support of #1, #2 and #3 ('which Ghatkesar squads are missing members?', '2 of your 4 haven't confirmed', ambassador disqualification); claim 'only aggregated, non-PII data reaches the free-tier model'",
+     "problem": "These copilot tasks need person-level rows (squad members, ambassador names, fraud flags based on phone numbers), which contradicts the plan's own 'aggregated, non-PII only' rule. Free-tier prompts are 'used to improve our products' [GEM-06]. For a healthcare-AI interviewer, data handling is a credibility test.",
+     "fix": "Have the tools return pseudonymous IDs (squad_7f3a, amb_12) and counts only. The model drafts templates with placeholders, and names and phone numbers are merged in on the server after it responds. Alternatively, run the copilot on the paid tier, where prompts aren't used for training [GEM-06] and demo-volume cost is negligible, and say so on Slide 3."
+    },
+    {
+     "severity": "major",
+     "where": "Deliverable: exactly 3 slides",
+     "problem": "The strategy has about 10 funnel stages x 2 cases, 5 ideas x 15 fields, 20 assumptions, 11 deprioritised items and 8 phases. That cannot fit 3 legible slides, there is no appendix, and skeptical reviewers will read the density as hiding weak spots.",
+     "fix": "- Slide 1: one base/stretch funnel table, the waterfall, the floor, and 3 load-bearing assumptions.\n- Slide 2: one 5-row table (concept, change in base and stretch, Rs, owner-weeks, dates, test, ICE score) plus a double-down/cut box with the Rs 1.52L to Rs 0.55L trade-off.\n- Slide 3: one 5-row table (leading indicator; scale, change and stop thresholds; action) plus a strip showing the gate calendar.\nMove the full arithmetic, assumptions and sensitivities to a 'Model' page in the Growth Center and cite it on each slide."
+    },
+    {
+     "severity": "minor",
+     "where": "capacity PEAK LOAD; A16; A19 '~30 event-day volunteers'",
+     "problem": "Peak entry is based on 2025's daytime profile: 17.6% of day-1 visitors in the busiest hour, peaking at 11:00, with no entries after 17:00. 2027 moves crowd-heavy programming to 4 pm and adds a 7:30 pm pro-nite. At 30-35% in the peak hour, stretch entry is 726-847 an hour, giving 1.4-1.7x headroom on 1,200 an hour, not 2.8x. Thirty volunteers can't staff 4 lanes, the exception desk, a squad lane, exit counts, shuttle marshalling and 3 halls.",
+     "fix": "State an evening-weighted arrival assumption (30% in the peak hour). Add 2 surge lanes from 5 to 8 pm. Plan about 60 event-day volunteers across 2 shifts."
+    },
+    {
+     "severity": "minor",
+     "where": "capacity PERMIT and HARD CAPS",
+     "problem": "5,000 is treated as a peak concurrent figure, but CPPMS applications usually state expected attendance. Read as daily footfall, the worst case is 4,500 x 0.9 x 0.75 + 300 + 1,200 = 4,538, which is 91% of the permit.",
+     "fix": "Check on the CPPMS form whether the figure is concurrent or daily. If daily, apply for 6,000 daily and 5,000 concurrent, and state both figures on Slide 1."
+    },
+    {
+     "severity": "minor",
+     "where": "Phase 0 'Recruit 60 ambassadors (non-partner colleges only)'; #3 timeline 1-20 Dec; MoUs until 31 Jan",
+     "problem": "Ambassadors are recruited from 'non-partner' colleges before the partner list exists, so colleges that sign later will break the rule that ambassadors stay out of partner colleges.",
+     "fix": "Freeze the 60-college partner shortlist by Sun 6 Dec and recruit ambassadors only outside it. If an ambassador's college signs, make that ambassador its club-charter lead and credit their work to #1."
+    },
+    {
+     "severity": "minor",
+     "where": "#3 concept (a)(b); timeline 'Rewards paid 15-25 Mar'; budget 'Rs 25K squad-completion rewards'",
+     "problem": "Fast-lane entry is 'unlocked' by the whole squad's verified check-in, which is circular because the lane is how they check in. Ambassador guest passes and pro-nite pit access can't be granted after the event. It's unclear whether the Rs 100 food combo is per squad or per member.",
+     "fix": "Give fast-lane entry to squads whose members have all reconfirmed by T-1. Unlock front-zone access and the food combo live, once every member has scanned in. Grant event-access perks at T-1 based on reconfirmed recruits, and pay merch, cash and letters after the event on verified check-ins. State 'Rs 100 per squad'."
+    },
+    {
+     "severity": "minor",
+     "where": "overlap_adjustment (2) precedence; #1 KPI '>=4.0 coded registrations per active partner-week' and operating target (240 partner-weeks); #4 geo-fence on the partner corridors",
+     "problem": "Competition codes outrank partner codes, and CTWA is geo-fenced to the partner corridors, so the grid's and paid's KPIs move with the precedence rules rather than with performance. The 240 partner-weeks include the 1-7 Feb pause week, so only 220 are effective, which needs 4.36 per partner-week. The 'active partners per week: 40' KPI cannot hold that week.",
+     "fix": "Measure the grid as all registrations from partner-college students, whatever their code, per partner-week, and judge paid on its geo test. Restate the target as 4.4 over 220 effective partner-weeks. Exempt 1-7 Feb from the 'active partner' and 'days since last registration' alerts."
+    },
+    {
+     "severity": "minor",
+     "where": "framework ALLOCATION RULE ('budget follows marginal CPV'); organic Rs 14K to 10K; community Rs 16K to 15K",
+     "problem": "On the model's own curves, organic's marginal CPV between Rs 10K and 14K is Rs 147-179, and community's at Rs 15K is Rs 157. Both beat the grid's marginal of about Rs 196 (before the engine). So the Rs 5K cut gives up about 31 visitors to buy about 26 in the grid, which breaks the stated rule.",
+     "fix": "Restore organic to Rs 14K and community to Rs 16K, paid for by the bus cut. Otherwise state a non-CPV reason (for example, first-touch over-credit) and build the same discount into the curve."
+    },
+    {
+     "severity": "minor",
+     "where": "framework scores, #2 'Ease 9'",
+     "problem": "Ease 9 is defined as 'Rs 20K or less, one owner, configuration only'. The engine has 2 owners (9 person-weeks), a custom switch/transfer/release flow, waitlist operations, a payment gateway for the deposit and 5 tests. That matches Ease 7.",
+     "fix": "Score Ease 7, giving ICE 6.67. #2 stays ranked second with no tie-break, so delete the 'tie broken by absolute impact' sentence. If the release and waitlist modules are cut, Ease 8 is defensible."
+    },
+    {
+     "severity": "minor",
+     "where": "north_star; stretch funnel; overlap (5) CEILINGS",
+     "problem": "[SHOW-02]'s 82% is the median for large paid events; large free events median 76%. Calling 82% a 'ceiling' for a free fest misstates the source, and the base's 78.5% is already above the free-event median.",
+     "fix": "Write: 'The free large-event median is 76% [SHOW-02]. The base's 78.5% exceeds it through the measured channel mix (72.7%) plus the engine. The stretch is capped at the paid-event median (82%) as an upper bound.'"
+    },
+    {
+     "severity": "minor",
+     "where": "A3; stretch what_must_be_true #1 (x1.10 stall recovery)",
+     "problem": "In weeks 11-14 of 2025, partnerships ran at 64-97 registrations a week, well above the weeks 6-7 run-rate of about 26. Part of the 'lost 49' was likely deferred, not lost, so crediting a x1.10 recovery may count volume the channel recaptured anyway.",
+     "fix": "Describe x1.10 as 'up to' and show a stretch variant at x1.045 only: about -81 registrations and -61 visitors."
+    },
+    {
+     "severity": "minor",
+     "where": "headline 'Two methods agree within 2.3%'; base arithmetic CROSS-CHECK",
+     "problem": "Method B reuses the conversion layer, haircuts, competitions, reserve and walk-ins, and changes only the acquisition curves. Its agreement with Method A is not independent evidence.",
+     "fix": "Reword to: 'An alternative acquisition model (step-CPR, no efficiency gains) gives 2,654 (-2.3%).' Present the floor (2,141) as the robustness check."
+    },
+    {
+     "severity": "minor",
+     "where": "Phase 1 'Competition sponsor go/no-go Fri 15 Jan'; #2 'January club workshops ... reminder test'; T-2 on Thu 11 Mar",
+     "problem": "15 Jan is Sankranti, inside the plan's own 13-17 Jan quiet window [fest HYD-21, cal HYD-06]. Reminder tests can't use WhatsApp templates before their 10 Jan approval or during the break, so the January test bed is really 18-29 Jan, which overlaps the mid-terms of autonomous colleges such as NRCM (25-30 Jan) [cal HYD-03].",
+     "fix": "Move the sponsor go/no-go to Tue 12 Jan. Run the workshop reminder test 19-23 Jan at non-autonomous colleges and label it directional. Make T-2 conditional on the Eid moon sighting."
+    },
+    {
+     "severity": "minor",
+     "where": "#5 prelims 15-26 Feb; #1 club pre-events 8-27 Feb; P2 degree-college partners",
+     "problem": "Inter theory exams start 24 Feb [cal HYD-08]. Degree and junior colleges used as exam centres usually restrict gatherings, which affects prelims on 24-26 Feb and pre-events at OU-area partners.",
+     "fix": "Find out which partner campuses are Inter exam centres. Finish prelims and on-campus pre-events there by 23 Feb, and run later activations off campus."
+    },
+    {
+     "severity": "minor",
+     "where": "big_idea first sentence; headline_numbers[0]; deprioritised 'Raising the budget' reason",
+     "problem": "'Yes, this is Challenge A' and 'Yes, Challenge A' are chat replies, not slide copy. 'No marginal Rs 18-19 per stretch visitor is claimed' refers to an internal draft the reviewers never saw.",
+     "fix": "Open with: 'Challenge A, Attendee Growth: maximise unique verified external visitors, Hyderabad, 13-14 Mar 2027.' Delete the Rs 18-19 sentence. Confirm 'Challenge A' to the user in chat, not on a slide."
+    },
+    {
+     "severity": "minor",
+     "where": "stretch funnel 'Walk-ins and day-2 friend passes'; #3 (c); #2 budget",
+     "problem": "People who use the day-1 friend link register before arriving, so they are registrants, not walk-ins. Grouping them as walk-ins muddles both the 300-a-day walk-in cap and the 6.5% comparison with 2025. The 6 pm link is a marketing-category message: about 1,900-2,400 sends at about Rs 1.14 each with BSP fee and GST, so Rs 2.2-2.8K that isn't budgeted.",
+     "fix": "Book these people as a 'day-2 friend link' source with their own show rate. Apply the 300-a-day cap to gate registrations only. Add about Rs 2.5K for the send, funded by cutting the Rs 2,600 deposit cell."
+    },
+    {
+     "severity": "minor",
+     "where": "#2 (e) 'opt-in Rs 99 refundable priority pass returned as food credit'",
+     "problem": "A deposit returned as food credit is a prepaid voucher, not a refund. Calling it 'refundable' misleads registrants and muddies the ticketed/non-ticketed decision.",
+     "fix": "Either refund it by UPI at check-in, or call it a 'Rs 99 food-credit priority pass'. Preferably cut the cell to save team bandwidth."
+    },
+    {
+     "severity": "minor",
+     "where": "deprioritised 'Paid stalls or sponsorships at other colleges' fests'",
+     "problem": "'No verified-attendance path' is wrong: a stall can hand out a unique QR or code like any other channel. The real reasons are cost (Rs 15K-2L each [PART-01]) and audience overlap with flagship campuses.",
+     "fix": "Reword: 'A Rs 15K stall would need at least 77 incremental verified visitors to match the grid's marginal CPV of about Rs 196, at fests whose crowds overlap campuses we treat as credibility partners. Rejected, but we'll accept a free, code-tracked barter booth where one is offered.'"
+    }
+   ]
+  }
+ ],
+ "ranking": [
+  [
+   "unit-economics",
+   24.830000000000002
+  ],
+  [
+   "show-up",
+   24.68
+  ],
+  [
+   "loops",
+   21.700000000000003
+  ],
+  [
+   "community",
+   18.97
+  ]
+ ]
+}
