@@ -244,6 +244,31 @@ It would also have issued STOP on Creator Partners. No later outcome leaks into 
   - The SQL tool refuses writes.
 - **Break-UI pass.** Worst-case data was injected: crore-scale spend, 10M impressions, 70-character names, negative net spend, a task overdue by 695 days. The layout issues it exposed were fixed. For example, the efficiency scatter switches to a log axis when costs span more than 12×.
 
+### Visual design: "Charminar Bento"
+The interface is a light bento of colour-blocked tiles drawn from Hyderabad's materials.
+
+**Colour.** Each metric family owns one hue, and that hue means the family everywhere:
+- visitors in lac crimson;
+- registrations in Nizami blue;
+- money in haldi;
+- audience in pista;
+- the gate clock on a dark Bidri tile;
+- neutrals in Charminar limestone.
+
+**Rules.**
+- Every tile leads with a visual and one number; words are short labels.
+- Assumptions are hatched or dotted.
+- Scale / Keep / Change / Stop calls always carry a glyph and a label.
+- The campaign, family and status palettes are checked with a palette validator for colour-blind separation and contrast.
+- Type is Mona Sans, with condensed poster-style numerals.
+
+**How it was chosen.** I built three working Overview mockups on the real data, each a genuinely different direction:
+1. Dusk Command: dark and continuous with the deck.
+2. Charminar Bento: a light, colour-blocked bento.
+3. Signal Story: a scrubbable annotated chart.
+
+They were shown side by side behind a picker, and the owner picked the bento. It was then rolled out across all eight views. The spec is `growth-center/docs/design-spec.md`.
+
 ### Interface patterns, named (after interfacelineage.com)
 - **Time-travel scrubber:** the campaign tape.
 - **Approval ticket:** human-in-the-loop writes.
@@ -293,7 +318,7 @@ Then re-seed management data (`POST /api/admin/seed`).
 | **Rare UI** Fluid Orb (rareui.com) | Copilot avatar / thinking state | MIT + Commons Clause + Attribution. Credited in the app and here; source notice kept in `src/components/vendor/fluid-orb.tsx` |
 | **Rune Icons** (runeicons.com) | Duotone navigation icons | Apache-2.0 |
 | Bklit UI radial chart, Liveline, Sesama UI, UploadCN, Design Spells | Pattern ideas: gate clock, live line head, "vs last week" and "View data", drop zone, ticket tear | Ideas re-implemented from scratch; no code copied (`research/design-inspiration.md`) |
-| Archivo (Omnibus-Type) | Typography in the app and the deck | SIL Open Font License |
+| Mona Sans (GitHub), Archivo (Omnibus-Type) | Mona Sans in the app (condensed numerals); Archivo in the deck | SIL Open Font License |
 | three.js | Deck renders: the arch, bangle stacks and gate colonnade, drawn to exact data scale | MIT |
 | ShaderPad (misery.co), Bluu Next (Velvetyne), Bagnard (Sebastien Sanfilippo) | Only in the two rejected deck mockups (`deck/directions/b-calm`, `c-shader`) | MIT / SIL OFL |
 | Dataviz palette validator | Campaign colours | Passed lightness, chroma, CVD (ΔE ≥ 11.8) and normal-vision checks |

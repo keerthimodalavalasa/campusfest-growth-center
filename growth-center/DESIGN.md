@@ -3,7 +3,7 @@
 ## Product
 "CampusFest Growth Center" is the command center a festival growth team uses to run, diagnose and optimise attendee acquisition. It is built on the CampusFest 2025 attendee dataset and serves as the evidence base for the Hyderabad 2027 edition. The North Star is **unique verified external visitors**. The reviewers are skeptical growth leaders: every number must be accurate, traceable and honest about assumptions.
 
-## Visual system: Charminar Bento (spec: `.proto/overview/v2-bento.md`; reuse it, do not invent new tokens)
+## Visual system: Charminar Bento (spec: `docs/design-spec.md`; reuse it, do not invent new tokens)
 - Tokens live in `src/app/globals.css` as Tailwind 4 `@theme` colours. Materials: `ground` (white page), `stone` / `stone-2` / `stone-3` (limestone tile, tracks, outlines), `sand` (a mark only, e.g. walk-ins), `bidri` / `bidri-2` / `bidri-3` with `silver` / `silver-2` (the one dark tile, tooltips). Ink: `ink`, `ink-2` (7.1:1 on stone). No white cards, no shadows: depth comes from field colour; only the copilot drawer and dialogs are raised.
 - Families, one hue each: `lac` (visitors, the North Star), `nizami` (registrations), `haldi` (money), `pista` (audience), each with `*-track` and a secondary ink (`lac-soft`, `nizami-soft`, `haldi-ink`, `pista-ink`). One solid tile per family is its lead number; every other use of the hue is a mark on limestone.
 - Status (reserved, always glyph + label): `st-scale`, `st-keep`, `st-change`, `st-stop`. Severity is fill weight (pips), never a hue.
