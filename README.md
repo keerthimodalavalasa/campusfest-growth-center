@@ -312,6 +312,12 @@ Then re-seed management data (`POST /api/admin/seed`).
 - Venue, production and prize money sit outside the ₹3 lakh and depend on sponsors.
 
 **The product**
-- There are no user accounts or roles. Anyone with the link can edit; the data can be restored with "Reset to original data".
+- **Open by design: no accounts or roles.** Reviewers need to edit data and watch the analytics change, so anyone with the link can edit, and "Reset to original data" restores everything. Hardening that does not get in a reviewer's way:
+  - per-visitor rate limits: 20 copilot questions per 10 minutes, 90 edits a minute, 6 imports or resets per 10 minutes (best effort, per server instance);
+  - caps on conversation size and a 15 MB upload limit;
+  - HMAC-signed approval cards (`TOOL_APPROVAL_SECRET`), so a client cannot forge an approval;
+  - a read-only SQL tool, tested against write attempts.
+
+  A production version would add sign-in with roles (e.g. Clerk or Auth.js), limit bulk import and reset to admins, and keep an audit trail per user.
 - **Free-tier limits on the copilot.** Gemini caps free requests per model per day (about 20 on 3.8 Flash, measured on 27 Nov 2026), and each question takes 2–4 requests. The fallback chain stretches this, but fallback answers come from smaller Flash-Lite models. A billing-enabled key (Tier 1) removes the cap at a cost of cents per question. My research had estimated "tens to low hundreds of turns a day"; that was unverified and too high.
 - Projections before the event use a labelled show-rate assumption (75%) because no attendance exists yet.

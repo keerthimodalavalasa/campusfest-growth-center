@@ -8,6 +8,7 @@ import { latestDataDate } from './engine/snapshot';
 import { isIsoDate } from './engine/time';
 import type { Dataset } from './engine/types';
 import { ValidationError } from './mutations';
+import { LIMITS, rateLimit, tooMany } from './ratelimit';
 import { ensureSchema, importOriginal, seedManagement, seedSettings, type ManagementSeed } from './setup';
 
 const g = globalThis as unknown as { __gcReady?: Promise<void> };
@@ -61,6 +62,12 @@ export function handle<A extends unknown[]>(fn: (...args: A) => Promise<unknown>
   return async (...args: A): Promise<Response> => {
     // Every API response depends on live data: never prerender at build time (no DB access during `next build`).
     await connection();
+    const req = args[0];
+    if (req instanceof Request && req.method !== 'GET') {
+      const bulk = /\/api\/data\/(import|reset)$/.test(new URL(req.url).pathname);
+      const wait = rateLimit(req, bulk ? LIMITS.bulk : LIMITS.write);
+      if (wait != null) return tooMany(wait, bulk ? 'imports or resets' : 'edits');
+    }
     try {
       const out = await fn(...args);
       if (out instanceof Response) return out;

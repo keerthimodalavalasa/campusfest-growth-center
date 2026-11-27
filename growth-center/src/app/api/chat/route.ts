@@ -5,6 +5,7 @@ import { isIsoDate } from '@/server/engine/time';
 import { buildTools } from '@/server/chat/tools';
 import { buildInstructions } from '@/server/chat/instructions';
 import { copilotModel, copilotStatus } from '@/server/chat/model';
+import { LIMITS, rateLimit, tooMany } from '@/server/ratelimit';
 
 export const maxDuration = 120;
 const MAX_STEPS = 10;
@@ -13,7 +14,12 @@ export async function POST(req: Request) {
   if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
     return Response.json({ error: 'The AI copilot is not configured: set GOOGLE_GENERATIVE_AI_API_KEY.' }, { status: 503 });
   }
+  const wait = rateLimit(req, LIMITS.chat);
+  if (wait != null) return tooMany(wait, 'copilot questions');
   const { messages, asOf, page }: { messages: UIMessage[]; asOf?: string; page?: string } = await req.json();
+  // keep prompts bounded: the free Gemini quota is shared by every visitor
+  if (!Array.isArray(messages) || messages.length === 0 || messages.length > 40) return Response.json({ error: 'A conversation can hold at most 40 messages. Start a new chat.' }, { status: 400 });
+  if (JSON.stringify(messages).length > 200_000) return Response.json({ error: 'The conversation is too long. Start a new chat.' }, { status: 413 });
   const { db, ds } = await ctx();
   const defaultAsOf = asOf && isIsoDate(asOf) ? asOf : latestDataDate(ds);
   const today = todayIST();
@@ -26,6 +32,8 @@ export async function POST(req: Request) {
     messages: await convertToModelMessages(messages),
     tools: buildTools({ db, defaultAsOf, today }),
     toolApproval: { create_task: 'user-approval', update_task: 'user-approval', update_campaign: 'user-approval' },
+    // HMAC-sign approval requests so a client cannot forge an approval for a write it was never offered
+    experimental_toolApprovalSecret: process.env.TOOL_APPROVAL_SECRET || undefined,
     stopWhen: isStepCount(MAX_STEPS),
     // The last allowed step must be a written answer: a model that keeps calling tools
     // would otherwise end the turn with no text at all.
